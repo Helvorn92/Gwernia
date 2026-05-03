@@ -1452,6 +1452,111 @@ body {
   section { padding: 4rem 1.2rem; }
   .nav-cta { display: none; }
 }
+
+/* ---------------- HAMBURGER MENU ---------------- */
+.nav-hamburger {
+  display: none; flex-direction: column; justify-content: center; gap: 5px;
+  width: 40px; height: 40px; background: none; border: none; cursor: pointer;
+  padding: 6px; z-index: 8100; flex-shrink: 0;
+}
+.nav-hamburger span {
+  display: block; width: 100%; height: 1.5px; background: var(--gold);
+  transition: transform .35s ease, opacity .25s ease;
+}
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+.nav-mobile-overlay {
+  display: none; position: fixed; inset: 0; z-index: 7500;
+  background: rgba(5,4,9,.97);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  flex-direction: column; align-items: center; justify-content: center;
+}
+.nav-mobile-overlay.open { display: flex; }
+.nav-mobile-menu {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 2.6rem; text-align: center;
+}
+.nav-mobile-menu a {
+  font-family: var(--display-2); font-size: 1rem; letter-spacing: .42em;
+  text-transform: uppercase; color: var(--bone); text-decoration: none;
+  opacity: .78; transition: opacity .25s, color .25s;
+}
+.nav-mobile-menu a:hover { opacity: 1; color: var(--gold-bright); }
+.nav-mobile-cta {
+  margin-top: .8rem; opacity: 1 !important; color: var(--bg-0) !important;
+  background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%);
+  padding: .85rem 2.4rem; border: 1px solid var(--gold-bright);
+  box-shadow: 0 8px 28px -4px rgba(201,165,88,.45);
+}
+.nav-mobile-cta:hover {
+  color: var(--bg-0) !important;
+  background: linear-gradient(180deg, #fff0ba 0%, var(--gold-bright) 100%) !important;
+}
+
+/* ---------------- GLOBAL IMAGE SAFETY ---------------- */
+img { max-width: 100%; height: auto; }
+
+/* ---------------- TABLET (≤ 1024px) — override precedente ---------------- */
+@media (max-width: 1024px) {
+  .domini-grid { grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  .personaggi-grid { grid-template-columns: repeat(3, 1fr); }
+  .identita-grid { gap: 1.4rem; }
+  .section-lede { font-size: 1rem; }
+}
+
+/* ---------------- MOBILE (≤ 768px) ---------------- */
+@media (max-width: 768px) {
+  .nav-hamburger { display: flex; }
+  .nav-links { display: none !important; }
+  .nav-cta { display: none !important; }
+  .nav { padding: .75rem 1.2rem; height: auto; min-height: 56px; }
+
+  .hero { min-height: 88svh; padding-bottom: 2.5rem; }
+  .hero h1 { font-size: clamp(2rem, 11vw, 3rem); letter-spacing: .1em; }
+  .hero .tagline { font-size: .95rem; margin-top: 2rem; }
+  .hero .eyebrow { font-size: .6rem; letter-spacing: .36em; margin-bottom: 2.2rem; }
+  .hero-content { padding: 0 1rem; }
+  .hero-content::before, .hero-content::after { display: none; }
+
+  section { padding: 4rem 1rem; }
+  .domini-section, .identita-section { padding-top: 5rem; padding-bottom: 3rem; }
+  .bilancia-section { padding: 4rem 1rem; }
+
+  .section-title { font-size: clamp(1.5rem, 6.5vw, 2.2rem); }
+  .section-lede { font-size: .9rem; line-height: 1.65; }
+
+  .bilancia-stage { height: clamp(280px, 50vh, 440px); }
+  .bilancia-info { flex-direction: column; gap: 2rem; }
+
+  .domini-grid { grid-template-columns: repeat(2, 1fr); gap: .9rem; }
+  .personaggi-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .identita-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+  .pegni-ladder { grid-template-columns: 1fr; max-width: 380px; margin-left: auto; margin-right: auto; }
+  .componenti-grid { grid-template-columns: repeat(3, 1fr); gap: .7rem; }
+  .componente { padding: 1.4rem .6rem; }
+  .componente .count { font-size: 2.2rem; }
+
+  .faction { padding: 1.8rem 1.2rem; }
+  .threshold-table, .players-table { padding: 1.4rem 1rem; }
+
+  .cta-buttons { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-secondary {
+    width: 100%; max-width: 300px; justify-content: center; padding: 1.1rem 1.4rem;
+  }
+
+  .container::before, .container::after { display: none; }
+  footer { padding: 1.2rem 1rem 2rem; }
+}
+
+/* ---------------- SMALL MOBILE (≤ 420px) ---------------- */
+@media (max-width: 420px) {
+  .domini-grid { grid-template-columns: 1fr; }
+  .personaggi-grid { grid-template-columns: 1fr; }
+  .componenti-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero h1 { font-size: clamp(1.8rem, 13vw, 2.4rem); }
+}
 </style>
 </head>
 <body>
@@ -1490,7 +1595,22 @@ body {
     <a href="#identita">Identità</a>
   </div>
   <a href="#sostieni" class="nav-cta">Sostieni</a>
+  <button class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Mobile nav overlay -->
+<div class="nav-mobile-overlay" id="navMobileOverlay" role="dialog" aria-label="Menu">
+  <nav class="nav-mobile-menu">
+    <a href="#manifesto" class="nav-mobile-link">Manifesto</a>
+    <a href="#bilancia" class="nav-mobile-link">Bilancia</a>
+    <a href="#domini" class="nav-mobile-link">Ambientazioni</a>
+    <a href="#personaggi" class="nav-mobile-link">Personaggi</a>
+    <a href="#identita" class="nav-mobile-link">Identità</a>
+    <a href="#sostieni" class="nav-mobile-cta">Sostieni</a>
+  </nav>
+</div>
 
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
@@ -1945,12 +2065,26 @@ manifestoIO.observe(manifestoQuote);
     resetTimer = setTimeout(() => { targetAngle *= 0.2; }, 1400);
   }, { passive: true });
 
-  // Touch fallback
+  // Touch — stessa logica del mouse
+  function applyTouch(clientX) {
+    const cx = window.innerWidth / 2;
+    const dx = (clientX - cx) / cx; // -1 .. 1
+    const eased = Math.sign(dx) * Math.pow(Math.abs(dx), 1.3);
+    targetAngle = eased * MAX_ANGLE;
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => { targetAngle *= 0.2; }, 1400);
+  }
+  window.addEventListener('touchstart', (e) => {
+    if (!e.touches[0]) return;
+    applyTouch(e.touches[0].clientX);
+  }, { passive: true });
   window.addEventListener('touchmove', (e) => {
     if (!e.touches[0]) return;
-    const cx = window.innerWidth / 2;
-    const dx = (e.touches[0].clientX - cx) / cx;
-    targetAngle = dx * MAX_ANGLE;
+    applyTouch(e.touches[0].clientX);
+  }, { passive: true });
+  window.addEventListener('touchend', () => {
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => { targetAngle *= 0.2; }, 1400);
   }, { passive: true });
 
   function tick() {
@@ -2088,6 +2222,38 @@ if (window.gsap && window.ScrollTrigger) {
     requestAnimationFrame(frame);
   }
   frame();
+})();
+
+/* ========== HAMBURGER MENU ========== */
+(function hamburger() {
+  const btn = document.getElementById('navHamburger');
+  const overlay = document.getElementById('navMobileOverlay');
+  if (!btn || !overlay) return;
+
+  function openMenu() {
+    btn.classList.add('open');
+    overlay.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    btn.classList.remove('open');
+    overlay.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  btn.addEventListener('click', () => {
+    btn.classList.contains('open') ? closeMenu() : openMenu();
+  });
+
+  overlay.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', closeMenu);
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeMenu();
+  });
 })();
 
 /* ========== TITLE FLICKER (subtle) ========== */
