@@ -143,24 +143,23 @@ body {
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 7000;
   display: flex; justify-content: space-between; align-items: center;
-  padding: 1.4rem 2.2rem; mix-blend-mode: difference;
+  padding: .9rem 2.2rem;
   transition: padding .4s ease, background .4s ease;
-	background: linear-gradient(180deg, rgb(122 86 28 / 47%), rgb(25 14 33 / 82%));
+  mix-blend-mode: normal;
+  background: linear-gradient(180deg, rgb(85 56 17 / 92%) 0%, rgba(7,6,10,.7) 100%);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(201,165,88,.28);
+  box-shadow: 0 18px 42px rgba(0,0,0,.34), inset 0 -1px 0 rgba(201,165,88,.08);
+  height: 60px;
 }
 .nav.scrolled {
   padding: .9rem 2.2rem; mix-blend-mode: normal;
-  background: linear-gradient(180deg, rgba(7,6,10,.92) 0%, rgba(7,6,10,.7) 100%);
+  background: linear-gradient(180deg, rgb(85 56 17 / 92%) 0%, rgba(7, 6, 10, .7) 100%);
   backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(201,165,88,.15);
 }
-.nav-brand {
-  font-family: var(--display); font-weight: 700; letter-spacing: .22em; font-size: 1.3rem;
-  color: var(--gold); display: flex; align-items: center; text-decoration: none;
-  text-shadow: 0 0 18px rgba(201,165,88,.4), 0 0 40px rgba(201,165,88,.15);
-  line-height: 1; text-indent: .22em;
-}
 .nav-brand .glyph { display: none; }
-.nav-links { display: flex; gap: 2.2rem; align-items: center; }
+.nav-links { display: flex; gap: 2.2rem; align-items: center; position: absolute; left: 50%; transform: translateX(-50%); }
 .nav-links a {
   font-family: var(--display-2); font-size: .72rem; letter-spacing: .3em; text-transform: uppercase;
   color: var(--bone); text-decoration: none; opacity: .75; transition: opacity .25s, color .25s;
@@ -171,13 +170,20 @@ body {
   content: ''; position: absolute; left: 50%; bottom: 0; width: 0; height: 1px; background: var(--gold);
   transition: width .35s ease, left .35s ease;
 }
+.loghetto img {
+  height: 40px; /* regola questo valore */
+  width: auto;
+  display: block;
+}
+.loghetto img:hover { filter: brightness(1.4); }
 .nav-links a:hover::after { width: 100%; left: 0; }
 .nav-cta {
   font-family: var(--display-2); font-size: .7rem; letter-spacing: .3em; text-transform: uppercase;
-  color: var(--bg-0); background: var(--gold); padding: .65rem 1.2rem; text-decoration: none;
-  border: 1px solid var(--gold-bright); transition: background .3s, color .3s, transform .3s;
+  color: var(--bg-0); background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%); padding: .65rem 1.2rem; text-decoration: none;
+  border: 1px solid var(--gold-bright); transition: all .4s ease;
+  box-shadow: 0 12px 30px -8px rgba(201,165,88,.5), inset 0 1px 0 rgba(255,255,255,.3);
 }
-.nav-cta:hover { background: var(--gold-bright); transform: translateY(-1px); }
+.nav-cta:hover { transform: translateY(-2px); box-shadow: 0 18px 40px -8px rgba(201,165,88,.7), inset 0 1px 0 rgba(255,255,255,.4); }
 @media (max-width: 880px) { .nav-links { display: none; } .nav { padding: 1rem 1.2rem; } }
 
 /* ---------------- HERO ---------------- */
@@ -900,12 +906,7 @@ body {
 }
 	
 .hero::before,
-.hero::after {
-  content: '';
-  position: absolute;
-  pointer-events: none;
-  z-index: 2;
-}
+
 .hero::before {
   inset: clamp(1rem, 3vw, 2.4rem);
   border: 1px solid rgba(201,165,88,.24);
@@ -915,17 +916,7 @@ body {
     0 0 50px rgba(0,0,0,.48);
   clip-path: polygon(3rem 0, calc(100% - 3rem) 0, 100% 3rem, 100% calc(100% - 3rem), calc(100% - 3rem) 100%, 3rem 100%, 0 calc(100% - 3rem), 0 3rem);
 }
-.hero::after {
-  left: 50%;
-  bottom: 2.1rem;
-  width: min(560px, 72vw);
-  height: 42px;
-  transform: translateX(-50%);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 42'%3E%3Cg fill='none' stroke='%23c9a558' stroke-opacity='.68' stroke-width='1.2'%3E%3Cpath d='M12 21 H188 C220 21 230 4 250 4 C270 4 268 21 280 21 C292 21 290 4 310 4 C330 4 340 21 372 21 H548'/%3E%3Cpath d='M280 21 C260 28 250 38 230 36 C246 26 260 21 280 21 C300 21 314 26 330 36 C310 38 300 28 280 21Z'/%3E%3Cpath d='M58 21 C72 8 90 8 104 21 C90 34 72 34 58 21Z M456 21 C470 8 488 8 502 21 C488 34 470 34 456 21Z'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: .68;
-}
+
 .hero .layer.ornament {
   opacity: 1;
   background-size: 94vmin 94vmin;
@@ -1354,11 +1345,8 @@ body {
 }
 .nav {
   mix-blend-mode: normal;
-  background: linear-gradient(180deg, rgb(122 86 28 / 47%), rgb(25 14 33 / 82%));
-  border-bottom: 1px solid rgba(201,165,88,.12);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 14px 34px rgba(0,0,0,.34);
+  background: transparent;
+  border-bottom: none;
 }
 .nav-links a::after { content: none; }
 .nav-cta {
@@ -1369,17 +1357,13 @@ body {
 .nav-cta:hover {
   transform: translateY(-2px);
   background: linear-gradient(180deg, #fff0ba 0%, var(--gold-bright) 48%, var(--gold) 100%);
-  
+  box-shadow: 0 18px 40px -8px rgba(201,165,88,.7), inset 0 1px 0 rgba(255,255,255,.4);
 }
 .hero h1 {
   font-family: var(--display);
   font-weight: 700;
   letter-spacing: .22em;
-}
-.section-eyebrow {
-  border-top: 0;
-  border-bottom: 0;
-  background: none;
+
 }
 .section-eyebrow::before,
 .section-eyebrow::after { color: rgba(201,165,88,.72); }
@@ -1515,8 +1499,8 @@ body {
 <div class="cursor-dot" id="cursorDot"></div>
 
 <!-- ============ NAV ============ -->
-<nav class="nav" id="nav">
-  <a href="#top" class="nav-brand">DL</a>
+<nav class="nav scrolled" id="nav">
+  <a href="#top" class="loghetto"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777808931/Logo_4x-8_ibef33.png" class="beam" alt=""></a>
   <div class="nav-links">
     <a href="#manifesto">Manifesto</a>
     <a href="#bilancia">Bilancia</a>
@@ -1530,7 +1514,6 @@ body {
 <!-- ============ HERO ============ -->
 <section class="hero" id="top">
   <div class="layers">
-    <div class="layer ornament" data-depth="0.05"></div>
     <div class="layer rays" data-depth="0.08"></div>
     <div class="layer moon" data-depth="0.15"></div>
     <div class="layer fog-1" data-depth="0.3"></div>
@@ -1697,7 +1680,7 @@ body {
 <section class="cta-section" id="sostieni">
   <div class="container">
     <div class="reveal">
-      <div class="section-eyebrow" style="justify-content:center;display:flex;">Il Progetto cerca i suoi Narratori</div>
+      <div class="section-eyebrow" style="justify-content:center;">Il Progetto cerca i suoi Narratori</div>
       <h2>Porta <span class="accent">Darklore</span><br>al tuo tavolo.</h2>
       <p>
         Darklore è un progetto indipendente. Ogni sostenitore è un Narratore in più che apre una porta verso un racconto sempre nuovo.
@@ -1882,7 +1865,6 @@ document.querySelectorAll('a, .dominio-card, .btn-primary, .btn-secondary, .pers
 const nav = document.getElementById('nav');
 window.addEventListener('scroll', () => {
   if (window.scrollY > 60) nav.classList.add('scrolled');
-  else nav.classList.remove('scrolled');
 }, { passive: true });
 
 /* ========== LENIS SMOOTH SCROLL ========== */
