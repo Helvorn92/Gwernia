@@ -251,7 +251,7 @@ body {
 /* ---------------- SECTIONS GENERIC ---------------- */
 section {
     position: relative;
-    padding: 13rem 1.5rem;
+    padding: 8rem 1.5rem;
 }
 
 .container { max-width: 1280px; margin: 0 auto; position: relative; z-index: 2; }
@@ -435,7 +435,7 @@ section {
 /* ---------------- DOMINI ---------------- */
 .domini-section {
     background: transparent;
-    padding-top: 6rem;
+    padding-top: 11rem;
     padding-right: 1.5rem;
     padding-left: 1.5rem;
     padding-bottom: 6rem;
@@ -597,8 +597,11 @@ section {
 
 /* ---------------- IDENTITÀ SEGRETE ---------------- */
 .identita-section {
-  background: transparent;
-  padding: 8rem 1.5rem;
+    background: transparent;
+    padding-top: 11rem;
+    padding-right: 1.5rem;
+    padding-left: 1.5rem;
+    padding-bottom: 6rem;
 }
 .identita-grid {
   display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1100px; margin: 5rem auto 0;
@@ -881,8 +884,8 @@ body {
 }
 .nav-links a:hover::before { opacity: .8; top: -.75rem; }
 .hero {
-  min-height: 86vh;
-  min-height: 86svh;
+  min-height: 98vh;
+  min-height: 98svh;
   overflow: hidden;
 }
 .hero::before,
@@ -961,13 +964,12 @@ section::after {
   content: '';
   position: absolute;
   left: 50%;
-  top: 2.5rem;
+  top: 1.5rem;
   width: min(980px, calc(100% - 3rem));
   height: 1px;
   transform: translateX(-50%);
   background:
-    linear-gradient(90deg, transparent, rgba(201,165,88,.18) 18%, rgba(201,165,88,.55) 50%, rgba(201,165,88,.18) 82%, transparent),
-    radial-gradient(circle at center, rgba(201,165,88,.75) 0 2px, transparent 3px);
+    linear-gradient(90deg, transparent, rgba(201,165,88,.18) 18%, rgba(201,165,88,.55) 50%, rgba(201,165,88,.18) 82%, transparent);
   opacity: .75;
 }
 .container::before,
@@ -1448,16 +1450,16 @@ body {
 .reveal.in { opacity: 1; transform: none; }
 .reveal-stagger > * { opacity: 0; transform: translateY(20px); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.7,.2,1); }
 .reveal-stagger.in > * { opacity: 1; transform: none; }
-.reveal-stagger.in > *:nth-child(1) { transition-delay: .05s; }
-.reveal-stagger.in > *:nth-child(2) { transition-delay: .15s; }
-.reveal-stagger.in > *:nth-child(3) { transition-delay: .25s; }
+.reveal-stagger.in > *:nth-child(1) { transition-delay: .50s; }
+.reveal-stagger.in > *:nth-child(2) { transition-delay: .45s; }
+.reveal-stagger.in > *:nth-child(3) { transition-delay: .40s; }
 .reveal-stagger.in > *:nth-child(4) { transition-delay: .35s; }
-.reveal-stagger.in > *:nth-child(5) { transition-delay: .45s; }
-.reveal-stagger.in > *:nth-child(6) { transition-delay: .55s; }
-.reveal-stagger.in > *:nth-child(7) { transition-delay: .65s; }
-.reveal-stagger.in > *:nth-child(8) { transition-delay: .75s; }
-.reveal-stagger.in > *:nth-child(9) { transition-delay: .85s; }
-.reveal-stagger.in > *:nth-child(10) { transition-delay: .95s; }
+.reveal-stagger.in > *:nth-child(5) { transition-delay: .30s; }
+.reveal-stagger.in > *:nth-child(6) { transition-delay: .25s; }
+.reveal-stagger.in > *:nth-child(7) { transition-delay: .20s; }
+.reveal-stagger.in > *:nth-child(8) { transition-delay: .15s; }
+.reveal-stagger.in > *:nth-child(9) { transition-delay: .10s; }
+.reveal-stagger.in > *:nth-child(10) { transition-delay: .05s; }
 
 /* ---------------- RESPONSIVE TWEAKS ---------------- */
 @media (max-width: 1024px) {
@@ -1527,7 +1529,7 @@ body {
     <div class="eyebrow"><span class="line"></span><span>Un viaggio narrativo nell’orrore</span><span class="line"></span></div>
     <h1 id="heroTitle">DARKLORE</h1>
     <p class="tagline">Un racconto corale plasmato turno dopo turno, dove ogni scelta inclina <br>
-                l'ago della bilancia verso l'unico epilogo possibile.</p>
+                l'ago della bilancia del fato verso l'unico epilogo possibile.</p>
     <div class="sub-tag">cooperativo <span>✦</span> competitivo</div>
   </div>
 </section>
@@ -1542,7 +1544,7 @@ body {
     </p>
 
     <div class="reveal">
-      <p class="section-lede" style="text-align: center">Darklore è un gioco di narrazione horror per 4-8 giocatori. A turno, ciascuno prende la parola e costruisce la storia <br> attraverso il proprio Protagonista. Ogni Indizio usato, sposta la Bilancia verso la Luce o verso l'Ombra.</p>
+      <p class="section-lede" style="text-align: center">Darklore è un gioco di narrazione condivisa a tinte horror per 4-8 giocatori. Insieme, darete vita a un macabro racconto <br>diviso in tre Atti,  plasmando la storia attraverso Indizi, oscure Reliquie e Presagi imprevedibili.</p>
     </div>
 
     <div class="bilancia-stage reveal">
@@ -1570,12 +1572,12 @@ body {
       <div class="col light">
         <div class="col-label">Cammino della Luce</div>
         <h4>Epilogo Positivo</h4>
-        <p>Gioca le carte con i simboli del Sole per far pendere la bilancia verso un finale di salvezza.</p>
+        <p>Gli Indizi con i simboli del Sole fanno pendere la Bilancia verso un finale di salvezza.</p>
       </div>
       <div class="col dark">
         <div class="col-label">Cammino dell'Ombra</div>
         <h4><span class="blood">Epilogo Negativo</span></h4>
-        <p>Gioca le carte con i simboli della Luna per far pendere la bilancia verso un finale di rovina.</p>
+        <p>Gli Indizi con i simboli della Luna fanno pendere la Bilancia verso un finale di rovina.</p>
       </div>
     </div>
 
@@ -1604,7 +1606,7 @@ body {
     <div class="reveal" style="text-align:center;">
       <div class="section-eyebrow">Personaggi</div>
       <h2 class="section-title">I <span class="accent">Protagonisti</span> del <span class="accent">Racconto</span></h2>
-      <p class="section-lede" style="margin-left:auto;margin-right:auto;">Ogni narratore impersonerà un Protagonista, ciascuno con un'abilità unica in grado di cambiare le sorti del racconto.</p>
+      <p class="section-lede" style="margin-left:auto;margin-right:auto;">Al tavolo non sarete semplici narratori, ma incarnerete uno dei Protagonisti costretti a varcare la soglia del terrore. Ogni Protagonista possiede un talento unico. <br> Sfrutta la sua abilità per indagare, proteggerti o manipolare i segreti della storia, piegando le sorti del racconto a tuo vantaggio.</p>
     </div>
     <div class="personaggi-grid reveal-stagger" id="personaggiGrid">
       <!-- populated by JS -->
@@ -1618,19 +1620,19 @@ body {
     <div class="reveal" style="text-align:center;">
       <div class="section-eyebrow">Identità</div>
       <h2 class="section-title"><span class="accent">Innocenti</span> o <span class="blood">Traditori</span></h2>
-      <p class="section-lede" style="margin-left:auto;margin-right:auto;">Interpretare un Protagonista è solo una parte del racconto. Ogni giocatore nasconde un'identità segreta, e sarà quella a determinare l'epilogo della storia. <br> Sei un Innocente che lotta per sopravvivere, o un Traditore che agisce per l'Entità?</p>
+      <p class="section-lede" style="margin-left:auto;margin-right:auto;">Il volto del tuo Protagonista è solo una maschera. La vera natura della partita risiede nelle Identità Segrete. Ogni parola che pronuncerai e ogni alleanza che stringerai <br>saranno guidate da un fine occulto. Lavorerai per guidare i tuoi compagni verso la salvezza, o tesserai nell'ombra per trascinare l'intero racconto verso la rovina?</p>
     </div>
 
     <div class="identita-grid">
       <div class="faction innocenti reveal">
         <div class="symbol"><svg class="sun-glyph" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="30" r="10" fill="currentColor" stroke="none"/><line x1="30" y1="4" x2="30" y2="15" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="30" y1="45" x2="30" y2="56" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="4" y1="30" x2="15" y2="30" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="45" y1="30" x2="56" y2="30" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="11" y1="11" x2="19" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="41" y1="41" x2="49" y2="49" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="49" y1="11" x2="41" y2="19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="11" y1="49" x2="19" y2="41" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
         <h3>Innocenti</h3>
-        <p>Gli Innocenti vincono se uno dei piatti della Bilancia pende verso il Cammino della Luce. Per riuscirci, dovranno giocare gli Indizi giusti e impedire a chi trama nell'Ombra di agire.</p>
+        <p>Vincono se, al termine del racconto, la Bilancia pende verso il Cammino della Luce. Per riuscirci dovranno giocare gli Indizi giusti e usare i propri Malefici per ostacolare chi trama nell'ombra.</p>
       </div>
       <div class="faction traditori reveal">
         <div class="symbol">☾</div>
         <h3>Traditori</h3>
-        <p>I Traditori vincono se uno dei piatti della Bilancia pende verso il Cammino dell'Ombra. Per riuscirci, dovranno giocare gli Indizi giusti e impedire a chi trama nella luce di agire.</p>
+        <p>Vincono se, al termine del racconto, la Bilancia pende verso il Cammino dell'Ombra. Per riuscirci dovranno giocare gli Indizi giusti e usare i propri Malefici per ostacolare chi agisce nella luce.</p>
       </div>
     </div>
 
@@ -1643,24 +1645,24 @@ body {
     <div class="reveal" style="text-align:center;">
       <div class="section-eyebrow">Dedizione e Sacrificio</div>
       <h2 class="section-title">i Pegni Oscuri </h2>
-      <p class="section-lede" style="margin-left:auto;margin-right:auto;">Per ogni simbolo oscuro presente su un Indizio, si ottiene un Pegno Oscuro, una moneta che permette <br> di ottenere vantaggi unici capaci di ribaltare le sorti della storia.</p>
+      <p class="section-lede" style="margin-left:auto;margin-right:auto;">Il potere, in Darklore, richiede un compromesso con l'oscurità. Per ogni simbolo della Luna che aggiungi alla storia, riceverai un Pegno Oscuro. <br>Usa queste monete maledette per ribaltare le sorti della partita, sbloccando antiche Reliquie, sostituendo Indizzi o mettendo a tacere chi cerca di ostacolarti.</p>
     </div>
 
     <div class="pegni-ladder reveal-stagger">
       <div class="pegno">
         <div class="coin-stack"><div class="coin">☾</div></div>
         <h4>1 Pegno</h4>
-        <p>Un piccolo sacrificio per un piccolo aiuto.</p>
+        <p>Lascia scivolare via un Indizio dalla tua mano per frugare nell'ignoto e richiamare dal mazzo l'esatta verità di cui hai bisogno.</p>
       </div>
       <div class="pegno">
         <div class="coin-stack"><div class="coin">☾</div><div class="coin">☾</div></div>
         <h4>2 Pegni</h4>
-        <p>Un discreto sacrificio per un discreto aiuto.</p>
+        <p>Allunga la mano tra i segreti del Reliquiario e rivendica l'antico oggetto di potere necessario a compiere la tua missione.</p>
       </div>
       <div class="pegno">
         <div class="coin-stack"><div class="coin">☾</div><div class="coin">☾</div><div class="coin">☾</div></div>
         <h4>3 Pegni</h4>
-        <p>Un grande sacrificio per un grande aiuto.</p>
+        <p>Spezza brutalmente la voce di un avversario, troncando di netto la sua narrazione e chiudendo immediatamente il suo turno.</p>
       </div>
     </div>
   </div>
@@ -1672,7 +1674,7 @@ body {
     <div class="reveal" style="text-align:center;">
       <div class="section-eyebrow">Gli strumenti del Racconto</div>
       <h2 class="section-title">Componenti</h2>
-      <p class="section-lede" style="margin-left:auto;margin-right:auto;">Oltre agli Indizi e alle Identità, Darklore nasconde molto altro. Reliquie da raccogliere, Malefici da scagliare, Presagi che sovvertono gli eventi a ogni round. <br> E nell'ombra, Missioni segrete che attendono di essere completate prima dell'Epilogo.</p>
+      <p class="section-lede" style="margin-left:auto;margin-right:auto;">La scatola di Darklore custodisce molto più di un semplice racconto. Scopri le componenti che daranno forma al vostro incubo. </p>
     </div>
     <div class="componenti-grid reveal-stagger" id="componentiGrid">
       <!-- populated by JS -->
@@ -1875,7 +1877,7 @@ window.addEventListener('scroll', () => {
 /* ========== LENIS SMOOTH SCROLL ========== */
 let lenis;
 if (window.Lenis) {
-  lenis = new Lenis({ duration: 1.4, smoothWheel: true, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+  lenis = new Lenis({ duration: 0.5, smoothWheel: true, easing: t => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
   function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
   requestAnimationFrame(raf);
   document.querySelectorAll('a[href^="#"]').forEach(a => {
