@@ -242,7 +242,7 @@ body {
 	
 }
 .hero h1 .char {
-  display: inline-block; will-change: transform, opacity, filter;
+  display: inline; will-change: transform, opacity, filter;
 }
 .hero h1::before, .hero h1::after { content: none; }
 .hero .tagline {
@@ -322,7 +322,7 @@ section {
     transition: opacity .4s ease;
     will-change: opacity;
     padding-bottom: 0px;
-    min-height: 90px;
+    /* min-height: 90px rimosso */
 }
 .manifesto .quote .word.lit {
     opacity: 1;
@@ -1517,7 +1517,7 @@ img { max-width: 100%; height: auto; }
   .nav { padding: .75rem 1.2rem; height: auto; min-height: 56px; }
 
   .hero { min-height: 88svh; padding-bottom: 2.5rem; }
-  .hero h1 { font-size: clamp(2rem, 11vw, 3rem); letter-spacing: .1em; }
+  .hero h1 { font-size: clamp(2rem, 11vw, 3rem); letter-spacing: .1em;}
   .hero .tagline { font-size: .95rem; margin-top: 2rem; }
   .hero .eyebrow { font-size: .6rem; letter-spacing: .36em; margin-bottom: 2.2rem; }
   .hero-content { padding: 0 1rem; }
@@ -1531,7 +1531,53 @@ img { max-width: 100%; height: auto; }
   .section-lede { font-size: .9rem; line-height: 1.65; }
 
   .bilancia-wrap { overflow: hidden; }
-  .bilancia-stage { height: clamp(280px, 50vh, 440px); transform: scale(0.55); transform-origin: center top; margin-bottom: -130px; }
+  .bilancia-stage {
+  height: 340px;
+  margin-bottom: 0;
+  overflow: visible;
+}
+.bilancia .post {
+  transform: translateX(-50%) scaleY(1.1);
+}
+.bilancia .beam {
+  width: 380px;
+  top: 68px;
+}
+
+.bilancia .pan {
+  transform: scale(0.42) translateY(-25px);
+  top: 22%;
+}
+
+.bilancia .pan.left {
+  left: 0%;
+}
+
+.bilancia .pan.right {
+  right: 0%;
+}
+
+.bilancia .dish {
+  width: 90px !important;
+  max-width: 90px !important;
+}
+
+.sun-glyph {
+  width: 5rem;
+  height: 5rem;
+}
+
+.bilancia .pan.right .symbol {
+  font-size: 5rem;
+}
+.sun-glyph {
+  width: 5rem;
+  height: 5rem;
+}
+
+.bilancia .pan.right .symbol {
+  font-size: 5rem;
+}
   .bilancia-info { flex-direction: column; gap: 2rem; }
 
   .domini-grid { grid-template-columns: repeat(2, 1fr); gap: .9rem; }
