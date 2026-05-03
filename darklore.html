@@ -713,7 +713,17 @@ section {
   transition: transform .4s, border-color .4s, box-shadow .4s;
 }
 .pegno:hover { transform: translateY(-4px); border-color: var(--blood-bright); }
-.pegno .coin-stack { display: flex; justify-content: center; gap: .4rem; margin-bottom: 1.5rem; }
+.pegno .coin-stack {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-bottom: 1.5rem;
+}
+	.pegno .coin-stack img {
+    width: 15%;
+    height: 100%;
+    object-fit: contain;
+}
 .pegno .coin {
   width: 36px; height: 36px; border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #2a1050, #100828);
@@ -888,6 +898,7 @@ body {
   min-height: 98svh;
   overflow: hidden;
 }
+	
 .hero::before,
 .hero::after {
   content: '';
@@ -1650,17 +1661,17 @@ body {
 
     <div class="pegni-ladder reveal-stagger">
       <div class="pegno">
-        <div class="coin-stack"><div class="coin">☾</div></div>
+        <div class="coin-stack"><div class="coin-stack"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777801573/Pegno_Oscuro_4x-8_nkfcci.png" class="beam" alt=""></div></div>
         <h4>1 Pegno</h4>
         <p>Lascia scivolare via un Indizio dalla tua mano per frugare nell'ignoto e richiamare dal mazzo l'esatta verità di cui hai bisogno.</p>
       </div>
       <div class="pegno">
-        <div class="coin-stack"><div class="coin">☾</div><div class="coin">☾</div></div>
+        <div class="coin-stack"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777801573/Pegno_Oscuro_4x-8_nkfcci.png" class="beam" alt=""><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777801573/Pegno_Oscuro_4x-8_nkfcci.png" class="beam" alt=""></div>
         <h4>2 Pegni</h4>
         <p>Allunga la mano tra i segreti del Reliquiario e rivendica l'antico oggetto di potere necessario a compiere la tua missione.</p>
       </div>
       <div class="pegno">
-        <div class="coin-stack"><div class="coin">☾</div><div class="coin">☾</div><div class="coin">☾</div></div>
+        <div class="coin-stack"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777801573/Pegno_Oscuro_4x-8_nkfcci.png" class="beam" alt=""><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777801573/Pegno_Oscuro_4x-8_nkfcci.png" class="beam" alt=""><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777801573/Pegno_Oscuro_4x-8_nkfcci.png" class="beam" alt=""></div>
         <h4>3 Pegni</h4>
         <p>Spezza brutalmente la voce di un avversario, troncando di netto la sua narrazione e chiudendo immediatamente il suo turno.</p>
       </div>
