@@ -687,13 +687,14 @@ section {
   background: transparent;
 }
 .componenti-grid {
-  margin-top: 5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(50px, 1fr)); gap: 1rem;
+  margin-top: 5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 0.5rem;
 }
 .componente {
   position: relative; padding: 2rem 1rem; text-align: center;
   background: linear-gradient(180deg, #0c0815, #07050f);
   box-shadow: 0 8px 30px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.3);
   border: 1px solid rgba(201,165,88,.1); transition: border-color .4s, transform .4s, box-shadow .4s;
+  overflow: hidden;
 }
 .componente:hover { border-color: var(--gold); transform: translateY(-4px); }
 .componente .count {
@@ -701,7 +702,7 @@ section {
   line-height: 1; text-shadow: 0 0 24px rgba(201,165,88,.3);
 }
 .componente .label {
-  margin-top: .8rem; font-family: var(--display-2); font-size: .72rem; letter-spacing: .3em;
+  margin-top: .8rem; font-family: var(--display-2); font-size: .60rem; letter-spacing: .3em;
   text-transform: uppercase; color: var(--bone-dim);
 }
 
@@ -1281,11 +1282,12 @@ img { max-width: 100%; height: auto; }
 <nav class="nav scrolled" id="nav">
   <a href="#top" class="loghetto"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181548/Logo_Metallico_2_lkg8zo.png" class="beam" alt=""></a>
   <div class="nav-links">
-    <a href="#manifesto">Manifesto</a>
-    <a href="#bilancia">Bilancia</a>
+    <a href="#manifesto">Bilancia</a>
     <a href="#domini">Ambientazioni</a>
     <a href="#personaggi">Personaggi</a>
     <a href="#identita">Identità</a>
+    <a href="#pegni">Pegni Oscuri</a>
+    <a href="#componenti">Componenti</a>
   </div>
   <a href="#sostieni" class="nav-cta">Sostieni</a>
   <button class="nav-hamburger" id="navHamburger" aria-label="Menu" aria-expanded="false">
@@ -1296,11 +1298,12 @@ img { max-width: 100%; height: auto; }
 <!-- Mobile nav overlay -->
 <div class="nav-mobile-overlay" id="navMobileOverlay" role="dialog" aria-label="Menu">
   <nav class="nav-mobile-menu">
-    <a href="#manifesto" class="nav-mobile-link">Manifesto</a>
-    <a href="#bilancia" class="nav-mobile-link">Bilancia</a>
+    <a href="#manifesto" class="nav-mobile-link">Bilancia</a>
     <a href="#domini" class="nav-mobile-link">Ambientazioni</a>
     <a href="#personaggi" class="nav-mobile-link">Personaggi</a>
     <a href="#identita" class="nav-mobile-link">Identità</a>
+    <a href="#pegni" class="nav-mobile-link">Pegni Oscuri</a>
+    <a href="#componenti" class="nav-mobile-link">Componenti</a>
     <a href="#sostieni" class="nav-mobile-cta">Sostieni</a>
   </nav>
 </div>
@@ -1427,7 +1430,7 @@ img { max-width: 100%; height: auto; }
 
 
 <!-- ============ PEGNI OSCURI ============ -->
-<section class="pegni-section">
+<section class="pegni-section" id="pegni">
   <div class="container">
     <div class="reveal" style="text-align:center;">
       <div class="section-eyebrow">Compromessi</div>
@@ -1456,7 +1459,7 @@ img { max-width: 100%; height: auto; }
 </section>
 
 <!-- ============ COMPONENTI ============ -->
-<section class="componenti-section">
+<section class="componenti-section" id="componenti">
   <div class="container">
     <div class="reveal" style="text-align:center;">
       <div class="section-eyebrow">Componenti</div>
@@ -1519,14 +1522,14 @@ const PERSONAGGI = [
 
 const COMPONENTI = [
   { count: '10', label: 'Carte Dominio' },
-  { count: '8',  label: 'Carte Personaggio' },
+  { count: '8',  label: 'Carte Protagonisti' },
   { count: '8',  label: 'Carte Identità' },
   { count: '40', label: 'Carte Indizio' },
   { count: '20', label: 'Carte Reliquia' },
   { count: '8', label: 'Carte Missioni' },
   { count: '10', label: 'Carte Maleficio' },
   { count: '10', label: 'Carte Presagio' },
-  { count: '60', label: 'Segnalini Sole / Luna' }
+  { count: '60', label: 'Sole / Luna', nowrap: true }
 ];
 
 /* ========== POPULATE GRIDS ========== */
@@ -1581,7 +1584,7 @@ const componentiGrid = document.getElementById('componentiGrid');
 COMPONENTI.forEach(c => {
   const el = document.createElement('div');
   el.className = 'componente';
-  el.innerHTML = `<div class="count" data-target="${c.count}">0</div><div class="label">${c.label}</div>`;
+  el.innerHTML = `<div class="count" data-target="${c.count}">0</div><div class="label"${c.nowrap ? ' style="white-space:nowrap"' : ''}>${c.label}</div>`;
   componentiGrid.appendChild(el);
 });
 
