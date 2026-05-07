@@ -37,13 +37,13 @@
   --gothic: 'UnifrakturCook', 'IM Fell English', serif;
   --book: 'Cormorant Garamond', Georgia, serif;
 }
-* { margin: 0; padding: 0; box-sizing: border-box; cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778180109/Mouse_svza6x.png') 0 0, none !important; }
+* { margin: 0; padding: 0; box-sizing: border-box; cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0, none !important; }
 html { background: var(--bg-0); scroll-behavior: auto; overflow-x: hidden; }
 body {
   min-height: 100vh;
   font-size: 18px;
   line-height: 1.7;
-  cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778180109/Mouse_svza6x.png') 0 0, none;
+  cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0, none;
   color: var(--bone);
   font-family: var(--serif);
   overflow-x: hidden;
@@ -53,7 +53,7 @@ body {
     linear-gradient(180deg, #050407 0%, #09070c 48%, #050407 100%);
   letter-spacing: .01em;
 }
-a, button, input, select, textarea, label, [role='button'] { cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778180109/Mouse_svza6x.png') 0 0, none !important; }
+a, button, input, select, textarea, label, [role='button'] { cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0, none !important; }
 @media (hover: none) { * { cursor: auto !important; } }
 
 /* ---------------- GRAIN, VIGNETTE, GLOBAL OVERLAYS ---------------- */
@@ -165,10 +165,19 @@ a, button, input, select, textarea, label, [role='button'] { cursor: url('https:
 .loghetto img:hover { filter: brightness(1.4); }
 .nav-links a:hover::after { width: 100%; left: 0; }
 .nav-cta {
-  font-family: var(--display-2); font-size: .7rem; letter-spacing: .3em; text-transform: uppercase;
-  color: var(--bg-0); background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%); padding: .65rem 1.2rem; text-decoration: none;
-  border: 1px solid var(--gold-bright); transition: all .4s ease;
-  box-shadow: 0 0 18px rgba(233,201,122,.45), 0 8px 24px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.38);
+  font-family: var(--display); font-weight: 700; font-size: .72rem; letter-spacing: .32em;
+  text-transform: uppercase; padding: .62rem 1.2rem; text-decoration: none; transition: all .4s ease;
+  display: inline-flex; align-items: center;
+  color: var(--bg-0);
+  background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%);
+  border: 1px solid var(--gold-bright);
+  box-shadow: 0 8px 24px -6px rgba(201,165,88,.5), inset 0 1px 0 rgba(255,255,255,.3);
+  clip-path: polygon(8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px), calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px);
+  position: relative; overflow: hidden;
+}
+.nav-cta::before {
+  content: ''; position: absolute; inset: 4px;
+  border: 1px solid rgba(7,6,10,.32); pointer-events: none;
 }
 .nav-cta:hover {
   transform: translateY(-2px);
@@ -437,7 +446,7 @@ section {
   margin-top: 5rem; display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.4rem;
 }
 .dominio-card {
-  position: relative; aspect-ratio: 5/7; perspective: 1200px; cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778180109/Mouse_svza6x.png') 0 0, none !important;
+  position: relative; aspect-ratio: 5/7; perspective: 1200px; cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0, none !important;
   filter: drop-shadow(0 8px 24px rgba(0,0,0,.55));
 }
 .dominio-inner {
@@ -718,7 +727,7 @@ section {
 .btn-primary, .btn-secondary {
   font-family: var(--display); font-weight: 700; font-size: .85rem; letter-spacing: .35em;
   text-transform: uppercase; padding: 1.3rem 2.6rem; text-decoration: none; transition: all .4s ease;
-  display: inline-flex; align-items: center; gap: 1rem; cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778180109/Mouse_svza6x.png') 0 0, none !important;
+  display: inline-flex; align-items: center; gap: 1rem; cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0, none !important;
 }
 .btn-primary {
   background: linear-gradient(180deg, var(--gold-bright) 0%, var(--gold) 100%); color: var(--bg-0);
@@ -1067,7 +1076,7 @@ footer::before {
 /* ---------------- HAMBURGER MENU ---------------- */
 .nav-hamburger {
   display: none; flex-direction: column; justify-content: center; gap: 5px;
-  width: 40px; height: 40px; background: none; border: none; cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778180109/Mouse_svza6x.png') 0 0, none !important;
+  width: 40px; height: 40px; background: none; border: none; cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0, none !important;
   padding: 6px; z-index: 8100; flex-shrink: 0;
 }
 .nav-hamburger span {
@@ -1224,7 +1233,7 @@ img { max-width: 100%; height: auto; }
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778180109/Mouse_svza6x.png') 0 0, none !important;
+  cursor: url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0, none !important;
   box-shadow: 0 0 12px rgba(201,165,88,.18), inset 0 0 6px rgba(0,0,0,.5);
   transition: border-color .25s, box-shadow .25s, opacity .25s;
   opacity: .72;
@@ -1270,7 +1279,7 @@ img { max-width: 100%; height: auto; }
 
 <!-- ============ NAV ============ -->
 <nav class="nav scrolled" id="nav">
-  <a href="#top" class="loghetto"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778085962/Gemini_Generated_Image_4gucig4gucig4guc_i35cgr.png" class="beam" alt=""></a>
+  <a href="#top" class="loghetto"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181548/Logo_Metallico_2_lkg8zo.png" class="beam" alt=""></a>
   <div class="nav-links">
     <a href="#manifesto">Manifesto</a>
     <a href="#bilancia">Bilancia</a>
@@ -1307,7 +1316,7 @@ img { max-width: 100%; height: auto; }
   <div class="hero-content">
     
     <div class="eyebrow"><span class="line"></span><span>La notte è certa. L'alba va guadagnata</span><span class="line"></span></div>
-    <h1 id="heroTitle"><span>DUSKL</span><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778085962/Gemini_Generated_Image_4gucig4gucig4guc_i35cgr.png" alt="O" style="display:inline-block;height:1em;width:auto;vertical-align:-15px;margin-left: -20px;"><span>RE</span></h1>
+    <h1 id="heroTitle"><span>DUSKL</span><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181548/Logo_Metallico_2_lkg8zo.png" alt="O" style="display:inline-block;height:1em;width:auto;vertical-align:-15px;margin-left: -20px;"><span>RE</span></h1>
     <p class="tagline">Dusklore è un gioco di narrazione condivisa in cui mistero e sospetto si intrecciano fino a trascinare i giocatori nelle profondità di un incubo. Per vincere non basta raccontare una buona storia, bisogna saperla plasmare a proprio vantaggio.</p>
     <div class="sub-tag">cooperativo <span>✦</span> competitivo</div>
   </div>
