@@ -75,15 +75,38 @@
 <body>
 <div class="app">
   <section id="setup" class="screen">
-    <div class="setup-card">
+    <!-- Landing -->
+    <div id="landingView" class="setup-card">
       <h1>DUSKLORE</h1>
       <p>App solitaria da playtest: tavolo, mano, mazzi, AI, Malefici, Pegni Oscuri, Missioni e fine Atto.</p>
+      <button class="btn wide" style="width:100%;margin-bottom:10px" onclick="showNewGame()">Nuova Partita</button>
+      <button class="btn secondary wide" style="width:100%" onclick="showJoinGame()">Unisciti a una Partita</button>
+    </div>
+    <!-- Nuova Partita -->
+    <div id="newGameView" class="setup-card hidden">
+      <h1>DUSKLORE</h1>
+      <p>Configura la partita e condividi il codice con i tuoi amici.</p>
       <div class="field"><label>Nome</label><input id="nameInput" value="Vincenzo"></div>
       <div class="field"><label>Protagonista</label><select id="heroSelect"></select></div>
       <div class="field"><label>Numero giocatori</label><select id="playerCount" onchange="renderSlotSetup()"><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
       <div class="field"><label>Posti al tavolo</label><div id="slotSetup" class="slot-list"></div></div>
-      <div id="joinBox" class="join-box hidden"></div>
-      <button class="btn wide" style="width:100%" onclick="startGame()">Inizia partita</button>
+      <div style="border:1px dashed var(--gold);background:rgba(198,155,84,.08);border-radius:14px;padding:12px;margin:12px 0;text-align:center">
+        <div class="small" style="margin-bottom:4px">Codice stanza — condividilo con i tuoi amici</div>
+        <div id="pendingCode" style="font-size:26px;font-weight:900;letter-spacing:.18em;color:var(--gold)">---</div>
+      </div>
+      <button class="btn wide" style="width:100%;margin-bottom:8px" onclick="startGame()">Inizia partita</button>
+      <button class="btn secondary wide" style="width:100%" onclick="showLanding()">← Indietro</button>
+    </div>
+    <!-- Unisciti -->
+    <div id="joinGameView" class="setup-card hidden">
+      <h1>DUSKLORE</h1>
+      <p>Inserisci il codice della stanza e scegli il tuo Protagonista.</p>
+      <div class="field"><label>Nome</label><input id="joinNameField" placeholder="Il tuo nome" value="Giocatore"></div>
+      <div class="field"><label>Protagonista</label><select id="joinHeroField"></select></div>
+      <div class="field"><label>Codice stanza</label><input id="joinCodeField" placeholder="Es. abc1234" maxlength="10" style="letter-spacing:.12em;text-transform:uppercase" oninput="this.value=this.value.toLowerCase()"></div>
+      <div id="joinFeedback" class="small" style="margin:6px 0;min-height:16px;color:var(--blood)"></div>
+      <button class="btn wide" style="width:100%;margin-bottom:8px" onclick="joinByCode()">Entra nella stanza</button>
+      <button class="btn secondary wide" style="width:100%" onclick="showLanding()">← Indietro</button>
     </div>
   </section>
 
@@ -215,7 +238,7 @@ const DATA={
 };
 
 const FIREBASE_CONFIG={apiKey:"AIzaSyC_KzUfb-6HKFxtN4cRG5DmsjRXtvBlGzg",authDomain:"dusklore-play.firebaseapp.com",projectId:"dusklore-play",storageBucket:"dusklore-play.firebasestorage.app",messagingSenderId:"72568019209",appId:"1:72568019209:web:6dbe34cbebc8ddafc2dbd8"};
-let game=null, handTab="all", selectedCard=null, selectedCurse=null, awaitingReaction=null, pendingTurnStart=false, db=null, roomId=null, syncing=false;
+let game=null, handTab="all", selectedCard=null, selectedCurse=null, awaitingReaction=null, pendingTurnStart=false, db=null, roomId=null, syncing=false, pendingRoomId=null;
 const $=id=>document.getElementById(id);
 const rand=a=>a[Math.floor(Math.random()*a.length)];
 const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;};
@@ -238,82 +261,88 @@ function save(){
 
 async function initSetup(){
   $("heroSelect").innerHTML=DATA.heroes.map(h=>`<option value="${h}">${h} - ${DATA.heroAbilities[h]}</option>`).join("");
+  $("joinHeroField").innerHTML=DATA.heroes.map(h=>`<option value="${h}">${h}</option>`).join("");
   renderSlotSetup();
-  await initRoomSync();
-  if(roomId)return;
+  await initFirebase();
+  const urlRoom=new URLSearchParams(location.hash.slice(1)).get("room");
+  if(urlRoom){showJoinGame();$("joinCodeField").value=urlRoom;$("joinFeedback").textContent="";$("joinFeedback").style.color="var(--muted)";$("joinFeedback").textContent="Codice rilevato dall'URL. Premi Entra per unirti.";return;}
   const saved=localStorage.getItem("dusklore-app");
-  if(saved){try{const parsed=JSON.parse(saved); if(parsed.version===3&&!parsed.ended){game=parsed;showGame();render();beginTurn();} else if(parsed.version===3&&parsed.ended){localStorage.removeItem("dusklore-app");}}catch{}}
+  if(saved){try{const parsed=JSON.parse(saved);if(parsed.version===3&&!parsed.ended){game=parsed;showGame();render();beginTurn();return;}else if(parsed.version===3&&parsed.ended)localStorage.removeItem("dusklore-app");}catch{}}
+  showLanding();
 }
 
-async function initRoomSync(){
-  roomId=new URLSearchParams(location.hash.slice(1)).get("room");
+async function initFirebase(){
+  try{if(window.firebase&&!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);if(window.firebase)db=firebase.firestore();}catch(e){console.warn("Firebase non disponibile",e)}
+}
+
+function setupRoomListener(code){
+  if(!db)return;
+  db.collection("duskloreRooms").doc(code).onSnapshot(doc=>{
+    if(!doc.exists)return;
+    syncing=true;game=doc.data();syncing=false;
+    if(!game.discardMalefici)game.discardMalefici=[];
+    localStorage.setItem("dusklore-app",JSON.stringify(game));
+    if(game.players.some(p=>p.controller===clientId)){showGame();render();beginTurn();}
+  },err=>console.warn("Sync error:",err.message));
+}
+
+function showLanding(){
+  $("landingView").classList.remove("hidden");
+  $("newGameView").classList.add("hidden");
+  $("joinGameView").classList.add("hidden");
+  history.replaceState(null,"",location.href.split("#")[0]);
+}
+function showNewGame(){
+  pendingRoomId=uid();
+  $("pendingCode").textContent=pendingRoomId.toUpperCase();
+  $("landingView").classList.add("hidden");
+  $("newGameView").classList.remove("hidden");
+  $("joinGameView").classList.add("hidden");
+  renderSlotSetup();
+}
+function showJoinGame(){
+  $("landingView").classList.add("hidden");
+  $("newGameView").classList.add("hidden");
+  $("joinGameView").classList.remove("hidden");
+  $("joinFeedback").textContent="";
+}
+
+async function joinByCode(){
+  const code=($("joinCodeField").value||"").trim().toLowerCase();
+  const fb=$("joinFeedback");
+  if(!code){fb.style.color="var(--blood)";fb.textContent="Inserisci un codice stanza.";return;}
+  if(!db){fb.style.color="var(--blood)";fb.textContent="Firebase non disponibile. Controlla la connessione.";return;}
+  fb.style.color="var(--muted)";fb.textContent="Ricerca in corso…";
   try{
-    if(window.firebase&&!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
-    if(window.firebase)db=firebase.firestore();
-  }catch(e){console.warn("Firebase non disponibile",e)}
-  if(roomId){
-    $("joinBox").classList.remove("hidden");
-    $("joinBox").innerHTML=`<b>Stanza: ${roomId}</b><div class='small'>Caricamento in corso…</div>`;
-    if(db){
-      db.collection("duskloreRooms").doc(roomId).onSnapshot(doc=>{
-        if(!doc.exists){
-          $("joinBox").innerHTML=`<b>Stanza non trovata</b><div class='small'>La stanza <code>${roomId}</code> non esiste o è scaduta. Chiedi al host di ricrearne una.</div>`;
-          return;
-        }
-        syncing=true;game=doc.data();syncing=false;
-        if(!game.discardMalefici)game.discardMalefici=[];
-        localStorage.setItem("dusklore-app",JSON.stringify(game));
-        if(game.players.some(p=>p.controller===clientId)){showGame();render();beginTurn();}
-        else renderJoinRoom();
-      },err=>{
-        $("joinBox").innerHTML=`<b>Errore connessione</b><div class='small'>${err.message}</div>`;
-      });
-    } else {
-      $("joinBox").innerHTML=`<b>Firebase non disponibile</b><div class='small'>Il join online richiede una connessione a Firebase. Assicurati di essere online e ricarica la pagina.</div>`;
-    }
-  }
+    const snap=await db.collection("duskloreRooms").doc(code).get();
+    if(!snap.exists){fb.style.color="var(--blood)";fb.textContent="Stanza non trovata. Controlla il codice.";return;}
+    syncing=true;game=snap.data();syncing=false;
+    if(!game.discardMalefici)game.discardMalefici=[];
+    roomId=code;
+    localStorage.setItem("dusklore-app",JSON.stringify(game));
+    // Already in this room?
+    if(game.players.some(p=>p.controller===clientId)){setupRoomListener(code);showGame();render();beginTurn();return;}
+    // Find open seat
+    const open=game.players.filter(p=>p.controller==="open");
+    if(!open.length){fb.style.color="var(--blood)";fb.textContent="Nessun posto libero in questa stanza.";return;}
+    // Validate hero
+    const heroVal=$("joinHeroField").value;
+    const takenByReal=game.players.filter(p=>p.controller!=="open"&&p.controller!=="ai").map(p=>p.hero);
+    if(takenByReal.includes(heroVal)){fb.style.color="var(--blood)";fb.textContent=`${heroVal} è già occupato. Scegli un altro Protagonista.`;return;}
+    // Displace AI if needed
+    const aiWithHero=game.players.find(x=>x.controller==="ai"&&x.hero===heroVal);
+    if(aiWithHero){const taken=game.players.filter(x=>x.id!==aiWithHero.id).map(x=>x.hero);const free=DATA.heroes.find(h=>!taken.includes(h));if(free){aiWithHero.hero=free;aiWithHero.name=free;}}
+    // Join first open seat
+    const seat=open[0];
+    const nameVal=($("joinNameField").value||"").trim()||"Giocatore";
+    seat.controller=clientId;seat.isHuman=true;seat.name=nameVal;seat.hero=heroVal;
+    if(heroVal==="SACERDOTE"&&!seat.hand.malefici.some(c=>c.name==="Protezione"))seat.hand.malefici.push(drawMaleficio("Protezione"));
+    game.roomId=code;
+    log(`${nameVal} (${heroVal}) entra nella partita.`);
+    save();setupRoomListener(code);showGame();render();beginTurn();
+  }catch(e){fb.style.color="var(--blood)";fb.textContent=`Errore: ${e.message}`;}
 }
 
-function renderJoinRoom(){
-  const open=game.players.filter(p=>p.controller==="open");
-  $("joinBox").classList.remove("hidden");
-  const startBtn=document.querySelector('#setup .btn.wide');
-  if(startBtn)startBtn.style.display="none";
-  // Heroes locked by real players already in the game
-  const takenByReal=game.players.filter(p=>p.controller!=="open"&&p.controller!=="ai").map(p=>p.hero);
-  const heroOptions=DATA.heroes.map(h=>{
-    const lockedByReal=takenByReal.includes(h);
-    const usedByAI=!lockedByReal&&game.players.some(p=>p.controller==="ai"&&p.hero===h);
-    if(lockedByReal)return `<option value="${h}" disabled>${h} (occupato)</option>`;
-    if(usedByAI)return `<option value="${h}">${h} (AI → verrà riassegnata)</option>`;
-    return `<option value="${h}">${h}</option>`;
-  }).join("");
-  $("joinBox").innerHTML=`<b>Entra nella stanza</b>
-  <div class="small" style="margin:6px 0 10px">Inserisci il tuo nome e scegli un Protagonista libero, poi seleziona un posto.</div>
-  <div class="field" style="margin-bottom:8px"><label>Il tuo nome</label><input id="joinName" placeholder="Nome" value="Giocatore"></div>
-  <div class="field" style="margin-bottom:10px"><label>Protagonista</label><select id="joinHero">${heroOptions}</select></div>
-  ${open.length?open.map(p=>`<button class="option" onclick="joinSeat('${p.id}')"><b>${escape(p.name)}</b><span>posto libero · clicca per occuparlo</span></button>`).join(""):"<div class='small' style='color:var(--blood)'>Non ci sono posti liberi in questa stanza.</div>"}`;
-}
-
-function joinSeat(id){
-  const p=game.players.find(x=>x.id===id); if(!p)return;
-  const nameVal=($("joinName")||$("nameInput")).value.trim()||"Giocatore";
-  const heroVal=($("joinHero")||$("heroSelect")).value;
-  // Block if another real player already has this hero
-  const blockedBy=game.players.find(x=>x.id!==id&&x.controller!=="open"&&x.controller!=="ai"&&x.hero===heroVal);
-  if(blockedBy)return openMsg("Protagonista occupato",`${heroVal} è già scelto da ${escape(blockedBy.name)}. Seleziona un altro Protagonista.`);
-  // If an AI has this hero, reassign the AI to the next available hero
-  const aiWithHero=game.players.find(x=>x.controller==="ai"&&x.hero===heroVal);
-  if(aiWithHero){
-    const allHeroes=game.players.filter(x=>x.id!==aiWithHero.id).map(x=>x.hero);
-    const newHero=DATA.heroes.find(h=>!allHeroes.includes(h));
-    if(newHero){aiWithHero.hero=newHero;aiWithHero.name=newHero;}
-  }
-  p.controller=clientId;p.isHuman=true;p.name=nameVal;p.hero=heroVal;
-  if(heroVal==="SACERDOTE"&&!p.hand.malefici.some(c=>c.name==="Protezione"))p.hand.malefici.push(drawMaleficio("Protezione"));
-  log(`${p.name} (${p.hero}) entra nella partita.`);
-  save();showGame();render();beginTurn();
-}
 
 function renderSlotSetup(){
   const count=Number($("playerCount").value||4);
@@ -329,7 +358,8 @@ function startGame(){
   const corrupt={4:2,5:2,6:2,7:3,8:3}[count], innocents=count-corrupt;
   const identities=shuffle([...Array(innocents).fill("Innocente"),...Array(corrupt).fill("Corrotto")]);
   const domain=rand(DATA.domini);
-  game={version:3,roomId:roomId||uid(),hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:domain[0],text:domain[1]},presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
+  const rid=pendingRoomId||uid();pendingRoomId=null;roomId=rid;
+  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:domain[0],text:domain[1]},presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
   const heroes=[$("heroSelect").value,...shuffle(DATA.heroes.filter(h=>h!==$("heroSelect").value))];
   Array.from({length:count},(_,i)=>{
     const kind=i===0?"local":($(`slot${i+1}`)?.value||"ai");
@@ -339,8 +369,8 @@ function startGame(){
     game.players.push(p);
   });
   log(`Dominio scelto: ${game.domain.name}. Round 1 di prefazione: niente carte, pesca o isolamento.`);
-  if(!location.hash.includes("room=")) location.hash="room="+game.roomId;
-  showShareLink();
+  location.hash="room="+game.roomId;
+  if(db)setupRoomListener(game.roomId);
   showGame();
 }
 
@@ -353,13 +383,6 @@ function isHumanTurn(){return current()?.controller===clientId}
 function handLimit(){return game.presage==="Ferimento"?2:3;}
 function canUseCurses(){return game.presage!=="Panico" && human().location!=="isolato" && human().hand.malefici.some(c=>c.name!=="Protezione")}
 function escape(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
-function showShareLink(){
-  game.roomId=game.roomId||uid();
-  roomId=game.roomId;
-  const url=location.href.split("#")[0]+"#room="+game.roomId;
-  $("joinBox").classList.remove("hidden");
-  $("joinBox").innerHTML=`<b>Link stanza</b><div class="small">Condividi questo link con chi deve occupare un posto libero: ${escape(url)}</div>`;
-}
 
 function render(){
   if(!game)return;
@@ -950,9 +973,9 @@ function showDiscardMalefici(){
   $("modal").classList.remove("hidden");
   $("sheet").innerHTML=`<h2>Scarti Malefici (${d.length})</h2><div style="display:grid;gap:6px;max-height:55svh;overflow:auto">${[...d].reverse().map(c=>`<div style="background:#140d1e;border:1px solid var(--line);border-radius:10px;padding:9px"><b>${escape(c.name)}</b><div class="small">${escape(c.text||DATA.malefici[c.name]||"")}</div></div>`).join("")}</div><button class="option" style="margin-top:10px" onclick="closeModal()">Chiudi</button>`;
 }
-function showRoomLink(){const url=location.href.split("#")[0]+"#room="+game.roomId;openMsg("Link stanza",`Condividi questo link con gli amici che devono occupare un posto libero:<br><br><b>${escape(url)}</b>`)}
+function showRoomLink(){const url=location.href.split("#")[0]+"#room="+game.roomId;openMsg("Codice stanza",`Codice: <b style="font-size:22px;letter-spacing:.15em;color:var(--gold)">${(game.roomId||"").toUpperCase()}</b><br><br>Oppure condividi il link:<br><b style="font-size:11px;word-break:break-all">${escape(url)}</b>`)}
 function openRules(){openMsg("Promemoria regole","Round 1: prefazione. Dal Round 2: pesca a inizio turno, gioca un Indizio, usa Malefici solo se nello stesso luogo, Presagio attivo fino a fine round. Alla fine di ogni Atto tutti mettono un Indizio coperto e i simboli opposti si annullano.")}
-function resetGame(){localStorage.removeItem("dusklore-app");history.replaceState(null,"",location.href.split("#")[0]);roomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal()}
+function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();}
 function openMsg(title,body){$("modal").classList.remove("hidden");$("sheet").innerHTML=`<h2>${title}</h2><p>${body}</p><button class="option" onclick="closeModal()">Ok</button>`}
 function closeModal(){$("modal").classList.add("hidden")}
 
