@@ -1,464 +1,618 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DUSKLORE - Playtest Solitario</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DUSKLORE - App Playtest</title>
 <style>
-  :root{--bg:#0a0a0f;--card:#15151e;--border:#2a2a3a;--sun:#fbbf24;--moon:#a78bfa;--accent:#7c3aed;--text:#e5e7eb;--muted:#9ca3af}
-  *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
-  body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;padding:1rem}
-  .container{max-width:1000px;margin:0 auto}
-  .btn{background:var(--accent);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:.5rem;cursor:pointer;font-weight:600;font-size:1rem;margin:.5rem}
-  .btn:hover{opacity:.9}.btn:disabled{opacity:.4;cursor:not-allowed}
-  .card{background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:1rem;margin-bottom:1rem}
-  input,select{background:#111827;border:1px solid #374151;color:#fff;padding:.6rem;border-radius:.5rem;width:100%;max-width:300px;margin:.5rem auto;display:block}
-  .hidden{display:none}
-  .text-sun{color:var(--sun)}.text-moon{color:var(--moon)}.text-muted{color:var(--muted)}
-  .log-box{background:#1f2937;border:1px solid #374151;padding:.5rem;border-radius:.5rem;font-size:.85rem;max-height:200px;overflow-y:auto;margin:.5rem 0}
-  .log-box div{padding:.25rem 0;border-bottom:1px solid #374151}
-  .error{background:#450a0a;color:#fecaca;padding:.8rem;border-radius:.5rem;margin-bottom:1rem;display:none}
-  .scale-wrap{height:10px;background:#374151;border-radius:5px;overflow:hidden;display:flex;margin:.5rem 0}
-  .sun-bar{background:var(--sun);height:100%;transition:width .3s}
-  .moon-bar{background:var(--moon);height:100%;transition:width .3s}
-  .hand-item{background:#1f2937;border:1px solid #374151;padding:.5rem;margin:.25rem 0;border-radius:.5rem;cursor:pointer;transition:.2s}
-  .hand-item:hover{background:#374151}.hand-item.disabled{opacity:.4;pointer-events:none}
-  .bot-tag{display:inline-block;background:#374151;padding:.1rem .4rem;border-radius:.25rem;font-size:.75rem;margin:.2rem}
-  .grid{display:grid;gap:1rem}
-  @media(min-width:768px){.grid-2{grid-template-columns:1fr 1fr}}
-  h1{text-align:center;color:var(--accent);margin-bottom:.5rem}
-  .status{background:#1f2937;padding:.5rem;border-radius:.5rem;margin:.5rem 0;font-size:.9rem}
+  :root{
+    --bg:#08070a;--panel:#151116;--panel2:#211922;--line:#3b2e3e;--text:#f5efe6;--muted:#b7a9b6;
+    --sun:#f5c95b;--moon:#8eb7ff;--blood:#b44444;--green:#5cc18a;--gold:#c69b54;--violet:#8f61ff;
+    --felt:#183b32;--felt2:#102820;--card:#eadfcb;--ink:#211b18;--shadow:0 18px 50px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:radial-gradient(circle at 20% 0,#2b1f31 0,#08070a 34rem);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.35}
+  button,input,select,textarea{font:inherit}
+  button{border:0;cursor:pointer}
+  .app{min-height:100svh;max-width:520px;margin:0 auto;background:linear-gradient(180deg,#120f14,#08070a);position:relative;overflow:hidden}
+  .screen{min-height:100svh;padding:18px 14px 96px}
+  .hidden{display:none!important}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+  .brand{letter-spacing:.18em;font-weight:900;font-size:18px;color:#fff;text-shadow:0 0 22px rgba(142,97,255,.45)}
+  .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(255,255,255,.05);border-radius:999px;padding:7px 10px;color:var(--muted);font-size:12px}
+  .btn{border-radius:12px;background:var(--violet);color:#fff;padding:12px 14px;font-weight:800;box-shadow:var(--shadow)}
+  .btn.secondary{background:#2a222d;color:var(--text);border:1px solid var(--line);box-shadow:none}
+  .btn.good{background:#19704a}.btn.danger{background:#8f3333}.btn.gold{background:#8a632d}.btn:disabled{opacity:.45;cursor:not-allowed}
+  .setup-card{margin-top:10svh;border:1px solid var(--line);background:rgba(21,17,22,.92);border-radius:18px;padding:18px;box-shadow:var(--shadow)}
+  .setup-card h1{margin:0 0 8px;font-size:32px;letter-spacing:.12em}.setup-card p{margin:0 0 18px;color:var(--muted)}
+  .field{display:grid;gap:7px;margin:12px 0}.field label{font-size:12px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  input,select{width:100%;border:1px solid var(--line);border-radius:12px;background:#0f0d11;color:var(--text);padding:12px}
+  .slot-list{display:grid;gap:8px;margin:10px 0}.slot-row{display:grid;grid-template-columns:1fr 128px;gap:8px;align-items:center;border:1px solid var(--line);background:#100d12;border-radius:12px;padding:9px}.slot-row b{font-size:13px}.slot-row span{display:block;color:var(--muted);font-size:11px;margin-top:2px}.join-box{border:1px dashed var(--gold);background:rgba(198,155,84,.08);border-radius:14px;padding:10px;margin:10px 0}
+  .layout{display:grid;gap:12px}
+  .status{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(21,17,22,.8);border-radius:16px;padding:10px}
+  .score{text-align:center}.score strong{display:block;font-size:23px}.score.sun strong{color:var(--sun)}.score.moon strong{color:var(--moon)}
+  .act{text-align:center}.act b{display:block;font-size:12px;color:var(--muted)}.act span{font-weight:900}
+  .track{height:10px;background:#28202b;border-radius:99px;overflow:hidden;display:flex;margin-top:7px}.sunbar{background:var(--sun)}.moonbar{background:var(--moon)}
+  .table{position:relative;min-height:330px;border:1px solid #285548;border-radius:28px;background:
+    radial-gradient(circle at 50% 45%,rgba(255,255,255,.08),transparent 16rem),
+    linear-gradient(145deg,var(--felt),var(--felt2));box-shadow:inset 0 0 70px rgba(0,0,0,.45),var(--shadow);padding:14px;overflow:hidden}
+  .domain{font-size:12px;color:#d9c7b4;text-align:center;margin-bottom:10px}.domain strong{display:block;font-size:17px;color:#fff}
+  .decks{display:flex;justify-content:center;gap:10px;margin:4px 0 12px}
+  .deck{width:72px;height:98px;border-radius:10px;border:2px solid rgba(255,255,255,.18);display:grid;place-items:center;text-align:center;font-weight:900;font-size:12px;box-shadow:0 10px 24px rgba(0,0,0,.32);padding:6px}
+  .deck.indizi{background:linear-gradient(145deg,#d8c291,#7c5d2f);color:#23160a}.deck.malefici{background:linear-gradient(145deg,#3b1533,#0c0a10);color:#f5d6ff}.deck.reliquie{background:linear-gradient(145deg,#efe5c9,#856739);color:#1c1309}
+  .players{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .player{border:1px solid rgba(255,255,255,.12);background:rgba(7,10,9,.45);border-radius:14px;padding:9px;min-height:82px;position:relative}
+  .player.active{outline:2px solid var(--gold)}.player.human{background:rgba(56,43,63,.5)}
+  .pname{font-weight:900;font-size:13px}.pmeta{color:var(--muted);font-size:11px;margin-top:3px}.badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}.badge{font-size:10px;border:1px solid rgba(255,255,255,.13);border-radius:99px;padding:3px 6px;background:rgba(0,0,0,.22)}
+  .table-center{margin:12px auto 0;width:84%;border:1px dashed rgba(255,255,255,.18);border-radius:16px;padding:10px;text-align:center;background:rgba(0,0,0,.14)}
+  .covered-row{display:flex;gap:6px;justify-content:center;margin-top:8px}.mini-card{width:42px;height:58px;border-radius:7px;background:#1d1720;border:1px solid #5e4a64;display:grid;place-items:center;font-size:18px}
+  .panel{border:1px solid var(--line);background:rgba(21,17,22,.92);border-radius:16px;padding:12px;box-shadow:0 12px 28px rgba(0,0,0,.22)}
+  .panel h3{margin:0 0 8px;font-size:14px;letter-spacing:.06em;text-transform:uppercase}.small{font-size:12px;color:var(--muted)}
+  .mission-phase{display:flex;gap:8px;margin:8px 0}.tick{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:#2a222d;border:1px solid var(--line);font-weight:900}.tick.done{background:var(--green);color:#07140d}
+  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions .wide{grid-column:1/-1}
+  .hand-wrap{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100vw);background:linear-gradient(180deg,rgba(8,7,10,0),#08070a 16px,#08070a);padding:20px 10px 10px;z-index:5}
+  .hand-head{display:flex;justify-content:space-between;align-items:center;margin:0 4px 8px}.hand-head strong{font-size:13px}.hand-tabs{display:none}.tabbtn{border:1px solid var(--line);background:#19131b;color:var(--muted);border-radius:99px;padding:6px 9px;font-size:12px}.tabbtn.active{background:var(--violet);color:#fff}
+  .hand{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x proximity}
+  .card{flex:0 0 122px;height:172px;border-radius:12px;background:var(--card);color:var(--ink);padding:10px;box-shadow:0 10px 22px rgba(0,0,0,.38);border:2px solid #f4ead8;display:flex;flex-direction:column;justify-content:space-between;scroll-snap-align:start}
+  .card.selected{outline:3px solid var(--violet)}.card.maleficio{background:linear-gradient(160deg,#2a1229,#0d0a10);color:#f6e6ff;border-color:#5f3a65}.card.reaction{outline:3px solid var(--green)}
+  .card-title{font-weight:900;font-size:15px}.card-type{font-size:10px;color:inherit;opacity:.75;text-transform:uppercase;letter-spacing:.08em}.symbols{font-size:26px;letter-spacing:4px}.card-text{font-size:11px;opacity:.86}
+  .toastlog{max-height:150px;overflow:auto;display:grid;gap:6px}.logitem{font-size:12px;color:#d5cad4;border-left:3px solid #5a465e;padding-left:8px}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.66);display:grid;place-items:end center;z-index:20;padding:14px}
+  .sheet{width:min(520px,100%);max-height:86svh;overflow:auto;background:#151116;border:1px solid var(--line);border-radius:20px 20px 14px 14px;padding:16px;box-shadow:var(--shadow)}
+  .sheet h2{margin:0 0 8px}.option{width:100%;text-align:left;background:#231b25;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0}.option:disabled{opacity:.45}.option b{display:block}.option span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
+  .target-grid{display:grid;gap:8px}.target{background:#241c27;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left}
+  .footer-space{height:224px}
+  @media (min-width:760px){.app{max-width:980px}.screen{padding:22px 18px 96px}.layout{grid-template-columns:1.25fr .9fr}.hand-wrap{width:min(980px,100vw)}.card{flex-basis:138px;height:188px}.table{min-height:500px}.players{grid-template-columns:repeat(4,1fr)}}
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>DUSKLORE</h1>
-  <p style="text-align:center;color:var(--muted);margin-bottom:1rem">Playtest Solitario con AI</p>
-  
-  <div id="errorBox" class="error"></div>
-  
-  <!-- LOBBY -->
-  <div id="lobby" class="card" style="text-align:center">
-    <h3 style="margin-bottom:1rem">Nuova Partita</h3>
-    <input id="nameInput" placeholder="Il tuo nome" value="Giocatore">
-    <label style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin:1rem 0;cursor:pointer">
-      <input type="checkbox" id="soloMode" checked style="width:auto"> Modalità Solitario (3 AI)
-    </label>
-    <button class="btn" onclick="startGame()">Inizia Partita</button>
-  </div>
+<div class="app">
+  <section id="setup" class="screen">
+    <div class="setup-card">
+      <h1>DUSKLORE</h1>
+      <p>App solitaria da playtest: tavolo, mano, mazzi, AI, Malefici, Pegni Oscuri, Missioni e fine Atto.</p>
+      <div class="field"><label>Nome</label><input id="nameInput" value="Vincenzo"></div>
+      <div class="field"><label>Protagonista</label><select id="heroSelect"></select></div>
+      <div class="field"><label>Numero giocatori</label><select id="playerCount" onchange="renderSlotSetup()"><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
+      <div class="field"><label>Posti al tavolo</label><div id="slotSetup" class="slot-list"></div></div>
+      <div id="joinBox" class="join-box hidden"></div>
+      <button class="btn wide" style="width:100%" onclick="startGame()">Inizia partita</button>
+    </div>
+  </section>
 
-  <!-- GAME -->
-  <div id="game" class="hidden">
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem">
-        <span id="actInfo" style="font-weight:bold">Atto 1 | Round 1</span>
-        <span id="domainInfo" class="text-muted"></span>
-      </div>
-      <div style="display:flex;justify-content:space-between;margin-bottom:.5rem">
-        <span class="text-sun">☀️ Luce: <span id="sunVal">0</span></span>
-        <span class="text-moon">🌙 Ombra: <span id="moonVal">0</span></span>
-      </div>
-      <div class="scale-wrap">
-        <div id="sunBar" class="sun-bar" style="width:0%"></div>
-        <div id="moonBar" class="moon-bar" style="width:0%"></div>
-      </div>
-      <div style="text-align:center;font-size:.85rem" class="text-muted">Soglia vittoria: <span id="threshVal">22</span></div>
-      <div id="presagioBox" class="hidden" style="margin-top:.5rem;padding:.5rem;background:#450a0a;border-radius:.5rem;text-align:center">
-        🔮 Presagio: <span id="presagioName" class="text-moon"></span>
-      </div>
+  <section id="game" class="screen hidden">
+    <div class="topbar">
+      <div><div class="brand">DUSKLORE</div><div id="turnLine" class="small"></div></div>
+      <div style="display:flex;gap:6px"><button class="pill" onclick="showRoomLink()">Link</button><button class="pill" onclick="openRules()">Regole</button><button class="pill" onclick="resetGame()">Nuova</button></div>
     </div>
 
-    <div class="grid grid-2">
-      <div class="card">
-        <h4 style="margin-bottom:.5rem">🃏 La tua mano</h4>
-        <div id="handIndizi"></div>
-        <h5 style="margin:.5rem 0 .25rem;color:#ef4444">💀 Malefici</h5>
-        <div id="handMalefici"></div>
-        <div id="playerStats" style="margin-top:1rem;padding-top:.5rem;border-top:1px solid var(--border);font-size:.9rem"></div>
-      </div>
-      
-      <div class="card">
-        <h4 style="margin-bottom:.5rem">🤖 Avversari AI</h4>
-        <div id="botList"></div>
-        <div style="margin-top:1rem">
-          <button class="btn" onclick="playCard()" id="playBtn" style="width:100%">Gioca Carta & Prosegui</button>
-          <button class="btn" onclick="toggleLocation()" style="width:100%;background:#4b5563">Cambia Ubicazione</button>
+    <div class="layout">
+      <main>
+        <div class="status">
+          <div class="score sun"><strong id="sunScore">0</strong><span>Sole</span><div class="track"><div id="sunBar" class="sunbar" style="width:0%"></div></div></div>
+          <div class="act"><b id="roundLabel">Round 1</b><span id="actLabel">Prefazione</span><div class="small">Soglia <span id="winThreshold">22</span></div></div>
+          <div class="score moon"><strong id="moonScore">0</strong><span>Luna</span><div class="track"><div id="moonBar" class="moonbar" style="width:0%"></div></div></div>
         </div>
-        <div id="turnInfo" style="margin-top:.5rem;text-align:center;font-size:.9rem"></div>
+
+        <div class="table" data-testid="table">
+          <div class="domain"><strong id="domainName"></strong><span id="domainText"></span></div>
+          <div class="decks">
+            <button class="deck indizi" onclick="showDeckInfo('indizi')">Mazzo<br>Indizi<br><span id="indiziCount"></span></button>
+            <button class="deck malefici" onclick="showDeckInfo('malefici')">Mazzo<br>Malefici<br><span id="maleficiCount"></span></button>
+            <button class="deck reliquie" onclick="showDeckInfo('reliquie')">Reliquiario<br><span id="relicCount"></span></button>
+          </div>
+          <div id="players" class="players"></div>
+          <div class="table-center">
+            <div><strong id="presageName">Nessun Presagio</strong></div>
+            <div id="presageText" class="small">Il primo round è solo introduzione dei Protagonisti.</div>
+            <div class="covered-row" id="coveredRow"></div>
+          </div>
+        </div>
+      </main>
+
+      <aside class="side">
+        <div class="panel">
+          <h3>Missione segreta</h3>
+          <div id="missionTitle" style="font-weight:900"></div>
+          <div id="missionRelic" class="small"></div>
+          <div id="missionPhases"></div>
+          <button class="btn secondary" style="width:100%;margin-top:8px" onclick="openMission()">Dettaglio missione</button>
+        </div>
+
+        <div class="panel">
+          <h3>Azioni</h3>
+          <div class="actions">
+            <button id="moveBtn" class="btn secondary" onclick="toggleLocation()">Ubicazione</button>
+            <button id="playBtn" class="btn good wide" onclick="mainAction()">Prosegui</button>
+            <button id="curseBtn" class="btn danger" onclick="openCurse()">Usa Maleficio</button>
+            <button id="darkBtn" class="btn gold" onclick="openDarkPawns()">Pegni Oscuri</button>
+          </div>
+          <div id="actionHint" class="small" style="margin-top:8px"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Cronologia</h3>
+          <div id="log" class="toastlog"></div>
+        </div>
+      </aside>
+    </div>
+    <div class="footer-space"></div>
+  </section>
+
+  <div id="handWrap" class="hand-wrap hidden">
+    <div class="hand-head">
+      <strong id="handTitle">La tua mano</strong>
+      <div class="hand-tabs">
+        <button id="tabIndizi" class="tabbtn active" onclick="setHandTab('indizi')">Indizi</button>
+        <button id="tabMalefici" class="tabbtn" onclick="setHandTab('malefici')">Malefici</button>
       </div>
     </div>
-    
-    <div class="card">
-      <h4 style="margin-bottom:.5rem">📜 Cronologia</h4>
-      <div id="logBox" class="log-box"></div>
-    </div>
+    <div id="hand" class="hand"></div>
   </div>
+
+  <div id="modal" class="modal hidden"><div id="sheet" class="sheet"></div></div>
 </div>
 
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 <script>
-// DATI DAL MANUALE
-const DATA = {
-  indizi:["Acqua Santa","Ostia","Lapide","Attrezzi","Spazzola","Candele","Rosario","Pentacolo","Veste","Straccio","Colla","Sale","Veleno","Lettere","Tappeto","Corona","Ascia","Cappio","Libri","Trofeo","Incenso","Catene","Cera","Lucchetto","Bambola","Lente","Forbici","Mannaia","Martello","Diario","Lampada","Gomitolo","Armadio","Pennelli","Mappamondo","Crocifisso","Inchiostro","Armatura","Secchio","Calamaio"],
-  malefici:["Osservazione","Rimozione","Sostituzione","Protezione"],
-  reliquie:["Grimorio","Maschera","Dipinto","Orologio","Anfora","Pugnale","Chiave","Marionetta","Clessidra","Fotografia","Sfera","Bussola","Specchio","Statua","Carillon","Telefono","Pianta","Sarcofago","Matriosca","Tarocchi"],
-  missioni:["Il Lutto","Il Tradimento","Il Flashback","La Profezia","Il Riflesso","La Soglia","Il Silenzio","Il Déjà-vu"],
-  domini:["Maniero","Cimitero","Manicomio","Luna Park","Orfanotrofio","Villaggio","Castello","Crociera","Albergo","Museo"],
-  presagi:["Flashback","Confusione","Premonizione","Ferimento","Isolamento","Convergenza","Stallo","Sovversione","Quiete","Panico"]
+const DATA={
+  indizi:["Acqua Santa","Ostia","Lapide","Attrezzi","Spazzola","Candele","Rosario","Pentacolo","Veste","Straccio","Colla","Sale","Veleno","Lettere","Tappeto","Corona","Ascia","Cappio","Libri","Trofeo","Incenso","Catene","Cera","Lucchetto","Bambola di Pezza","Lente di Vetro","Forbici","Mannaia","Martello","Diario","Lampada","Gomitolo","Armadio","Pennelli","Mappamondo","Crocifisso","Inchiostro","Armatura","Secchio","Calamaio"],
+  malefici:{
+    "Osservazione":"Guarda la Missione segreta di un Protagonista.",
+    "Rimozione":"Sottrai una carta dalla mano di un Protagonista.",
+    "Sostituzione":"Scambia la tua Reliquia con quella di un Protagonista.",
+    "Protezione":"Reazione: annulla un Maleficio scagliato contro di te."
+  },
+  reliquie:["Grimorio","Maschera","Dipinto","Orologio","Anfora","Pugnale","Chiave","Marionetta","Clessidra","Fotografia","Sfera di Vetro","Bussola","Specchio","Statua","Carillon","Telefono","Pianta","Sarcofago","Matriosca","Tarocchi"],
+  domini:[
+    ["Maniero","Un guscio di velluto e polvere dove il silenzio pesa più dell'oro."],["Cimitero","Un giardino di marmo che culla un sonno senza sogni."],["Manicomio","Un labirinto di urla cucite sui muri della mente."],["Luna Park","Un miraggio di neon che maschera il ghigno della ruggine."],["Orfanotrofio","Un nido di brandine fredde, dove il pianto si condensa sulle pareti."],["Villaggio","Un groviglio di case cieche che mastica segreti e sputa sospetti."],["Castello","Una corona di pietra innalzata per difendere paure più antiche dei suoi re."],["Crociera","Un'isola di ferro sospesa su un profondo abisso."],["Albergo","Una prigione di chiavi d'oro e stanze vuote."],["Museo","Un santuario di vetro dove il passato resta immobile per giudicare."]
+  ],
+  presagi:{
+    "Flashback":"Ogni giocatore deve usare il primo Indizio nella pila degli scarti, se presente.",
+    "Confusione":"Per questo round l'ordine di narrazione procede in senso contrario.",
+    "Premonizione":"Le carte Indizio restano scoperte sul tavolo.",
+    "Ferimento":"Per tutto il round ogni giocatore non può avere più di un Indizio in mano.",
+    "Isolamento":"Chi è insieme deve isolarsi nel proprio turno.",
+    "Convergenza":"Chi è isolato deve unirsi nel proprio turno.",
+    "Stallo":"Il round va narrato senza usare carte Indizio.",
+    "Sovversione":"Pura Luce e Pura Ombra vengono lette al contrario.",
+    "Quiete":"Nulla accade.",
+    "Panico":"Per tutto il round non possono essere lanciati Malefici."
+  },
+  heroes:["SOLDATO","DETECTIVE","RAMINGO","MEDIUM","GIORNALISTA","SACERDOTE","FANCIULLO","TURISTA"],
+  heroAbilities:{
+    "SOLDATO":"Affiancamento: una volta per round puoi unirti o separarti durante il turno altrui.",
+    "DETECTIVE":"Ispezione: quando peschi dal Reliquiario guardi 2 carte e ne scegli 1.",
+    "RAMINGO":"Recupero: quando peschi Indizi puoi scegliere dalla pila degli scarti.",
+    "MEDIUM":"Veggenza: spendi 2 Pegni Oscuri per guardare un'Identità o mostrare la tua.",
+    "GIORNALISTA":"Fiuto: quando peschi Indizi guardi 2 carte e ne scegli 1.",
+    "SACERDOTE":"Grazia: inizi con Protezione; quando peschi Malefici puoi scegliere Protezione.",
+    "FANCIULLO":"Complicità: se sei insieme ad altri puoi scambiare un tuo Indizio con uno casuale.",
+    "TURISTA":"Baratto: puoi sacrificare Malefici per ottenere Indizi."
+  },
+  missions:{
+    "Il Lutto":["Introduci una Comparsa e legala emotivamente a un Protagonista.","Usa la Reliquia per causare la morte della Comparsa in presenza di quel Protagonista."],
+    "Il Tradimento":["Crea un legame di complicità con un altro Protagonista.","Usa la Reliquia per spezzare quel legame."],
+    "Il Flashback":["Narra una scena di almeno cinquant'anni prima con un atto irreparabile.","Nel presente fai compiere a un Protagonista un atto irreparabile con la Reliquia."],
+    "La Profezia":["Usa la Reliquia per pronunciare una profezia che coinvolge il gruppo.","Fai in modo che uno dei Protagonisti avveri la profezia."],
+    "Il Riflesso":["Usa la Reliquia per clonare la Comparsa di un altro Protagonista.","Spingi quel Protagonista a uccidere la Comparsa invece del clone."],
+    "La Soglia":["Usa la Reliquia per aprire un varco surreale ed entraci con un altro Protagonista.","Convinci quel Protagonista a chiuderti in quel luogo."],
+    "Il Silenzio":["Usa la Reliquia per convincere un Protagonista a tacere durante tutto il suo turno.","Convinci quel Protagonista che l'unico modo per parlare è rompere la Reliquia."],
+    "Il Déjà-vu":["Spingi un Protagonista a fare due volte la stessa azione.","Usa la Reliquia per nullificare l'azione e fargliela ripetere una terza volta."]
+  },
+  thresholds:{4:[22,6,14],5:[24,7,16],6:[26,8,18],7:[28,9,20],8:[30,10,22]}
 };
 
-const THRESHOLDS = {4:{win:22,act1:6,act2:14}};
+const FIREBASE_CONFIG={apiKey:"AIzaSyC_KzUfb-6HKFxtN4cRG5DmsjRXtvBlGzg",authDomain:"dusklore-play.firebaseapp.com",projectId:"dusklore-play",storageBucket:"dusklore-play.firebasestorage.app",messagingSenderId:"72568019209",appId:"1:72568019209:web:6dbe34cbebc8ddafc2dbd8"};
+let game=null, handTab="all", selectedCard=null, selectedCurse=null, awaitingReaction=null, pendingTurnStart=false, db=null, roomId=null, syncing=false;
+const $=id=>document.getElementById(id);
+const rand=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>[...a].sort(()=>Math.random()-.5);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const clientId=localStorage.getItem("dusklore-client")||uid();
+localStorage.setItem("dusklore-client",clientId);
 
-// STATO GIOCO
-let game = {
-  phase: 'lobby',
-  round: 1,
-  act: 1,
-  domain: '',
-  presagio: null,
-  scale: { sun: 0, moon: 0 },
-  players: {},
-  currentPlayer: 'player',
-  log: []
-};
+function makeDeck(list){return shuffle(list.map(name=>({id:uid(),name})));}
+function maleficiPool(){return Array(5).fill(0).flatMap(()=>Object.keys(DATA.malefici));}
+function makeIndizio(name){const roll=Math.random();return {id:uid(),type:"indizio",name,symbols:roll<.34?["☀️","☀️"]:roll<.67?["🌙","🌙"]:["☀️","🌙"]};}
+function makeMaleficio(name){return {id:uid(),type:"maleficio",name,text:DATA.malefici[name]};}
+function drawIndizio(){if(!game.decks.indizi.length) game.decks.indizi=makeDeck(DATA.indizi);return makeIndizio(game.decks.indizi.pop().name);}
+function drawMaleficio(name=null){if(name)return makeMaleficio(name); if(!game.decks.malefici.length) game.decks.malefici=makeDeck(maleficiPool()); return makeMaleficio(game.decks.malefici.pop().name);}
+function drawRelic(){if(!game.decks.reliquie.length) game.decks.reliquie=makeDeck(DATA.reliquie);return game.decks.reliquie.pop().name;}
+function log(msg){game.log.unshift(msg);game.log=game.log.slice(0,60);save();render();}
+function save(){
+  localStorage.setItem("dusklore-app",JSON.stringify(game));
+  if(db&&game?.roomId&&!syncing) db.collection("duskloreRooms").doc(game.roomId).set(game).catch(console.warn);
+}
 
-let playerId = 'player';
-let myName = 'Giocatore';
+async function initSetup(){
+  $("heroSelect").innerHTML=DATA.heroes.map(h=>`<option value="${h}">${h} - ${DATA.heroAbilities[h]}</option>`).join("");
+  renderSlotSetup();
+  await initRoomSync();
+  if(roomId)return;
+  const saved=localStorage.getItem("dusklore-app");
+  if(saved){try{const parsed=JSON.parse(saved); if(parsed.version===3){game=parsed;showGame();render();beginTurn();}}catch{}}
+}
 
-// UTILS
-const el = id => document.getElementById(id);
-const rand = arr => arr[Math.floor(Math.random() * arr.length)];
-const log = msg => {
-  game.log.push(`[R${game.round}] ${msg}`);
-  const logBox = el('logBox');
-  if(logBox) logBox.innerHTML = game.log.slice(-15).reverse().map(l => `<div>${l}</div>`).join('');
-};
-
-const genCard = (type = 'indizio') => {
-  const symbols = Math.random() > 0.6 ? ['☀️','☀️'] : Math.random() > 0.6 ? ['🌙',''] : ['☀️','🌙'];
-  return {
-    id: Math.random().toString(36).substr(2, 9),
-    name: type === 'indizio' ? rand(DATA.indizi) : rand(DATA.malefici),
-    type,
-    symbols
-  };
-};
-
-// INIZIO PARTITA
-function startGame() {
-  try {
-    myName = el('nameInput').value || 'Giocatore';
-    const soloMode = el('soloMode').checked;
-    
-    game = {
-      phase: 'playing',
-      round: 1,
-      act: 1,
-      domain: rand(DATA.domini),
-      presagio: null,
-      scale: { sun: 0, moon: 0 },
-      players: {},
-      currentPlayer: 'player',
-      log: [`🌙 Inizio partita nel ${rand(DATA.domini)}`]
-    };
-    
-    // Crea giocatore umano
-    game.players[playerId] = {
-      name: myName,
-      identity: Math.random() > 0.5 ? 'Innocente' : 'Corrotto',
-      relic: rand(DATA.reliquie),
-      mission: rand(DATA.missioni),
-      hand: {
-        indizi: [genCard(), genCard(), genCard()],
-        malefici: [genCard('maleficio')]
-      },
-      location: 'together',
-      darkPawns: 0,
-      hasPlayed: false,
-      isBot: false
-    };
-    
-    // Crea bot se modalità solitaria
-    if(soloMode) {
-      const botNames = ['Soldato AI', 'Detective AI', 'Ramingo AI'];
-      botNames.forEach((name, i) => {
-        const botId = `bot${i}`;
-        game.players[botId] = {
-          name,
-          identity: Math.random() > 0.5 ? 'Innocente' : 'Corrotto',
-          relic: rand(DATA.reliquie),
-          mission: rand(DATA.missioni),
-          hand: {
-            indizi: [genCard(), genCard(), genCard()],
-            malefici: [genCard('maleficio')]
-          },
-          location: 'together',
-          darkPawns: 0,
-          hasPlayed: false,
-          isBot: true
-        };
-      });
-    }
-    
-    showGame();
-    log(`Partita iniziata! Dominio: ${game.domain}`);
-    render();
-  } catch(e) {
-    showError('Errore avvio: ' + e.message);
-    console.error(e);
+async function initRoomSync(){
+  roomId=new URLSearchParams(location.hash.slice(1)).get("room");
+  try{
+    if(window.firebase&&!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
+    if(window.firebase)db=firebase.firestore();
+  }catch(e){console.warn("Firebase non disponibile",e)}
+  if(db&&roomId){
+    $("joinBox").classList.remove("hidden");
+    $("joinBox").innerHTML="<b>Stanza online</b><div class='small'>Carico la partita condivisa...</div>";
+    db.collection("duskloreRooms").doc(roomId).onSnapshot(doc=>{
+      if(!doc.exists)return;
+      syncing=true;game=doc.data();syncing=false;
+      localStorage.setItem("dusklore-app",JSON.stringify(game));
+      if(game.players.some(p=>p.controller===clientId)){showGame();render();beginTurn();}
+      else renderJoinRoom();
+    });
   }
 }
 
-function showGame() {
-  el('lobby').classList.add('hidden');
-  el('game').classList.remove('hidden');
-  el('domainInfo').textContent = game.domain;
+function renderJoinRoom(){
+  const open=game.players.filter(p=>p.controller==="open");
+  $("joinBox").classList.remove("hidden");
+  $("joinBox").innerHTML=`<b>Entra nella stanza ${game.roomId}</b><div class="small">Scegli un posto libero per sostituire una AI/slot aperto.</div>
+  ${open.map(p=>`<button class="option" onclick="joinSeat('${p.id}')"><b>${p.name}</b><span>${p.hero} · posto libero</span></button>`).join("")||"<div class='small'>Non ci sono posti liberi.</div>"}`;
 }
 
-function showError(msg) {
-  const errBox = el('errorBox');
-  if(errBox) {
-    errBox.textContent = msg;
-    errBox.style.display = 'block';
-    setTimeout(() => errBox.style.display = 'none', 5000);
-  }
-  console.error(msg);
+function joinSeat(id){
+  const p=game.players.find(x=>x.id===id); if(!p)return;
+  p.controller=clientId;p.isHuman=true;p.name=$("nameInput").value.trim()||"Giocatore";p.hero=$("heroSelect").value;
+  log(`${p.name} entra nella partita.`);
+  showGame();render();beginTurn();
 }
 
-// GIOCA CARTA
-function playCard() {
-  try {
-    const player = game.players[playerId];
-    if(!player) throw new Error('Giocatore non trovato');
-    if(player.hasPlayed) {
-      alert('Hai già giocato in questo round!');
-      return;
-    }
-    
-    if(player.hand.indizi.length === 0) {
-      alert('Nessun indizio disponibile!');
-      return;
-    }
-    
-    // Prendi prima carta (semplificato)
-    const card = player.hand.indizi[0];
-    player.hand.indizi.shift();
-    
-    // Calcola effetto sulla bilancia
-    const isPureSun = card.symbols.every(s => s === '☀️');
-    const isPureMoon = card.symbols.every(s => s === '🌙');
-    
-    if(isPureSun) {
-      game.scale.sun += 2;
-      if(game.scale.moon > 0) game.scale.moon--;
-      log(`${myName} gioca ${card.name} (+2 ☀️, -1 🌙)`);
-    } else if(isPureMoon) {
-      game.scale.moon += 2;
-      player.darkPawns++;
-      if(game.scale.sun > 0) game.scale.sun--;
-      log(`${myName} gioca ${card.name} (+2 🌙, -1 ☀️, +1 Pegno Oscuro)`);
-    } else {
-      game.scale.sun++;
-      game.scale.moon++;
-      player.darkPawns++;
-      log(`${myName} gioca ${card.name} (+1 ☀️, +1 🌙, +1 Pegno Oscuro)`);
-    }
-    
-    player.hasPlayed = true;
-    
-    // Pesca nuova carta
-    if(player.hand.indizi.length < 3) {
-      player.hand.indizi.push(genCard());
-    }
-    
-    // Controlla fine atto
-    checkActEnd();
-    
-    // Esegui turni AI
-    setTimeout(() => runAITurns(), 500);
-    
-    render();
-  } catch(e) {
-    showError('Errore giocata: ' + e.message);
-    console.error(e);
-  }
+function renderSlotSetup(){
+  const count=Number($("playerCount").value||4);
+  $("slotSetup").innerHTML=Array.from({length:count-1},(_,i)=>`
+    <div class="slot-row">
+      <div><b>Posto ${i+2}</b><span>Può essere controllato dal computer o lasciato libero per un amico.</span></div>
+      <select id="slot${i+2}"><option value="ai">AI</option><option value="open">Amico con link</option></select>
+    </div>`).join("");
 }
 
-// TURNI AI
-async function runAITurns() {
-  const bots = Object.values(game.players).filter(p => p.isBot && !p.hasPlayed);
-  
-  for(const bot of bots) {
-    await new Promise(r => setTimeout(r, 600));
-    
-    // AI sceglie carta in base all'identità
-    const wantsMoon = bot.identity === 'Corrotto';
-    let cardIndex = bot.hand.indizi.findIndex(c => 
-      wantsMoon ? c.symbols.includes('🌙') : c.symbols.includes('☀️')
-    );
-    if(cardIndex === -1) cardIndex = 0;
-    
-    const card = bot.hand.indizi[cardIndex];
-    bot.hand.indizi.splice(cardIndex, 1);
-    
-    const isPureSun = card.symbols.every(s => s === '☀️');
-    const isPureMoon = card.symbols.every(s => s === '🌙');
-    
-    if(isPureSun) {
-      game.scale.sun += 2;
-      if(game.scale.moon > 0) game.scale.moon--;
-    } else if(isPureMoon) {
-      game.scale.moon += 2;
-      bot.darkPawns++;
-      if(game.scale.sun > 0) game.scale.sun--;
-    } else {
-      game.scale.sun++;
-      game.scale.moon++;
-      bot.darkPawns++;
-    }
-    
-    bot.hasPlayed = true;
-    if(bot.hand.indizi.length < 3) bot.hand.indizi.push(genCard());
-    
-    log(`🤖 ${bot.name} (${bot.identity}) gioca ${card.name}`);
-    checkActEnd();
-  }
-  
-  // Avanza round
-  setTimeout(() => advanceRound(), 500);
-}
-
-function advanceRound() {
-  game.round++;
-  
-  // Reset hasPlayed e pesca per tutti
-  Object.values(game.players).forEach(p => {
-    p.hasPlayed = false;
-    while(p.hand.indizi.length < 3) {
-      p.hand.indizi.push(genCard());
-    }
+function startGame(){
+  const count=Number($("playerCount").value||4);
+  const corrupt={4:2,5:2,6:2,7:3,8:3}[count], innocents=count-corrupt;
+  const identities=shuffle([...Array(innocents).fill("Innocente"),...Array(corrupt).fill("Corrotto")]);
+  const domain=rand(DATA.domini);
+  game={version:3,roomId:roomId||uid(),hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:domain[0],text:domain[1]},presage:null,log:[],covered:[],discard:[],decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
+  const botNames=["Soldato AI","Detective AI","Medium AI","Ramingo AI","Giornalista AI","Sacerdote AI","Fanciullo AI"];
+  const heroes=[$("heroSelect").value,...shuffle(DATA.heroes.filter(h=>h!==$("heroSelect").value))];
+  Array.from({length:count},(_,i)=>{
+    const kind=i===0?"local":($(`slot${i+1}`)?.value||"ai");
+    const name=i===0?($("nameInput").value.trim()||"Giocatore"):(kind==="ai"?botNames[i-1]:`Posto ${i+1} libero`);
+    const mission=rand(Object.keys(DATA.missions));
+    const p={id:uid(),name,hero:heroes[i],controller:kind==="local"?clientId:kind,isHuman:kind!=="ai",identity:identities.pop(),mission,missionDone:[false,false],relic:drawRelic(),location:"insieme",dark:0,hasPlayed:false,hasDrawn:false,protected:false,known:false,hand:{indizi:[drawIndizio(),drawIndizio(),drawIndizio()],malefici:[drawMaleficio(heroes[i]==="SACERDOTE"?"Protezione":null)]}};
+    game.players.push(p);
   });
-  
-  // Presagio dal round 2
-  if(game.round === 2 && !game.presagio) {
-    game.presagio = rand(DATA.presagi);
-    log(`🔮 Presagio: ${game.presagio}`);
-  }
-  
-  // Controlla atto
-  const th = THRESHOLDS[4];
-  const total = game.scale.sun + game.scale.moon;
-  if(total >= th.act1 && game.act === 1) {
-    game.act = 2;
-    log(`⚡ ATTO 2 INIZIATO!`);
-  } else if(total >= th.act2 && game.act === 2) {
-    game.act = 3;
-    log(`⚡ ATTO 3 INIZIATO!`);
-  }
-  
-  render();
+  log(`Dominio scelto: ${game.domain.name}. Round 1 di prefazione: niente carte, pesca o isolamento.`);
+  if(!location.hash.includes("room=")) location.hash="room="+game.roomId;
+  showShareLink();
+  showGame();
 }
 
-function checkActEnd() {
-  const th = THRESHOLDS[4];
-  const total = game.scale.sun + game.scale.moon;
-  
-  if(total >= th.win) {
-    const winner = game.scale.sun > game.scale.moon ? 'INNOCENTI' : 'CORROTTI';
-    log(`🏆 VITTORIA: ${winner}!`);
-    setTimeout(() => {
-      alert(`Partita terminata! Vincitori: ${winner}`);
-      location.reload();
-    }, 1000);
-  }
+function showGame(){$("setup").classList.add("hidden");$("game").classList.remove("hidden");$("handWrap").classList.remove("hidden");}
+function human(){return game.players.find(p=>p.controller===clientId)||game.players[0]}
+function current(){return game.players[game.turn]}
+function threshold(){return DATA.thresholds[game.players.length]}
+function actFromScale(){const m=Math.max(game.scale.sun,game.scale.moon),t=threshold();return m>t[2]?3:m>t[1]?2:1}
+function isHumanTurn(){return current()?.controller===clientId}
+function canUseCurses(){return game.presage!=="Panico" && human().hand.malefici.some(c=>c.name!=="Protezione")}
+function escape(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function showShareLink(){
+  game.roomId=game.roomId||uid();
+  roomId=game.roomId;
+  const url=location.href.split("#")[0]+"#room="+game.roomId;
+  $("joinBox").classList.remove("hidden");
+  $("joinBox").innerHTML=`<b>Link stanza</b><div class="small">Condividi questo link con chi deve occupare un posto libero: ${escape(url)}</div>`;
 }
 
-function toggleLocation() {
-  const player = game.players[playerId];
-  player.location = player.location === 'together' ? 'isolated' : 'together';
-  log(`${myName} si ${player.location === 'together' ? 'riunisce al gruppo' : 'isola'}`);
-  render();
-}
-
-// RENDER UI
-function render() {
-  const player = game.players[playerId];
-  if(!player) return;
-  
-  const th = THRESHOLDS[4];
-  const total = game.scale.sun + game.scale.moon;
-  
-  // Info atto/round
-  el('actInfo').textContent = `Atto ${game.act} | Round ${game.round}`;
-  el('sunVal').textContent = game.scale.sun;
-  el('moonVal').textContent = game.scale.moon;
-  el('threshVal').textContent = th.win;
-  
-  // Barre
-  const sunPct = (game.scale.sun / th.win) * 100;
-  const moonPct = (game.scale.moon / th.win) * 100;
-  el('sunBar').style.width = `${sunPct}%`;
-  el('moonBar').style.width = `${moonPct}%`;
-  
-  // Presagio
-  if(game.presagio) {
-    el('presagioBox').classList.remove('hidden');
-    el('presagioName').textContent = game.presagio;
-  }
-  
-  // Mano indizi
-  const handDiv = el('handIndizi');
-  if(handDiv) {
-    handDiv.innerHTML = player.hand.indizi.map(c => `
-      <div class="hand-item ${player.hasPlayed ? 'disabled' : ''}" onclick="selectCard('${c.id}')">
-        <div style="font-weight:bold">${c.name}</div>
-        <div style="font-size:.85rem;color:var(--muted)">${c.symbols.join(' ')}</div>
+function render(){
+  if(!game)return;
+  const h=human(),t=threshold(),act=actFromScale();
+  $("sunScore").textContent=game.scale.sun;$("moonScore").textContent=game.scale.moon;$("winThreshold").textContent=t[0];
+  $("sunBar").style.width=Math.min(100,game.scale.sun/t[0]*100)+"%";$("moonBar").style.width=Math.min(100,game.scale.moon/t[0]*100)+"%";
+  $("roundLabel").textContent=`Round ${game.round}`;$("actLabel").textContent=game.round===1?"Prefazione":`Atto ${act}`;
+  $("domainName").textContent=game.domain.name;$("domainText").textContent=game.domain.text;
+  $("presageName").textContent=game.presage||"Nessun Presagio";$("presageText").textContent=game.presage?DATA.presagi[game.presage]:"Il primo round è solo introduzione dei Protagonisti.";
+  $("turnLine").textContent=`Turno: ${current().name}${isHumanTurn()?" (tu)":""}`;
+  $("indiziCount").textContent=game.decks.indizi.length;$("maleficiCount").textContent=game.decks.malefici.length;$("relicCount").textContent=game.decks.reliquie.length;
+  $("players").innerHTML=game.players.map((p,i)=>`
+    <div class="player ${i===game.turn?'active':''} ${p.controller===clientId?'human':''}">
+      <div class="pname">${escape(p.name)}</div>
+      <div class="pmeta">${p.hero} · ${p.controller===clientId?p.identity:(p.known?p.identity:(p.controller==="open"?"posto libero":"Identità coperta"))}</div>
+      <div class="badges">
+        <span class="badge">${p.location}</span><span class="badge">🌑 ${p.dark}</span><span class="badge">${p.relic}</span><span class="badge">${p.hand.indizi.length}I/${p.hand.malefici.length}M</span>
       </div>
-    `).join('') || '<div class="text-muted">Nessun indizio</div>';
-  }
-  
-  // Malefici
-  const malefDiv = el('handMalefici');
-  if(malefDiv) {
-    malefDiv.innerHTML = player.hand.malefici.map(c => `
-      <div class="hand-item" style="border-color:#ef4444">
-        <div style="color:#ef4444">💀 ${c.name}</div>
-      </div>
-    `).join('') || '<div class="text-muted">Nessun maleficio</div>';
-  }
-  
-  // Stats giocatore
-  el('playerStats').innerHTML = `
-    <div><strong>Identità:</strong> <span class="${player.identity === 'Corrotto' ? 'text-moon' : 'text-sun'}">${player.identity}</span></div>
-    <div><strong>Reliquia:</strong> ${player.relic}</div>
-    <div><strong>Missione:</strong> ${player.mission}</div>
-    <div><strong>Ubicazione:</strong> ${player.location === 'together' ? '👥 Insieme' : '🔒 Isolato'}</div>
-    <div><strong>Pegni Oscuri:</strong> ${player.darkPawns}</div>
-  `;
-  
-  // Bot
-  const bots = Object.values(game.players).filter(p => p.isBot);
-  el('botList').innerHTML = bots.map(b => `
-    <div class="bot-tag">${b.name} (${b.identity}) 🌙${b.darkPawns}</div>
-  `).join('');
-  
-  // Turno
-  el('turnInfo').textContent = player.hasPlayed ? 
-    '✅ Hai giocato. Attendi gli avversari...' : 
-    '🎯 Il tuo turno: gioca un indizio';
-  
-  // Bottone
-  el('playBtn').disabled = player.hasPlayed;
+    </div>`).join("");
+  $("coveredRow").innerHTML=game.covered.length?game.covered.map(c=>`<div class="mini-card">${c.revealed?c.symbols.join(""):"?"}</div>`).join(""):`<span class="small">Carte coperte di fine Atto</span>`;
+  $("missionTitle").textContent=h.mission;$("missionRelic").textContent=`Reliquia: ${h.relic}`;
+  $("missionPhases").innerHTML=DATA.missions[h.mission].map((txt,i)=>`<div class="mission-phase"><div class="tick ${h.missionDone[i]?'done':''}">${h.missionDone[i]?'✓':i+1}</div><div><b>Fase ${i+1}</b><div class="small">${escape(txt)}</div></div></div>`).join("");
+  $("log").innerHTML=game.log.map(x=>`<div class="logitem">${escape(x)}</div>`).join("");
+  $("moveBtn").disabled=!isHumanTurn()||h.hasPlayed||game.round===1;
+  $("playBtn").disabled=!isHumanTurn()||h.hasPlayed;
+  $("curseBtn").disabled=!isHumanTurn()||h.hasPlayed||!canUseCurses();
+  $("darkBtn").disabled=h.dark<1;
+  $("playBtn").textContent=game.round===1?"Presenta Protagonista":(game.presage==="Stallo"?"Narra senza Indizio":"Gioca Indizio");
+  $("actionHint").textContent=hintText();
+  renderHand();
 }
 
-function selectCard(cardId) {
-  // Funzione placeholder per selezione specifica
-  console.log('Carta selezionata:', cardId);
+function hintText(){
+  const h=human();
+  if(!isHumanTurn())return "Attendi: stanno agendo gli avversari.";
+  if(game.round===1)return "Round di prefazione: presenta il Protagonista, senza carte o spostamenti.";
+  if(!h.hasDrawn)return "All'inizio del turno scegli se pescare un Indizio o un Maleficio.";
+  if(game.presage==="Stallo")return "Presagio Stallo: narra il turno senza giocare Indizi.";
+  if(!selectedCard)return "Scegli un Indizio dalla mano, poi giocarlo sulla Bilancia.";
+  return `Pronto a giocare: ${selectedCard.name}.`;
 }
 
-// Init
-window.onload = () => {
-  console.log('✅ DUSKLORE caricato');
-};
+function renderHand(){
+  const h=human(),list=[...h.hand.indizi,...h.hand.malefici];
+  $("handTitle").textContent="La tua mano - Indizi e Malefici";
+  $("hand").innerHTML=list.map(c=>{
+    const isSel=selectedCard&&selectedCard.id===c.id;
+    const cls=`card ${c.type==="maleficio"?"maleficio":""} ${isSel?"selected":""} ${c.name==="Protezione"?"reaction":""}`;
+    const body=c.type==="indizio"?`<div class="symbols">${c.symbols.join("")}</div><div class="card-text">Giocala per inclinare la Bilancia.</div>`:`<div class="symbols">✦</div><div class="card-text">${escape(c.text)}</div>`;
+    return `<button class="${cls}" onclick="selectHandCard('${c.id}','${c.type==='indizio'?'indizi':'malefici'}')"><div><div class="card-type">${c.type}</div><div class="card-title">${escape(c.name)}</div></div>${body}</button>`;
+  }).join("") || `<div class="small">Nessuna carta in questa sezione.</div>`;
+}
+function setHandTab(tab){handTab="all";selectedCard=null;render()}
+function selectHandCard(id,tab){const c=human().hand[tab].find(x=>x.id===id);selectedCard=c;if(tab==="malefici"&&c.name!=="Protezione")selectedCurse=c;render()}
+
+function drawTurnCard(choice){
+  const h=human(); if(h.hasDrawn||game.round===1)return;
+  if(choice==="indizio") h.hand.indizi.push(drawIndizio()); else h.hand.malefici.push(drawMaleficio());
+  h.hasDrawn=true; enforceHandLimit(h);
+  log(`${h.name} pesca una carta ${choice}.`);
+}
+
+function promptDrawChoice(){
+  const h=human();
+  if(!isHumanTurn()||h.hasDrawn||h.hasPlayed||game.round===1)return;
+  $("modal").classList.remove("hidden");
+  $("sheet").innerHTML=`<h2>Pesca di inizio turno</h2><p>La regola prevede una pesca all'inizio del turno. Scegli cosa pescare.</p>
+  <button class="option" onclick="chooseTurnDraw('indizio')"><b>Pesca Indizio</b><span>Aggiungi un Indizio alla mano. Il limite resta 3.</span></button>
+  <button class="option" onclick="chooseTurnDraw('maleficio')"><b>Pesca Maleficio</b><span>Aggiungi un Maleficio alla mano.</span></button>`;
+}
+function chooseTurnDraw(choice){closeModal();drawTurnCard(choice)}
+function enforceHandLimit(p){
+  if(game.presage==="Ferimento") while(p.hand.indizi.length>1) game.discard.push(p.hand.indizi.pop());
+  while(p.hand.indizi.length>3) game.discard.push(p.hand.indizi.pop());
+}
+function toggleLocation(){
+  const h=human(); if(game.round===1)return;
+  if(game.presage==="Isolamento")h.location="isolato"; else if(game.presage==="Convergenza")h.location="insieme"; else h.location=h.location==="insieme"?"isolato":"insieme";
+  log(`${h.name} ora è ${h.location}.`);
+}
+
+function mainAction(){
+  if(!isHumanTurn())return;
+  const h=human();
+  if(game.round===1){h.hasPlayed=true;log(`${h.name} presenta ${h.hero} nel Dominio.`);nextTurn();return;}
+  if(!h.hasDrawn){promptDrawChoice();return;}
+  if(game.presage==="Stallo"){h.hasPlayed=true;log(`${h.name} narra il turno senza usare Indizi per effetto di Stallo.`);nextTurn();return;}
+  if(!h.hand.indizi.length){h.hand.indizi.push(drawIndizio());log(`${h.name} non aveva Indizi: ne pesca uno automaticamente.`)}
+  const card=selectedCard&&selectedCard.type==="indizio"?selectedCard:h.hand.indizi[0];
+  playIndizio(h,card,false);
+  h.hasPlayed=true;selectedCard=null;
+  if(game.resolvingAct){save();render();return}
+  nextTurn();
+}
+
+function playIndizio(p,card,covered){
+  p.hand.indizi=p.hand.indizi.filter(c=>c.id!==card.id);
+  if(covered){game.covered.push({...card,owner:p.name,revealed:false});log(`${p.name} mette un Indizio coperto sul tavolo.`);return}
+  let symbols=[...card.symbols];
+  if(game.presage==="Sovversione"&&symbols[0]===symbols[1]) symbols=symbols[0]==="☀️"?["🌙","🌙"]:["☀️","☀️"];
+  applySymbols(p,symbols);
+  game.discard.push(card);
+  log(`${p.name} gioca ${card.name} (${symbols.join("")}).`);
+  checkActOrEnd();
+}
+function applySymbols(p,symbols){
+  const sun=symbols.filter(s=>s==="☀️").length, moon=symbols.filter(s=>s==="🌙").length;
+  game.scale.sun+=sun; game.scale.moon+=moon; p.dark+=moon;
+  if(sun===2&&game.scale.moon>0)game.scale.moon--;
+  if(moon===2&&game.scale.sun>0)game.scale.sun--;
+}
+
+function nextTurn(){
+  save();render();
+  if(game.players.every(p=>p.hasPlayed)){endRound();return}
+  game.turn=(game.turn+1)%game.players.length;
+  beginTurn();
+}
+function endRound(){
+  game.round++; game.turn=0; game.players.forEach(p=>{p.hasPlayed=false;p.hasDrawn=false});
+  game.presage=game.round>=2?rand(Object.keys(DATA.presagi)):null;
+  if(game.presage==="Ferimento")game.players.forEach(enforceHandLimit);
+  log(`Inizia il Round ${game.round}. Presagio: ${game.presage||"nessuno"}.`);
+  beginTurn();
+}
+
+function beginTurn(){
+  if(!game||pendingTurnStart)return;
+  render();
+  const p=current();
+  if(p.controller==="open")return openMsg("Posto libero",`${p.name} non è ancora occupato. Usa un posto AI oppure fai entrare un amico prima di continuare.`);
+  askDarkInterrupt(()=>{
+    if(isHumanTurn()) promptDrawChoice();
+    else if(p.controller==="ai"&&game.hostId===clientId)setTimeout(aiTurn,450);
+  });
+}
+
+function askDarkInterrupt(continueTurn){
+  const h=human(), p=current();
+  if(game.round===1||p.id===h.id||h.dark<3)return continueTurn();
+  pendingTurnStart=true;
+  $("modal").classList.remove("hidden");
+  $("sheet").innerHTML=`<h2>Interrompere il racconto?</h2><p>Sta per iniziare il turno di <b>${p.name}</b>. Hai ${h.dark} Pegni Oscuri: puoi spenderne 3 per interrompere il suo racconto.</p>
+  <button class="option" onclick="resolveInterrupt(true)"><b>Spendi 3 Pegni Oscuri</b><span>Il turno di ${p.name} termina immediatamente.</span></button>
+  <button class="option" onclick="resolveInterrupt(false)"><b>Non interrompere</b><span>Lascia iniziare il turno.</span></button>`;
+  window._continueTurn=continueTurn;
+}
+function resolveInterrupt(use){
+  const h=human(), p=current();
+  closeModal();pendingTurnStart=false;
+  if(use){h.dark-=3;p.hasPlayed=true;log(`${h.name} spende 3 Pegni Oscuri e interrompe ${p.name}.`);nextTurn();return}
+  const cont=window._continueTurn;window._continueTurn=null;if(cont)cont();
+}
+
+function aiTurn(){
+  const p=current(); if(p.controller!=="ai")return;
+  if(game.round===1){p.hasPlayed=true;log(`${p.name} presenta il proprio Protagonista.`);nextTurn();return}
+  if(!p.hasDrawn){Math.random()<.65?p.hand.indizi.push(drawIndizio()):p.hand.malefici.push(drawMaleficio());p.hasDrawn=true;enforceHandLimit(p)}
+  maybeAiCurse(p,()=>{if(game.presage==="Stallo"){p.hasPlayed=true;log(`${p.name} narra senza Indizi.`);nextTurn();return}
+    const wantsMoon=p.identity==="Corrotto";
+    if(!p.hand.indizi.length)p.hand.indizi.push(drawIndizio());
+    const card=p.hand.indizi.find(c=>wantsMoon?c.symbols.includes("🌙"):c.symbols.includes("☀️"))||p.hand.indizi[0];
+    if(Math.random()<.25)p.location=p.location==="insieme"?"isolato":"insieme";
+    playIndizio(p,card,p.location==="isolato");
+    p.hasPlayed=true;
+    if(game.resolvingAct){save();render();return}
+    nextTurn();
+  });
+}
+function maybeAiCurse(ai,done){
+  if(game.presage==="Panico"||ai.location!=="insieme"||Math.random()>.36)return done();
+  const curses=ai.hand.malefici.filter(c=>c.name!=="Protezione"); if(!curses.length)return done();
+  const curse=rand(curses), target=Math.random()<.7?human():rand(game.players.filter(p=>p.id!==ai.id));
+  ai.hand.malefici=ai.hand.malefici.filter(c=>c.id!==curse.id);
+  if(target.isHuman && target.hand.malefici.some(c=>c.name==="Protezione")){
+    awaitingReaction={source:ai,curse,target,done};
+    openProtectionPrompt(ai,curse);
+  }else{applyCurse(ai,target,curse);done();}
+}
+
+function openProtectionPrompt(ai,curse){
+  $("modal").classList.remove("hidden");
+  $("sheet").innerHTML=`<h2>Maleficio in arrivo</h2><p>${ai.name} ti lancia <b>${curse.name}</b>. Hai Protezione: vuoi usarla come reazione?</p>
+  <button class="option" onclick="useProtection(true)"><b>Usa Protezione</b><span>Annulla il Maleficio e scarta Protezione.</span></button>
+  <button class="option" onclick="useProtection(false)"><b>Subisci il Maleficio</b><span>Conservi Protezione per dopo.</span></button>`;
+}
+function useProtection(use){
+  const r=awaitingReaction, h=human(); closeModal(); awaitingReaction=null;
+  if(use){const prot=h.hand.malefici.find(c=>c.name==="Protezione"); h.hand.malefici=h.hand.malefici.filter(c=>c.id!==prot.id); log(`${h.name} usa Protezione e annulla ${r.curse.name}.`);}
+  else applyCurse(r.source,r.target,r.curse);
+  r.done();
+}
+
+function openCurse(){
+  const h=human(); if(game.presage==="Panico")return openMsg("Panico","Questo Presagio impedisce di lanciare Malefici.");
+  const curses=h.hand.malefici.filter(c=>c.name!=="Protezione");
+  if(!curses.length)return openMsg("Nessun Maleficio","Non hai Malefici attivi da lanciare.");
+  $("modal").classList.remove("hidden");
+  $("sheet").innerHTML=`<h2>Scegli Maleficio</h2>${curses.map(c=>`<button class="option" onclick="chooseCurse('${c.id}')"><b>${c.name}</b><span>${escape(c.text)}</span></button>`).join("")}<button class="option" onclick="closeModal()">Annulla</button>`;
+}
+function chooseCurse(id){selectedCurse=human().hand.malefici.find(c=>c.id===id);openTargets("Scegli bersaglio",p=>p.id!==human().id && p.location===human().location,"castHumanCurse")}
+function castHumanCurse(targetId){
+  const h=human(),target=game.players.find(p=>p.id===targetId),curse=selectedCurse; closeModal();
+  h.hand.malefici=h.hand.malefici.filter(c=>c.id!==curse.id); selectedCurse=null;
+  applyCurse(h,target,curse); render();
+}
+function applyCurse(source,target,curse){
+  if(curse.name==="Osservazione"){
+    target.known=true;
+    if(source.controller===clientId) openMsg(`Missione di ${target.name}`,`<b>${target.mission}</b><br>${DATA.missions[target.mission].map((x,i)=>`Fase ${i+1}: ${escape(x)}`).join("<br>")}`);
+    log(`${source.name} usa Osservazione su ${target.name}.`);
+  }
+  if(curse.name==="Rimozione"){
+    const pile=target.hand.indizi.length?"indizi":"malefici";const card=target.hand[pile].shift();
+    if(card){source.hand[pile].push(card); if(source.controller===clientId) openMsg("Carta sottratta",`Hai preso <b>${card.name}</b> dalla mano di ${target.name}.`); log(`${source.name} usa Rimozione e sottrae ${card.name} a ${target.name}.`)}
+    else log(`${source.name} usa Rimozione, ma ${target.name} non ha carte.`);
+  }
+  if(curse.name==="Sostituzione"){const old=source.relic,tmp=source.relic;source.relic=target.relic;target.relic=tmp; if(source.controller===clientId) openMsg("Reliquia scambiata",`Hai ceduto <b>${old}</b> e ottenuto <b>${source.relic}</b> da ${target.name}.`); log(`${source.name} usa Sostituzione e scambia Reliquia con ${target.name}.`)}
+}
+
+function openDarkPawns(){
+  const h=human();
+  $("modal").classList.remove("hidden");
+  $("sheet").innerHTML=`<h2>Pegni Oscuri: ${h.dark}</h2>
+  <button class="option" ${h.dark<1?"disabled":""} onclick="darkSwapIndizio()"><b>1 Pegno - Scambia Indizio</b><span>Scarta un Indizio e pescane uno nuovo dal mazzo.</span></button>
+  <button class="option" ${h.dark<2?"disabled":""} onclick="darkChooseRelic()"><b>2 Pegni - Scegli Reliquia</b><span>Rimetti la tua Reliquia nel Reliquiario e prendine una nuova.</span></button>
+  <button class="option" ${h.dark<3?"disabled":""} onclick="darkInterrupt()"><b>3 Pegni - Interrompi</b><span>Salta l'azione narrativa del prossimo avversario.</span></button>
+  <button class="option" onclick="closeModal()">Chiudi</button>`;
+}
+function darkSwapIndizio(){const h=human(); if(h.dark<1)return; h.dark--; if(h.hand.indizi.length)game.discard.push(h.hand.indizi.shift()); h.hand.indizi.push(drawIndizio()); closeModal();log(`${h.name} spende 1 Pegno Oscuro e scambia un Indizio.`)}
+function darkChooseRelic(){const h=human(); if(h.dark<2)return; h.dark-=2; game.decks.reliquie.unshift({id:uid(),name:h.relic}); h.relic=drawRelic(); closeModal();log(`${h.name} spende 2 Pegni Oscuri e ottiene ${h.relic}.`)}
+function darkInterrupt(){const h=human(); if(h.dark<3)return; h.dark-=3; const next=game.players[(game.turn+1)%game.players.length]; next.hasPlayed=true; closeModal();log(`${h.name} spende 3 Pegni Oscuri: ${next.name} viene interrotto.`)}
+
+function completeMissionPhase(i){const h=human(); if(i===1&&!h.missionDone[0])return openMsg("Fase bloccata","La Fase 2 richiede prima la Fase 1."); h.missionDone[i]=!h.missionDone[i]; if(h.missionDone[i]){h.hand.malefici.push(drawMaleficio(),drawMaleficio());log(`${h.name} completa la Fase ${i+1} della Missione e pesca 2 Malefici.`)} save();openMission();render()}
+function openMission(){
+  const h=human(),ph=DATA.missions[h.mission];
+  $("modal").classList.remove("hidden");
+  $("sheet").innerHTML=`<h2>${h.mission}</h2><p class="small">Reliquia attuale: <b>${h.relic}</b>. Le fasi non possono essere completate entrambe nello stesso Atto: usale come tracker di playtest.</p>
+  ${ph.map((txt,i)=>`<button class="option" onclick="completeMissionPhase(${i})"><b>${h.missionDone[i]?"✓ ":""}Fase ${i+1}</b><span>${escape(txt)}</span></button>`).join("")}
+  <button class="option" onclick="closeModal()">Chiudi</button>`;
+}
+
+function checkActOrEnd(){
+  const [win,a1,a2]=threshold(),m=Math.max(game.scale.sun,game.scale.moon),newAct=actFromScale();
+  if(m>=win)return epilogue();
+  if(newAct>game.act){game.act=newAct;finishAct();}
+}
+function finishAct(){
+  game.resolvingAct=true;
+  game.covered=[];
+  const h=human();
+  if(h.hand.indizi.length){
+    $("modal").classList.remove("hidden");
+    $("sheet").innerHTML=`<h2>Fine Atto</h2><p>La Bilancia ha raggiunto la soglia dell'Atto. Scegli un Indizio da mettere coperto sul tavolo.</p>
+    ${h.hand.indizi.map(c=>`<button class="option" onclick="chooseActCard('${c.id}')"><b>${c.name}</b><span>${c.symbols.join("")}</span></button>`).join("")}`;
+  }else{
+    const card=drawIndizio();game.covered.push({...card,owner:h.name,revealed:false});log(`${h.name} non aveva Indizi: ne pesca uno e lo mette coperto per la fine Atto.`);completeActCards();
+  }
+}
+function chooseActCard(id){
+  const h=human(), card=h.hand.indizi.find(c=>c.id===id)||h.hand.indizi[0];
+  h.hand.indizi=h.hand.indizi.filter(c=>c.id!==card.id);
+  game.covered.push({...card,owner:h.name,revealed:false});
+  closeModal();
+  completeActCards();
+}
+function completeActCards(){
+  game.players.filter(p=>p.id!==human().id).forEach(p=>{const card=p.hand.indizi.shift()||drawIndizio();game.covered.push({...card,owner:p.name,revealed:false})});
+  render();
+  setTimeout(()=>{revealCovered()},500);
+}
+function revealCovered(){
+  let sun=0,moon=0; game.covered.forEach(c=>{c.revealed=true;sun+=c.symbols.filter(s=>s==="☀️").length;moon+=c.symbols.filter(s=>s==="🌙").length});
+  const addSun=Math.max(0,sun-moon),addMoon=Math.max(0,moon-sun); game.scale.sun+=addSun; game.scale.moon+=addMoon;
+  game.resolvingAct=false;
+  game.round++; game.turn=0; game.players.forEach(p=>{p.hasPlayed=false;p.hasDrawn=false});
+  game.presage=rand(Object.keys(DATA.presagi));
+  log(`Fine Atto: carte coperte rivelate. Restano ${addSun} Sole e ${addMoon} Luna. Inizia il Round ${game.round}, Presagio: ${game.presage}.`);
+  beginTurn();
+}
+function epilogue(){
+  game.players.forEach(p=>{const bonus=p.missionDone[1]?(p.identity==="Corrotto"?7:5):p.missionDone[0]?(p.identity==="Corrotto"?3:2):0; if(p.identity==="Corrotto")game.scale.moon+=bonus; else game.scale.sun+=bonus});
+  const winner=game.scale.sun>=game.scale.moon?"Innocenti":"Corrotti";
+  openMsg("Epilogo",`Bilancia finale: Sole ${game.scale.sun}, Luna ${game.scale.moon}. Vincono: ${winner}.`);
+  log(`Epilogo: vincono ${winner}.`);
+}
+
+function openTargets(title,filter,callbackName){
+  const targets=game.players.filter(filter);
+  $("modal").classList.remove("hidden");
+  $("sheet").innerHTML=`<h2>${title}</h2><div class="target-grid">${targets.map(p=>`<button class="target" onclick="${callbackName}('${p.id}')"><b>${p.name}</b><div class="small">${p.hero} · ${p.location} · Reliquia ${p.relic}</div></button>`).join("")||"<p>Nessun bersaglio valido.</p>"}</div><button class="option" onclick="closeModal()">Annulla</button>`;
+}
+function showDeckInfo(type){openMsg("Mazzo",`Carte rimaste in ${type}: ${game.decks[type].length}.`)}
+function showRoomLink(){const url=location.href.split("#")[0]+"#room="+game.roomId;openMsg("Link stanza",`Condividi questo link con gli amici che devono occupare un posto libero:<br><br><b>${escape(url)}</b>`)}
+function openRules(){openMsg("Promemoria regole","Round 1: prefazione. Dal Round 2: pesca a inizio turno, gioca un Indizio, usa Malefici solo se nello stesso luogo, Presagio attivo fino a fine round. Alla fine di ogni Atto tutti mettono un Indizio coperto e i simboli opposti si annullano.")}
+function resetGame(){localStorage.removeItem("dusklore-app");history.replaceState(null,"",location.href.split("#")[0]);roomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal()}
+function openMsg(title,body){$("modal").classList.remove("hidden");$("sheet").innerHTML=`<h2>${title}</h2><p>${body}</p><button class="option" onclick="closeModal()">Ok</button>`}
+function closeModal(){$("modal").classList.add("hidden")}
+window.addEventListener("load",initSetup);
 </script>
 </body>
 </html>
