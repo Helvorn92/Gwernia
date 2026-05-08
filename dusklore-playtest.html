@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -276,13 +277,21 @@ async function initRoomSync(){
 function renderJoinRoom(){
   const open=game.players.filter(p=>p.controller==="open");
   $("joinBox").classList.remove("hidden");
-  // Hide the "Inizia partita" button so the host action is not confused with joining
   const startBtn=document.querySelector('#setup .btn.wide');
   if(startBtn)startBtn.style.display="none";
+  // Heroes locked by real players already in the game
+  const takenByReal=game.players.filter(p=>p.controller!=="open"&&p.controller!=="ai").map(p=>p.hero);
+  const heroOptions=DATA.heroes.map(h=>{
+    const lockedByReal=takenByReal.includes(h);
+    const usedByAI=!lockedByReal&&game.players.some(p=>p.controller==="ai"&&p.hero===h);
+    if(lockedByReal)return `<option value="${h}" disabled>${h} (occupato)</option>`;
+    if(usedByAI)return `<option value="${h}">${h} (AI → verrà riassegnata)</option>`;
+    return `<option value="${h}">${h}</option>`;
+  }).join("");
   $("joinBox").innerHTML=`<b>Entra nella stanza</b>
-  <div class="small" style="margin:6px 0 10px">Inserisci il tuo nome e scegli un Protagonista, poi seleziona un posto libero.</div>
+  <div class="small" style="margin:6px 0 10px">Inserisci il tuo nome e scegli un Protagonista libero, poi seleziona un posto.</div>
   <div class="field" style="margin-bottom:8px"><label>Il tuo nome</label><input id="joinName" placeholder="Nome" value="Giocatore"></div>
-  <div class="field" style="margin-bottom:10px"><label>Protagonista</label><select id="joinHero">${DATA.heroes.map(h=>`<option value="${h}">${h}</option>`).join("")}</select></div>
+  <div class="field" style="margin-bottom:10px"><label>Protagonista</label><select id="joinHero">${heroOptions}</select></div>
   ${open.length?open.map(p=>`<button class="option" onclick="joinSeat('${p.id}')"><b>${escape(p.name)}</b><span>posto libero · clicca per occuparlo</span></button>`).join(""):"<div class='small' style='color:var(--blood)'>Non ci sono posti liberi in questa stanza.</div>"}`;
 }
 
@@ -290,6 +299,16 @@ function joinSeat(id){
   const p=game.players.find(x=>x.id===id); if(!p)return;
   const nameVal=($("joinName")||$("nameInput")).value.trim()||"Giocatore";
   const heroVal=($("joinHero")||$("heroSelect")).value;
+  // Block if another real player already has this hero
+  const blockedBy=game.players.find(x=>x.id!==id&&x.controller!=="open"&&x.controller!=="ai"&&x.hero===heroVal);
+  if(blockedBy)return openMsg("Protagonista occupato",`${heroVal} è già scelto da ${escape(blockedBy.name)}. Seleziona un altro Protagonista.`);
+  // If an AI has this hero, reassign the AI to the next available hero
+  const aiWithHero=game.players.find(x=>x.controller==="ai"&&x.hero===heroVal);
+  if(aiWithHero){
+    const allHeroes=game.players.filter(x=>x.id!==aiWithHero.id).map(x=>x.hero);
+    const newHero=DATA.heroes.find(h=>!allHeroes.includes(h));
+    if(newHero){aiWithHero.hero=newHero;aiWithHero.name=newHero;}
+  }
   p.controller=clientId;p.isHuman=true;p.name=nameVal;p.hero=heroVal;
   if(heroVal==="SACERDOTE"&&!p.hand.malefici.some(c=>c.name==="Protezione"))p.hand.malefici.push(drawMaleficio("Protezione"));
   log(`${p.name} (${p.hero}) entra nella partita.`);
