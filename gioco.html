@@ -1,58 +1,153 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DUSKLORE - Playtest Solitario</title>
+<style>
+  :root{--bg:#0a0a0f;--card:#15151e;--border:#2a2a3a;--sun:#fbbf24;--moon:#a78bfa;--accent:#7c3aed;--text:#e5e7eb;--muted:#9ca3af}
+  *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+  body{background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5}
+  .container{max-width:900px;margin:0 auto;padding:1rem}
+  .btn{background:var(--accent);color:#fff;border:none;padding:.6rem 1.2rem;border-radius:.5rem;cursor:pointer;font-weight:600;font-size:1rem}
+  .btn:hover{opacity:.9}.btn:disabled{opacity:.4;cursor:not-allowed}
+  .btn-solo{background:#059669}.btn-solo:hover{opacity:.9}
+  .card{background:var(--card);border:1px solid var(--border);border-radius:.75rem;padding:1rem;margin-bottom:1rem}
+  input,select{background:#111827;border:1px solid #374151;color:#fff;padding:.6rem;border-radius:.5rem;width:100%;max-width:300px;margin:0 auto;display:block}
+  .hidden{display:none}
+  .text-sun{color:var(--sun)}.text-moon{color:var(--moon)}.text-muted{color:var(--muted)}
+  .log-box{background:#1f2937;border:1px solid #374151;padding:.5rem;border-radius:.5rem;font-size:.85rem;max-height:180px;overflow-y:auto}
+  .log-box div{padding:.25rem 0;border-bottom:1px solid #374151}
+  .error{background:#450a0a;color:#fecaca;padding:.8rem;border-radius:.5rem;margin-bottom:1rem;display:none}
+  .scale-wrap{height:8px;background:#374151;border-radius:4px;overflow:hidden;display:flex;margin:.5rem 0}
+  .sun-bar{background:var(--sun);height:100%;transition:width .3s}
+  .moon-bar{background:var(--moon);height:100%;transition:width .3s}
+  .hand-item{background:#1f2937;border:1px solid #374151;padding:.5rem;margin:.25rem 0;border-radius:.5rem;cursor:pointer;transition:.2s}
+  .hand-item:hover{background:#374151}.hand-item.disabled{opacity:.4;pointer-events:none}
+  .bot-tag{display:inline-block;background:#374151;padding:.1rem .4rem;border-radius:.25rem;font-size:.75rem;margin-right:.3rem}
+  .ai-thinking{color:#a78bfa;font-style:italic;font-size:.8rem;margin-top:.5rem}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1 class="text-3xl font-bold text-purple-400 text-center mb-2">DUSKLORE</h1>
+  <p class="text-center text-muted mb-4">Playtest Solitario con AI</p>
+  
+  <div id="errorBox" class="error"></div>
+  <div id="statusBox" class="log-box mb-4">⏳ Inizializzazione...</div>
+
+  <!-- LOBBY -->
+  <div id="lobby" class="text-center py-6">
+    <input id="nameInput" placeholder="Il tuo nome">
+    <label style="display:flex;align-items:center;justify-content:center;gap:.5rem;margin:.8rem 0;cursor:pointer">
+      <input type="checkbox" id="soloMode" checked style="width:auto"> Modalità Solitario (3 AI)
+    </label>
+    <button class="btn btn-solo mt-2" id="joinBtn" onclick="joinLobby()">Entra & Avvia</button>
+  </div>
+
+  <!-- GAME -->
+  <div id="game" class="hidden">
+    <div class="card">
+      <div class="flex justify-between items-center mb-2">
+        <span id="actInfo" class="text-sm font-bold">Atto 1 | Round 1</span>
+        <span id="turnInfo" class="text-muted text-sm">Turno: Tuo</span>
+      </div>
+      <div class="scale-wrap">
+        <div id="sunBar" class="sun-bar" style="width:0%"></div>
+        <div id="moonBar" class="moon-bar" style="width:0%"></div>
+      </div>
+      <div class="flex justify-between text-sm">
+        <span class="text-sun">☀️ <span id="sunVal">0</span></span>
+        <span class="text-muted">Soglia: <span id="threshVal">22</span></span>
+        <span class="text-moon">🌙 <span id="moonVal">0</span></span>
+      </div>
+    </div>
+
+    <div class="grid" style="display:grid;gap:1rem;grid-template-columns:1fr 1fr">
+      <div class="card">
+        <h4 class="mb-2">🃏 La tua mano</h4>
+        <div id="handIndizi"></div>
+        <h5 class="mt-3 mb-1 text-red-400">💀 Malefici</h5>
+        <div id="handMalefici"></div>
+        <button class="btn w-full mt-3" onclick="playTurn()" id="playBtn">Gioca & Prosegui</button>
+        <div id="logStatus" class="text-xs text-muted mt-2"></div>
+      </div>
+      <div class="card">
+        <h4 class="mb-2"> Info & Avversari</h4>
+        <div id="pInfo" class="text-sm space-y-1 mb-3"></div>
+        <div id="botList" class="text-sm text-muted mb-3"></div>
+        <button class="btn w-full mb-2" onclick="toggleLoc()">Cambia Ubicazione</button>
+        <div id="aiLog" class="ai-thinking">In attesa del tuo turno...</div>
+      </div>
+    </div>
+    
+    <div class="card mt-4">
+      <h4 class="mb-2">📜 Cronologia Partita</h4>
+      <div id="logBox" class="log-box"></div>
+    </div>
+  </div>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script>
-// 🔑 CONFIG FIREBASE (INCASSA QUI SOLO LE RIGHE TRA { } DELLA TUA CONSOLE)
+// 🔑 INCOLLA QUI LA TUA CONFIG FIREBASE (solo il contenuto tra { })
 const FIREBASE_CONFIG = {
-  apiKey: "AIzaSyD...",
-  authDomain: "tuo-progetto.firebaseapp.com",
-  projectId: "tuo-progetto",
-  storageBucket: "tuo-progetto.appspot.com",
-  messagingSenderId: "123...",
-  appId: "1:123:web:abc..."
+  apiKey: "AIzaSyC_KzUfb-6HKFxtN4cRG5DmsjRXtvBlGzg",
+  authDomain: "dusklore-play.firebaseapp.com",
+  projectId: "dusklore-play",
+  storageBucket: "dusklore-play.firebasestorage.app",
+  messagingSenderId: "72568019209",
+  appId: "1:72568019209:web:6dbe34cbebc8ddafc2dbd8"
 };
 
+// 📚 DATI MANUALE
 const DATA = {
   indizi:["Acqua Santa","Ostia","Lapide","Attrezzi","Spazzola","Candele","Rosario","Pentacolo","Veste","Straccio","Colla","Sale","Veleno","Lettere","Tappeto","Corona","Ascia","Cappio","Libri","Trofeo","Incenso","Catene","Cera","Lucchetto","Bambola di Pezza","Lente di Vetro","Forbici","Mannaia","Martello","Diario","Lampada","Gomitolo","Armadio","Pennelli","Mappamondo","Crocifisso","Inchiostro","Armatura","Secchio","Calamaio"],
   malefici:["Osservazione","Rimozione","Sostituzione","Protezione"],
   reliquie:["Grimorio","Maschera","Dipinto","Orologio","Anfora","Pugnale","Chiave","Marionetta","Clessidra","Fotografia","Sfera di Vetro","Bussola","Specchio","Statua","Carillon","Telefono","Pianta","Sarcofago","Matriosca","Tarocchi"],
   missioni:["Il Lutto","Il Tradimento","Il Flashback","La Profezia","Il Riflesso","La Soglia","Il Silenzio","Le Déjà-vu"],
-  domini:["Maniero","Cimitero","Manicomio","Luna Park","Orfanotrofio","Villaggio","Castello","Crociera","Albergo","Museo"]
+  protagonisti:["SOLDATO","DETECTIVE","RAMINGO","MEDIUM","GIORNALISTA","SACERDOTE","FANCIULLO","TURISTA"]
 };
 const THRESH = {4:{w:22,a1:6,a2:14}};
 
+// 🔧 VARIABILI GLOBALI
 let db, auth, pid, myName="", game=null, soloMode=true;
 const el = id => document.getElementById(id);
-const logMsg = msg => { 
-  if(!game) return;
+const log = msg => { 
   game.log.push(msg); 
   el("logBox").innerHTML = game.log.slice(-12).reverse().map(l=>`<div>${l}</div>`).join(""); 
 };
-const showError = msg => { el("errorBox").textContent=msg; el("errorBox").style.display="block"; console.error(msg); };
+const err = msg => { el("errorBox").textContent=msg; el("errorBox").style.display="block"; console.error(msg); };
 const delay = ms => new Promise(res => setTimeout(res, ms));
+
+// 🎲 GENERATORI AI
 const rand = arr => arr[Math.floor(Math.random()*arr.length)];
 const genId = () => Date.now().toString(36) + Math.random().toString(36).substr(2,5);
 const genCard = () => ({
   id: genId(), 
   name: rand(DATA.indizi), 
   type: "indizio", 
-  symbols: Math.random()>.6 ? ["️","☀️"] : Math.random()>.6 ? ["🌙","🌙"] : ["☀️","🌙"]
+  symbols: Math.random()>.6 ? ["☀️","☀️"] : Math.random()>.6 ? ["🌙",""] : ["☀️","🌙"]
 });
 
-// 🔧 INIT
+//  INIT FIREBASE
 try {
   const app = firebase.initializeApp(FIREBASE_CONFIG);
   db = firebase.firestore(app);
   auth = firebase.auth(app);
-  console.log("✅ Firebase caricato");
-} catch(e) { showError("Config Firebase mancante."); }
+  el("statusBox").innerHTML += "<div>✅ Firebase pronto.</div>";
+} catch(e) { err("Config Firebase mancante o errata."); }
 
+// 🔑 AUTH & LISTEN
 async function init() {
   if(!db || !auth) return;
   try {
     await auth.signInAnonymously();
     pid = auth.currentUser.uid;
-    console.log("👤 Auth ok:", pid);
+    el("statusBox").innerHTML += `<div>👤 Connesso come ${pid.slice(0,6)}...</div>`;
     
     db.collection("games").doc("main").onSnapshot(doc => {
       if(doc.exists) {
@@ -60,57 +155,146 @@ async function init() {
         render();
       }
     });
-  } catch(e) { showError("Auth fallita: " + e.message); }
+  } catch(e) { err("Auth fallita: " + e.message); }
 }
 
-// 🚪 JOIN & START (CORRETTO)
+// 🚪 JOIN & START
 window.joinLobby = async () => {
   myName = el("nameInput").value.trim() || "Giocatore";
   soloMode = el("soloMode").checked;
   
-  const btn = el("joinBtn");
-  btn.textContent = "Avvio in corso...";
-  btn.disabled = true;
-  el("statusBox").innerHTML += `<div>⏳ Creazione partita...</div>`;
-
-  try {
-    if(!pid) throw new Error("ID giocatore non disponibile. Ricarica la pagina.");
-    
-    const players = {};
-    players[pid] = { name:myName, identity:null, relic:null, mission:null, hand:{indizi:[],malefici:[]}, location:"together", darkPawns:0, hasPlayed:false, isBot:false };
-
-    if(soloMode) {
-      const bots = ["Soldato AI","Detective AI","Ramingo AI"];
-      bots.forEach(n => {
-        players[genId()] = { name:n, identity: Math.random()>.5?"Innocente":"Corrotto", relic:rand(DATA.reliquie), mission:rand(DATA.missioni), hand:{indizi:[genCard(),genCard(),genCard()],malefici:[{id:genId(),name:rand(DATA.malefici),type:"maleficio"}]}, location:"together", darkPawns:0, hasPlayed:false, isBot:true };
-      });
-    }
-
-    const domain = rand(DATA.domini);
-    await db.collection("games").doc("main").set({
-      phase:"playing",
-      domain: domain,
-      players,
-      round:1,
-      act:1,
-      turn:pid,
-      scale:{sun:0,moon:0},
-      log:[`🌙 Inizio partita. Dominio: ${domain}`]
+  // Crea struttura iniziale
+  const players = {};
+  players[pid] = { name:myName, identity:null, relic:null, mission:null, hand:{indizi:[],malefici:[]}, location:"together", darkPawns:0, hasPlayed:false, isBot:false };
+  
+  if(soloMode) {
+    const bots = ["Soldato AI","Detective AI","Ramingo AI"];
+    bots.forEach(n => {
+      players[genId()] = { name:n, identity: Math.random()>.5?"Innocente":"Corrotto", relic:rand(DATA.reliquie), mission:rand(DATA.missioni), hand:{indizi:[genCard(),genCard(),genCard()],malefici:[{id:genId(),name:rand(DATA.malefici),type:"maleficio"}]}, location:"together", darkPawns:0, hasPlayed:false, isBot:true };
     });
-    
-    el("statusBox").innerHTML += `<div>✅ Partita avviata con successo!</div>`;
-  } catch(e) {
-    showError("Errore avvio: " + e.message);
-    console.error(e);
-    btn.textContent = "Entra & Avvia";
-    btn.disabled = false;
   }
+
+  await db.collection("games").doc("main").set({
+    phase:"playing", domain:rand(DATA.domini), players, round:1, act:1, turn:pid, scale:{sun:0,moon:0}, log:[`🌙 Inizio partita. Dominio: ${players[Object.keys(players)[0]].domain||"Maniero"}`]
+  });
 };
 
-// 🔄 RENDER
+//  TURNO UMANO
+window.playTurn = async () => {
+  if(game.players[pid].hasPlayed) return alert("Hai già giocato in questo round!");
+  el("playBtn").disabled = true;
+  el("aiLog").textContent = "Elaborazione mossa...";
+  
+  // Simula scelta carta (in solitario puoi espandere con click sulla mano)
+  const hand = game.players[pid].hand.indizi;
+  if(hand.length===0) { hand.push(genCard()); await updateField(`players.${pid}.hand.indizi`, hand); }
+  const card = hand[0]; // Simplificato: gioca la prima
+  
+  // Calcola scala
+  const {sun,moon} = game.scale;
+  let ns=sun, nm=moon, dp=game.players[pid].darkPawns;
+  const isSun = card.symbols.every(s=>s==="☀️");
+  const isMoon = card.symbols.every(s=>s==="🌙");
+  if(isSun){ns+=2;if(nm>0)nm--}else if(isMoon){nm+=2;dp++;if(ns>0)ns--}else{ns++;nm++;dp++}
+  
+  // Aggiorna stato
+  const newHand = hand.filter(c=>c.id!==card.id);
+  await updateField("scale",{sun:ns,moon:nm});
+  await updateField(`players.${pid}.hand.indizi`, newHand);
+  await updateField(`players.${pid}.darkPawns`, dp);
+  await updateField(`players.${pid}.hasPlayed`, true);
+  log(`${myName} gioca ${card.name} (${card.symbols.join("")}). Bilancia: ☀️${ns} 🌙${nm}`);
+  
+  // Avvia AI
+  if(soloMode) await runBotTurns();
+  el("playBtn").disabled = false;
+};
+
+//  MOTORE AI
+async function runBotTurns() {
+  const botIds = Object.keys(game.players).filter(id=>game.players[id].isBot && !game.players[id].hasPlayed);
+  for(const bid of botIds) {
+    el("aiLog").textContent = `🤖 ${game.players[bid].name} sta pensando...`;
+    await delay(600);
+    await executeBotMove(bid);
+  }
+  el("aiLog").textContent = "Turno completato. Avanzamento round...";
+  await delay(500);
+  await advanceRound();
+}
+
+async function executeBotMove(botId) {
+  const bot = game.players[botId];
+  const hand = [...bot.hand.indizi];
+  if(hand.length===0) hand.push(genCard());
+  
+  // AI Decide carta in base a identità
+  const wantsMoon = bot.identity === "Corrotto";
+  let card = hand.find(c => (wantsMoon && c.symbols.includes("🌙")) || (!wantsMoon && c.symbols.includes("☀️"))) || hand[0];
+  
+  // Calcola effetto
+  const {sun,moon} = game.scale;
+  let ns=sun, nm=moon, dp=bot.darkPawns;
+  const isSun = card.symbols.every(s=>s==="☀️");
+  const isMoon = card.symbols.every(s=>s==="🌙");
+  if(isSun){ns+=2;if(nm>0)nm--}else if(isMoon){nm+=2;dp++;if(ns>0)ns--}else{ns++;nm++;dp++}
+  
+  // 30% cambia ubicazione
+  const newLoc = Math.random()<0.3 ? (bot.location==="together"?"isolated":"together") : bot.location;
+  
+  // Pesca se <3
+  const newHand = hand.filter(c=>c.id!==card.id);
+  if(newHand.length<3) newHand.push(genCard());
+  
+  // Scrivi su Firebase
+  await updateField("scale",{sun:ns,moon:nm});
+  await updateField(`players.${botId}.hand.indizi`, newHand);
+  await updateField(`players.${botId}.darkPawns`, dp);
+  await updateField(`players.${botId}.location`, newLoc);
+  await updateField(`players.${botId}.hasPlayed`, true);
+  
+  log(`🤖 ${bot.name} (${bot.identity}) gioca ${card.name}. ${bot.identity==="Corrotto"?"Spinge l'Ombra 🌙":"Cerca la Luce ☀️"}. Ubicazione: ${newLoc}`);
+}
+
+// 🔄 AVANZA ROUND
+async function advanceRound() {
+  const allPlayed = Object.values(game.players).every(p=>p.hasPlayed);
+  if(!allPlayed) return;
+  
+  const newRound = game.round + 1;
+  const nextTurn = Object.keys(game.players)[0]; // Reset turno
+  const updates = { round:newRound, turn:nextTurn };
+  
+  // Reset hasPlayed
+  Object.keys(game.players).forEach(pid => updates[`players.${pid}.hasPlayed`] = false);
+  
+  // Pesca automatica per tutti
+  Object.keys(game.players).forEach(pid => {
+    const h = [...game.players[pid].hand.indizi];
+    if(h.length<3) h.push(genCard());
+    updates[`players.${pid}.hand.indizi`] = h;
+  });
+  
+  // Presagio Round 2+
+  if(newRound===2) updates.presagio = rand(["Flashback","Confusione","Premonizione","Ferimento","Isolamento"]);
+  if(newRound>2 && Math.random()<0.4) updates.presagio = rand(DATA.presagi||["Quiete","Panico","Stallo"]);
+  
+  await db.collection("games").doc("main").update(updates);
+  log(`🔄 Round ${newRound} iniziato. ${updates.presagio?"🔮 Presagio: "+updates.presagio:"Nessun presagio."}`);
+}
+
+// ️ HELPER FIREBASE
+const updateField = async (path, val) => {
+  await db.collection("games").doc("main").update({[path]:val});
+  // Forza sync locale immediato per UI fluida
+  if(path.includes("scale")) game.scale = val;
+  if(path.includes("hasPlayed")) game.players[Object.keys(game.players).find(k=>`players.${k}.hasPlayed`===path)||pid].hasPlayed = val;
+};
+
+// 🎨 RENDER UI
 function render() {
   if(!game) return;
-  el("lobby").classList.toggle("hidden", game.phase==="playing");
+  el("lobby").classList.toggle("hidden", game.phase!=="lobby" && game.phase!=="playing");
   el("game").classList.toggle("hidden", game.phase!=="playing");
 
   if(game.phase==="playing") {
@@ -132,15 +316,16 @@ function render() {
 }
 
 window.toggleLoc = async () => {
-  if(!game || !game.players[pid]) return;
   const newLoc = game.players[pid].location==="together"?"isolated":"together";
-  await db.collection("games").doc("main").update({[`players.${pid}.location`]: newLoc});
-  logMsg(`${myName} si ${newLoc==="together"?"riunisce al gruppo":"isola"}`);
+  await updateField(`players.${pid}.location`, newLoc);
+  log(`${myName} si ${newLoc==="together"?"riunisce al gruppo":"isola"}`);
 };
 
-window.selectCard = id => { console.log("Carta selezionata:", id); };
+window.selectCard = id => { /* Logica estendibile per click specifico */ };
 window.useMaleficio = id => { alert("Maleficio usato (logica da espandere)"); };
 
 // AVVIO
 init();
 </script>
+</body>
+</html>
