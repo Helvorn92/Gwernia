@@ -1,767 +1,672 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>DUSKLORE - App Playtest</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg-0:#12081a;--bg-1:#0d0b10;--bg-2:#15121a;--ink:#1a1620;--bone:#c3b89f;--bone-dim:#c3b89f;--bone-deep:#8c8270;
-    --gold:#c9a558;--gold-bright:#e9c97a;--gold-dark:#6e5424;--silver:#b8b8c0;--silver-dim:#6a6a72;
-    --blood:#2a1050;--blood-bright:#8a2aaa;
-    --sun:#f5c95b;--moon:#8eb7ff;--green:#5cc18a;--violet:#8f61ff;
-    --felt:#183b32;--felt2:#102820;--card:#eadfcb;--shadow:0 18px 50px rgba(0,0,0,.35);
-    --serif:'Cormorant Garamond',Georgia,serif;--display:'Cinzel','Cormorant Garamond',serif;
-    --line:rgba(201,165,88,.28);--text:var(--bone);--muted:var(--bone-deep);
-    --panel:rgba(21,18,26,.92);--panel2:rgba(33,25,34,.92);
-  }
-  *{box-sizing:border-box}
-  html{background:var(--bg-0);scroll-behavior:auto;overflow-x:hidden}
-  body{margin:0;min-height:100vh;color:var(--text);font-family:var(--serif);line-height:1.6;letter-spacing:.01em;overflow-x:hidden;
-    background:radial-gradient(ellipse at 50% 0%,rgba(201,165,88,.026),transparent 34rem),
-    radial-gradient(ellipse at 50% 68%,rgba(159,114,197,.018),transparent 44rem),
-    linear-gradient(180deg,#050407 0%,#09070c 48%,#050407 100%)}
-  button,input,select,textarea{font:inherit}
-  button{border:0;cursor:pointer}
-  .app{min-height:100svh;max-width:520px;margin:0 auto;background:linear-gradient(180deg,rgba(18,8,26,.95),rgba(13,11,16,.95));position:relative;overflow:hidden;
-    box-shadow:0 0 80px rgba(0,0,0,.5),inset 0 0 120px rgba(201,165,88,.02)}
-  .screen{min-height:100svh;padding:18px 14px 96px}
-  .hidden{display:none!important}
-  .topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-  .brand{font-family:var(--display);letter-spacing:.25em;font-weight:800;font-size:18px;color:var(--bone);text-shadow:0 0 22px rgba(201,165,88,.35)}
-  .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:rgba(201,165,88,.06);border-radius:999px;padding:7px 10px;color:var(--bone);font-size:11px;font-family:var(--display);letter-spacing:.08em;text-transform:uppercase;transition:all .25s}
-  .pill:hover{background:rgba(201,165,88,.12);border-color:var(--gold)}
-  .btn{border-radius:8px;background:linear-gradient(180deg,var(--gold-bright) 0%,var(--gold) 100%);color:var(--ink);padding:12px 14px;font-weight:700;font-family:var(--display);letter-spacing:.12em;text-transform:uppercase;font-size:12px;box-shadow:var(--shadow);transition:all .3s ease;border:1px solid var(--gold-bright)}
-  .btn:hover{transform:translateY(-2px);background:linear-gradient(180deg,#fff0ba 0%,var(--gold-bright) 48%,var(--gold) 100%);box-shadow:0 18px 40px -8px rgba(201,165,88,.5)}
-  .btn.secondary{background:linear-gradient(180deg,rgba(42,34,45,.9),rgba(26,22,28,.9));color:var(--bone);border:1px solid var(--line);box-shadow:none;font-family:var(--serif);text-transform:none;letter-spacing:.02em}
-  .btn.secondary:hover{background:linear-gradient(180deg,rgba(52,44,55,.95),rgba(36,32,38,.95));border-color:var(--gold)}
-  .btn.good{background:linear-gradient(180deg,#3a9b6a,#19704a);border-color:#3a9b6a;color:#fff}.btn.good:hover{background:linear-gradient(180deg,#4ab87a,#29805a)}
-  .btn.danger{background:linear-gradient(180deg,#a94444,#8f3333);border-color:#a94444;color:#fff}.btn.danger:hover{background:linear-gradient(180deg,#c95454,#9f4343)}
-  .btn.gold{background:linear-gradient(180deg,var(--gold-bright),var(--gold-dark));border-color:var(--gold);color:var(--ink)}.btn.gold:hover{background:linear-gradient(180deg,#ffd580,var(--gold))}
-  .btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important}
-  .setup-card{margin-top:10svh;border:1px solid var(--line);background:var(--panel);border-radius:18px;padding:22px;box-shadow:var(--shadow);
-    border-top:1px solid rgba(201,165,88,.35);border-bottom:1px solid rgba(201,165,88,.15)}
-  .setup-card h1{font-family:var(--display);margin:0 0 8px;font-size:36px;letter-spacing:.2em;color:var(--gold-bright);text-shadow:0 0 24px rgba(201,165,88,.25)}
-  .setup-card p{margin:0 0 18px;color:var(--muted);font-size:15px}
-  .field{display:grid;gap:7px;margin:12px 0}
-  .field label{font-family:var(--display);font-size:11px;color:var(--bone-deep);font-weight:700;text-transform:uppercase;letter-spacing:.15em}
-  input,select{width:100%;border:1px solid var(--line);border-radius:10px;background:rgba(15,13,17,.8);color:var(--text);padding:12px;font-family:var(--serif);font-size:14px;transition:border-color .25s}
-  input:focus,select:focus{outline:none;border-color:var(--gold);background:rgba(15,13,17,.95)}
-  .slot-list{display:grid;gap:8px;margin:10px 0}
-  .slot-row{display:grid;grid-template-columns:1fr 128px;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(16,13,18,.8);border-radius:12px;padding:9px;transition:border-color .2s}
-  .slot-row:hover{border-color:rgba(201,165,88,.4)}
-  .slot-row b{font-size:13px;font-family:var(--display);letter-spacing:.05em;color:var(--bone)}
-  .slot-row span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
-  .join-box{border:1px dashed var(--gold);background:rgba(198,155,84,.08);border-radius:14px;padding:10px;margin:10px 0}
-  .layout{display:grid;gap:12px}
-  .status{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;border:1px solid var(--line);background:rgba(21,17,22,.75);border-radius:16px;padding:12px;
-    backdrop-filter:blur(8px);box-shadow:inset 0 0 40px rgba(0,0,0,.25)}
-  .score{text-align:center}.score strong{display:block;font-size:23px;font-family:var(--display);letter-spacing:.05em}.score.sun strong{color:var(--sun);text-shadow:0 0 12px rgba(245,201,91,.3)}.score.moon strong{color:var(--moon);text-shadow:0 0 12px rgba(142,183,255,.3)}
-  .act{text-align:center}.act b{display:block;font-size:11px;color:var(--muted);font-family:var(--display);letter-spacing:.12em;text-transform:uppercase}.act span{font-weight:700;font-family:var(--display);color:var(--gold-bright)}
-  .track{height:10px;background:rgba(40,32,43,.8);border-radius:99px;overflow:hidden;display:flex;margin-top:7px;box-shadow:inset 0 2px 6px rgba(0,0,0,.4)}
-  .sunbar{background:linear-gradient(90deg,var(--sun),#ffe082);box-shadow:0 0 10px rgba(245,201,91,.5)}.moonbar{background:linear-gradient(90deg,var(--moon),#c2d8ff);box-shadow:0 0 10px rgba(142,183,255,.5)}
-  .table{position:relative;min-height:330px;border:1px solid rgba(40,85,72,.6);border-radius:28px;background:
-    radial-gradient(circle at 50% 45%,rgba(255,255,255,.06),transparent 16rem),
-    linear-gradient(145deg,var(--felt),var(--felt2));box-shadow:inset 0 0 70px rgba(0,0,0,.55),var(--shadow);padding:14px;overflow:hidden;
-    border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(0,0,0,.4)}
-  .domain{font-size:11px;color:#d9c7b4;text-align:center;margin-bottom:10px;font-family:var(--display);letter-spacing:.12em;text-transform:uppercase}
-  .domain strong{display:block;font-size:18px;color:var(--bone);font-family:var(--display);letter-spacing:.15em;text-shadow:0 0 18px rgba(201,165,88,.2)}
-  .decks{display:flex;justify-content:center;gap:10px;margin:4px 0 12px;flex-wrap:wrap}
-  .deck{width:72px;height:98px;border-radius:10px;border:2px solid rgba(255,255,255,.15);display:grid;place-items:center;text-align:center;font-weight:700;font-size:11px;box-shadow:0 10px 24px rgba(0,0,0,.35);padding:6px;transition:all .25s;font-family:var(--display);letter-spacing:.05em}
-  .deck:hover{transform:translateY(-3px);box-shadow:0 16px 32px rgba(0,0,0,.45)}
-  .deck.indizi{background:linear-gradient(145deg,#d8c291,#7c5d2f);color:#23160a;border-color:rgba(216,194,145,.5)}
-  .deck.malefici{background:linear-gradient(145deg,#3b1533,#0c0a10);color:#f5d6ff;border-color:rgba(139,103,255,.35)}
-  .deck.reliquie{background:linear-gradient(145deg,#efe5c9,#856739);color:#1c1309;border-color:rgba(239,229,201,.4)}
-  .players{display:block}
-  .groups-layout{display:grid;gap:8px}
-  .group-section{border-radius:14px;padding:10px 10px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.02);transition:all .25s}
-  .group-section.together{border-color:rgba(90,200,120,.35);background:rgba(30,70,45,.25)}
-  .group-section.isolated-section{border-color:rgba(180,68,68,.32);background:rgba(55,15,15,.22)}
-  .group-section-label{font-family:var(--display);font-size:9px;text-transform:uppercase;letter-spacing:.18em;color:var(--muted);margin-bottom:7px;font-weight:800}
-  .group-players-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));gap:6px}
-  .player{border:1px solid rgba(255,255,255,.12);background:rgba(7,10,9,.5);border-radius:12px;padding:8px;position:relative;transition:all .2s}
-  .player:hover{background:rgba(7,10,9,.65);border-color:rgba(255,255,255,.2)}
-  .player.active{outline:2px solid var(--gold);box-shadow:0 0 16px rgba(201,165,88,.35)}
-  .player.human{background:rgba(56,43,63,.55)}
-  .pname{font-weight:700;font-size:13px;font-family:var(--display);letter-spacing:.05em}
-  .pmeta{color:var(--muted);font-size:11px;margin-top:3px}
-  .badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
-  .badge{font-size:9px;border:1px solid rgba(255,255,255,.15);border-radius:99px;padding:3px 6px;background:rgba(0,0,0,.25);font-family:var(--display);letter-spacing:.05em}
-  .table-center{margin:12px auto 0;width:84%;border:1px dashed rgba(255,255,255,.15);border-radius:16px;padding:10px;text-align:center;background:rgba(0,0,0,.18)}
-  .covered-row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px}
-  .mini-card{width:42px;height:58px;border-radius:7px;background:#1d1720;border:1px solid #5e4a64;display:grid;place-items:center;font-size:18px;box-shadow:0 4px 12px rgba(0,0,0,.3)}
-  .panel{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:12px;box-shadow:0 12px 28px rgba(0,0,0,.25)}
-  .panel h3{font-family:var(--display);margin:0 0 8px;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-bright)}
-  .small{font-size:11px;color:var(--muted)}
-  .mission-phase{display:flex;gap:8px;margin:8px 0;align-items:flex-start}
-  .tick{width:26px;height:26px;min-width:26px;border-radius:50%;display:grid;place-items:center;background:rgba(42,34,45,.9);border:1px solid var(--line);font-weight:700;cursor:pointer;padding:0;transition:all .15s;font-family:var(--display);font-size:11px}
-  .tick:hover{background:#3d2e42;border-color:var(--gold)}
-  .tick.done{background:var(--green);color:#07140d;border-color:#3a9b6a;box-shadow:0 0 10px rgba(92,193,138,.4)}
-  .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions .wide{grid-column:1/-1}
-  .hand-wrap{position:fixed;left:50%;bottom:0;transform:translateX(-50%);width:min(520px,100vw);background:linear-gradient(180deg,rgba(8,7,10,0),#08070a 16px,#08070a);padding:20px 10px 10px;z-index:5;
-    border-top:1px solid rgba(201,165,88,.15);box-shadow:0 -8px 40px rgba(0,0,0,.5)}
-  .hand-head{display:flex;justify-content:space-between;align-items:center;margin:0 4px 8px}
-  .hand-head strong{font-size:12px;font-family:var(--display);letter-spacing:.12em;text-transform:uppercase;color:var(--bone-deep)}
-  .hand-tabs{display:none}
-  .tabbtn{border:1px solid var(--line);background:rgba(25,19,27,.9);color:var(--muted);border-radius:99px;padding:6px 9px;font-size:11px;font-family:var(--display);letter-spacing:.08em;text-transform:uppercase;transition:all .2s}
-  .tabbtn:hover{border-color:var(--gold);color:var(--bone)}
-  .tabbtn.active{background:linear-gradient(180deg,var(--gold-bright),var(--gold));color:var(--ink);border-color:var(--gold-bright);box-shadow:0 0 12px rgba(201,165,88,.35)}
-  .hand{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x proximity}
-  .card{flex:0 0 122px;height:172px;border-radius:12px;background:var(--card);color:var(--ink);padding:10px;box-shadow:0 10px 22px rgba(0,0,0,.4);border:2px solid #f4ead8;display:flex;flex-direction:column;justify-content:space-between;scroll-snap-align:start;transition:all .2s}
-  .card:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,.5)}
-  .card.selected{outline:3px solid var(--violet);box-shadow:0 0 20px rgba(143,97,255,.45)}
-  .card.maleficio{background:linear-gradient(160deg,#2a1229,#0d0a10);color:#f6e6ff;border-color:#5f3a65}
-  .card.reaction{outline:3px solid var(--green);box-shadow:0 0 16px rgba(92,193,138,.35)}
-  .card.over-limit{border-color:var(--blood)!important;box-shadow:0 0 16px rgba(180,68,68,.45)}
-  .card-title{font-weight:700;font-size:14px;font-family:var(--display);letter-spacing:.03em}
-  .card-type{font-size:9px;color:inherit;opacity:.75;text-transform:uppercase;letter-spacing:.12em;font-family:var(--display)}
-  .symbols{font-size:26px;letter-spacing:4px}
-  .card-text{font-size:11px;opacity:.86;line-height:1.35}
-  .toastlog{max-height:150px;overflow:auto;display:grid;gap:6px}
-  .logitem{font-size:11px;color:#d5cad4;border-left:3px solid #5a465e;padding-left:8px;font-family:var(--serif)}
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:grid;place-items:end center;z-index:20;padding:14px;backdrop-filter:blur(4px)}
-  .sheet{width:min(520px,100%);max-height:86svh;overflow:auto;background:#151116;border:1px solid var(--line);border-radius:20px 20px 14px 14px;padding:18px;box-shadow:var(--shadow);
-    border-top:1px solid rgba(201,165,88,.3)}
-  .sheet h2{font-family:var(--display);margin:0 0 8px;color:var(--gold-bright);letter-spacing:.1em}
-  .option{width:100%;text-align:left;background:#231b25;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;margin:8px 0;transition:all .2s;font-family:var(--serif)}
-  .option:hover{background:#2d2130;border-color:var(--gold)}
-  .option:disabled{opacity:.45;cursor:not-allowed}
-  .option b{display:block;font-family:var(--display);letter-spacing:.03em}
-  .option span{display:block;color:var(--muted);font-size:12px;margin-top:3px}
-  .target-grid{display:grid;gap:8px}
-  .target{background:#241c27;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left;transition:border-color .2s}
-  .target:hover{border-color:var(--gold)}
-  .footer-space{height:224px}
-  @media (min-width:760px){.app{max-width:980px}.screen{padding:22px 18px 96px}.layout{grid-template-columns:1.25fr .9fr}.hand-wrap{width:min(980px,100vw)}.card{flex-basis:138px;height:188px}.table{min-height:500px}.players{grid-template-columns:repeat(4,1fr)}}
-  #lobby{background:radial-gradient(circle at 20% 0%,rgba(43,31,49,.3) 0%,#08070a 34rem);display:flex;align-items:center;justify-content:center;padding:20px 14px;min-height:100svh}
-  .lobby-box{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:var(--shadow);width:min(480px,100%);
-    border-top:1px solid rgba(201,165,88,.35)}
-  .domain-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
-  .domain-choice{width:100%;background:linear-gradient(145deg,rgba(26,18,36,.9),rgba(13,10,20,.9));border:2px solid var(--line);border-radius:14px;padding:12px 8px;color:var(--text);cursor:pointer;text-align:center;display:flex;flex-direction:column;gap:5px;transition:all .25s;font-family:var(--serif)}
-  .domain-choice:hover{border-color:var(--violet);box-shadow:0 0 18px rgba(143,97,255,.25);transform:translateY(-2px)}
-  .domain-choice.voted{border-color:var(--gold);background:linear-gradient(145deg,rgba(30,20,8,.95),rgba(17,13,0,.95));box-shadow:0 0 22px rgba(198,155,84,.3)}
-  .domain-choice-name{font-weight:700;font-size:12px;font-family:var(--display);letter-spacing:.08em}
-  .domain-choice-text{font-size:9px;color:var(--muted);line-height:1.4;flex:1;text-align:left}
-  .domain-vote-badge{font-size:10px;color:var(--gold);font-weight:700;font-family:var(--display)}
-  .lobby-players{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-top:16px}
-  .lobby-player{background:#18111e;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all .2s}
-  .lobby-player:hover{border-color:rgba(201,165,88,.4);background:#1f1626}
-  .lobby-player.me{border-color:var(--gold);box-shadow:0 0 14px rgba(201,165,88,.25)}
-  .lobby-player .lp-avatar{color:rgba(255,255,255,.15);font-size:18px}
-  .lobby-player.me .lp-avatar,.lobby-player.joined .lp-avatar{color:rgba(143,97,255,.75)}
-  .lp-name{font-size:10px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding:0 2px;font-family:var(--display);letter-spacing:.05em}
-  .lp-vote{font-size:9px;color:var(--gold);font-weight:700;min-height:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding:0 2px;font-family:var(--display)}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dusklore Playtest</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-dark: #0f0518;
+            --bg-panel: rgba(20, 10, 35, 0.85);
+            --text-main: #e0d8c0;
+            --text-muted: #a89f85;
+            --accent-gold: #c9a558;
+            --accent-gold-light: #e9c97a;
+            --accent-purple: #4a2b6e;
+            --border-color: rgba(195, 184, 159, 0.3);
+            --glow: 0 0 15px rgba(201, 165, 88, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Cormorant Garamond', serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 50% 30%, rgba(74, 43, 110, 0.4) 0%, transparent 60%),
+                radial-gradient(circle at 50% 80%, rgba(201, 165, 88, 0.15) 0%, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .btn {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* --- UI Components --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            opacity: 0.5;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--accent-gold), #a68535);
+            color: #1a0f00;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(201, 165, 88, 0.4);
+            background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold));
+        }
+
+        .btn:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            padding: 2rem 0;
+            margin-bottom: 1rem;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: var(--accent-gold-light);
+            text-shadow: 0 0 20px rgba(201, 165, 88, 0.5);
+            margin-bottom: 0.5rem;
+            letter-spacing: 2px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+
+        /* --- Game Area --- */
+        #game-area {
+            display: none; /* Hidden by default */
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .turn-indicator {
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+        }
+
+        /* Board */
+        .board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .field {
+            min-height: 200px;
+            border: 1px dashed var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+            transition: background 0.3s;
+        }
+
+        .field.enemy {
+            background: rgba(60, 20, 20, 0.2);
+        }
+
+        .field.player {
+            background: rgba(20, 40, 60, 0.2);
+        }
+
+        .field-label {
+            width: 100%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Cards */
+        .card {
+            width: 100px;
+            height: 140px;
+            background: linear-gradient(160deg, #2a1f35, #150e20);
+            border: 1px solid var(--accent-gold);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            user-select: none;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(201, 165, 88, 0.3);
+            z-index: 10;
+            border-color: var(--accent-gold-light);
+        }
+
+        .card.selected {
+            box-shadow: 0 0 15px var(--accent-gold);
+            border-color: #fff;
+            transform: translateY(-15px);
+        }
+
+        .card-cost {
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            background: var(--accent-purple);
+            color: #fff;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            border: 1px solid var(--accent-gold);
+            font-size: 0.8rem;
+        }
+
+        .card-image {
+            width: 60px;
+            height: 60px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .card-name {
+            font-size: 0.8rem;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.1;
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .stat-atk { color: #ff6b6b; }
+        .stat-hp { color: #51cf66; }
+
+        /* Hand */
+        .hand-container {
+            margin-top: auto;
+        }
+        
+        .hand {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            min-height: 150px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Start Screen Overlay */
+        #start-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 5, 24, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .logo-large {
+            font-size: 4rem;
+            color: var(--accent-gold);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 30px rgba(201, 165, 88, 0.6);
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0% { text-shadow: 0 0 20px rgba(201, 165, 88, 0.4); }
+            50% { text-shadow: 0 0 40px rgba(201, 165, 88, 0.8); }
+            100% { text-shadow: 0 0 20px rgba(201, 165, 88, 0.4); }
+        }
+
+        .resource-display {
+            font-size: 1.2rem;
+            color: var(--accent-gold-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .resource-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            background: var(--accent-purple);
+            border: 1px solid var(--accent-gold);
+            border-radius: 50%;
+            text-align: center;
+            line-height: 18px;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .board { grid-template-columns: 1fr; }
+            header h1 { font-size: 2rem; }
+            .card { width: 80px; height: 110px; }
+        }
+    </style>
 </head>
 <body>
-<div class="app">
-  <section id="setup" class="screen">
-    <!-- Landing -->
-    <div id="landingView" class="setup-card">
-      <h1>DUSKLORE</h1>
-      <p>App solitaria da playtest: tavolo, mano, mazzi, AI, Malefici, Pegni Oscuri, Missioni e fine Atto.</p>
-      <button class="btn wide" style="width:100%;margin-bottom:10px" onclick="showNewGame()">Nuova Partita</button>
-      <button class="btn secondary wide" style="width:100%" onclick="showJoinGame()">Unisciti a una Partita</button>
-    </div>
-    <!-- Nuova Partita -->
-    <div id="newGameView" class="setup-card hidden">
-      <h1>DUSKLORE</h1>
-      <p>Configura la partita e condividi il codice con i tuoi amici.</p>
-      <div class="field"><label>Nome</label><input id="nameInput" value="Vincenzo"></div>
-      <div class="field"><label>Protagonista</label><select id="heroSelect"></select></div>
-      <div class="field"><label>Numero giocatori</label><select id="playerCount" onchange="renderSlotSetup()"><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
-      <div class="field"><label>Posti al tavolo</label><div id="slotSetup" class="slot-list"></div></div>
-      <div style="border:1px dashed var(--gold);background:rgba(198,155,84,.08);border-radius:14px;padding:12px;margin:12px 0;text-align:center">
-        <div class="small" style="margin-bottom:4px">Codice stanza — condividilo con i tuoi amici</div>
-        <div id="pendingCode" style="font-size:26px;font-weight:900;letter-spacing:.18em;color:var(--gold)">---</div>
-      </div>
-      <button class="btn wide" style="width:100%;margin-bottom:8px" onclick="startGame()">Inizia partita</button>
-      <button class="btn secondary wide" style="width:100%" onclick="showLanding()">← Indietro</button>
-    </div>
-    <!-- Unisciti -->
-    <div id="joinGameView" class="setup-card hidden">
-      <h1>DUSKLORE</h1>
-      <p>Inserisci il codice della stanza e scegli il tuo Protagonista.</p>
-      <div class="field"><label>Nome</label><input id="joinNameField" placeholder="Il tuo nome" value="Giocatore"></div>
-      <div class="field"><label>Protagonista</label><select id="joinHeroField"></select></div>
-      <div class="field"><label>Codice stanza</label><input id="joinCodeField" placeholder="Es. abc1234" maxlength="10" style="letter-spacing:.12em;text-transform:uppercase" oninput="this.value=this.value.toLowerCase()"></div>
-      <div id="joinFeedback" class="small" style="margin:6px 0;min-height:16px;color:var(--blood)"></div>
-      <button class="btn wide" style="width:100%;margin-bottom:8px" onclick="joinByCode()">Entra nella stanza</button>
-      <button class="btn secondary wide" style="width:100%" onclick="showLanding()">← Indietro</button>
-    </div>
-  </section>
 
-  <section id="game" class="screen hidden">
-    <div class="topbar">
-      <div><div class="brand">DUSKLORE</div><div id="turnLine" class="small"></div></div>
-      <div style="display:flex;gap:6px"><button class="pill" onclick="showRoomLink()">Link</button><button class="pill" onclick="openRules()">Regole</button><button class="pill" onclick="resetGame()">Nuova</button></div>
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <h1 class="logo-large">DUSKLORE</h1>
+        <p style="margin-bottom: 2rem; color: var(--text-muted); font-size: 1.2rem;">Playtest Edition</p>
+        <button class="btn" onclick="showNewGame()">Inizia Partita</button>
     </div>
 
-    <div class="layout">
-      <main>
-        <div class="status">
-          <div class="score sun"><strong id="sunScore">0</strong><span>Sole</span><div class="track"><div id="sunBar" class="sunbar" style="width:0%"></div></div></div>
-          <div class="act"><b id="roundLabel">Round 1</b><span id="actLabel">Prefazione</span><div class="small">Soglia <span id="winThreshold">22</span></div></div>
-          <div class="score moon"><strong id="moonScore">0</strong><span>Luna</span><div class="track"><div id="moonBar" class="moonbar" style="width:0%"></div></div></div>
+    <div class="container">
+        <header>
+            <h1>DUSKLORE</h1>
+            <p>Battle for the Shattered Realm</p>
+        </header>
+
+        <div id="game-area">
+            <!-- Top Bar: Resources & Turn -->
+            <div class="panel top-bar">
+                <div class="resource-display">
+                    Mana: <span id="player-mana">0</span>/ <span id="player-max-mana">0</span>
+                    <span class="resource-icon">M</span>
+                </div>
+                <div class="turn-indicator" id="turn-text">Turno del Giocatore</div>
+                <button class="btn" id="end-turn-btn" onclick="endTurn()">Termina Turno</button>
+            </div>
+
+            <!-- Board -->
+            <div class="board">
+                <!-- Enemy Field -->
+                <div class="field enemy" id="enemy-field">
+                    <div class="field-label">Campo Nemico</div>
+                    <!-- Cards injected by JS -->
+                </div>
+
+                <!-- Player Field -->
+                <div class="field player" id="player-field">
+                    <div class="field-label">Il Tuo Campo</div>
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
+
+            <!-- Hand -->
+            <div class="panel hand-container">
+                <div class="field-label" style="margin-bottom: 10px;">La Tua Mano</div>
+                <div class="hand" id="player-hand">
+                    <!-- Cards injected by JS -->
+                </div>
+            </div>
+
+            <!-- Game Log / Info -->
+            <div class="panel" style="margin-top: 20px; min-height: 100px;">
+                <h3 style="color: var(--accent-gold); margin-bottom: 10px;">Registro di Battaglia</h3>
+                <div id="game-log" style="font-size: 0.95rem; color: var(--text-muted); height: 80px; overflow-y: auto;">
+                    Benvenuto in Dusklore. La partita è iniziata.
+                </div>
+            </div>
         </div>
-
-        <div class="table" data-testid="table">
-          <div class="domain"><strong id="domainName"></strong><span id="domainText"></span></div>
-          <div class="decks">
-            <button class="deck indizi" onclick="showDeckInfo('indizi')">Mazzo<br>Indizi<br><span id="indiziCount"></span></button>
-            <button class="deck malefici" onclick="showDeckInfo('malefici')">Mazzo<br>Malefici<br><span id="maleficiCount"></span></button>
-            <button class="deck reliquie" onclick="showDeckInfo('reliquie')">Reliquiario<br><span id="relicCount"></span></button>
-            <button id="discardDeckBtn" class="deck" style="background:linear-gradient(145deg,#2e2020,#100808);color:#c9a8a8;border-color:rgba(180,68,68,.4)" onclick="showDiscard()">Scarti<br>Indizi<br>—</button>
-            <button id="discardMaleficiDeckBtn" class="deck" style="background:linear-gradient(145deg,#1a0d2e,#0a0810);color:#d0aaff;border-color:rgba(143,97,255,.4)" onclick="showDiscardMalefici()">Scarti<br>Malefici<br>—</button>
-          </div>
-          <div id="players" class="players"></div>
-          <div class="table-center">
-            <div><strong id="presageName">Nessun Presagio</strong></div>
-            <div id="presageText" class="small">Il primo round è solo introduzione dei Protagonisti.</div>
-            <div class="covered-row" id="coveredRow"></div>
-          </div>
-        </div>
-      </main>
-
-      <aside class="side">
-        <div class="panel">
-          <h3>Missione segreta</h3>
-          <div id="missionTitle" style="font-weight:900"></div>
-          <div id="missionRelic" class="small"></div>
-          <div id="missionPhases"></div>
-        </div>
-
-        <div class="panel">
-          <h3>Azioni</h3>
-          <div class="actions">
-            <button id="playBtn" class="btn good wide" onclick="mainAction()">Prosegui</button>
-            <button id="curseBtn" class="btn danger" onclick="openCurse()">Usa Maleficio</button>
-            <button id="darkBtn" class="btn" onclick="openDarkPawns()">Pegni Oscuri</button>
-            <button id="abilityBtn" class="btn gold wide" onclick="openAbility()">⚡ Potere</button>
-            <button id="scartaBtn" class="btn danger wide hidden" onclick="discardSelected()">🗑 Scarta Indizio Selezionato</button>
-          </div>
-          <div id="abilityDesc" class="small" style="margin-top:6px;color:var(--muted);font-style:italic;min-height:14px"></div>
-          <div id="actionHint" class="small" style="margin-top:4px"></div>
-        </div>
-
-        <div class="panel">
-          <h3>Cronologia</h3>
-          <div id="log" class="toastlog"></div>
-        </div>
-      </aside>
     </div>
-    <div class="footer-space"></div>
-  </section>
 
-  <div id="handWrap" class="hand-wrap hidden">
-    <div class="hand-head">
-      <strong id="handTitle">La tua mano</strong>
-      <div class="hand-tabs">
-        <button id="tabIndizi" class="tabbtn active" onclick="setHandTab('indizi')">Indizi</button>
-        <button id="tabMalefici" class="tabbtn" onclick="setHandTab('malefici')">Malefici</button>
-      </div>
-    </div>
-    <div id="hand" class="hand"></div>
-  </div>
+    <script>
+        // --- Game State ---
+        const gameState = {
+            turn: 1,
+            isPlayerTurn: true,
+            player: {
+                mana: 1,
+                maxMana: 1,
+                hand: [],
+                field: [],
+                deck: []
+            },
+            enemy: {
+                mana: 1,
+                maxMana: 1,
+                hand: [],
+                field: [],
+                deck: []
+            },
+            selectedCardIndex: null
+        };
 
-  <div id="modal" class="modal hidden"><div id="sheet" class="sheet"></div></div>
-</div>
+        // --- Card Database ---
+        const cardDatabase = [
+            { id: 1, name: "Guardia d'Ombra", cost: 1, atk: 2, hp: 1, icon: "🗡️" },
+            { id: 2, name: "Mago Crepuscolare", cost: 2, atk: 3, hp: 2, icon: "🔮" },
+            { id: 3, name: "Golem di Pietra", cost: 3, atk: 2, hp: 5, icon: "🛡️" },
+            { id: 4, name: "Spettro Urlante", cost: 2, atk: 1, hp: 3, icon: "👻" },
+            { id: 5, name: "Drago Antico", cost: 5, atk: 6, hp: 6, icon: "🐉" },
+            { id: 6, name: "Assassino Veloce", cost: 1, atk: 1, hp: 2, icon: "🗡️" },
+            { id: 7, name: "Chierica della Luce", cost: 3, atk: 2, hp: 4, icon: "✨" }
+        ];
 
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-<script>
-const DATA={
-  indizi:["Acqua Santa","Ostia","Lapide","Attrezzi","Spazzola","Candele","Rosario","Pentacolo","Veste","Straccio","Colla","Sale","Veleno","Lettere","Tappeto","Corona","Ascia","Cappio","Libri","Trofeo","Incenso","Catene","Cera","Lucchetto","Bambola di Pezza","Lente di Vetro","Forbici","Mannaia","Martello","Diario","Lampada","Gomitolo","Armadio","Pennelli","Mappamondo","Crocifisso","Inchiostro","Armatura","Secchio","Calamaio"],
-  malefici:{
-    "Osservazione":"Guarda la Missione segreta di un Protagonista.",
-    "Rimozione":"Sottrai una carta dalla mano di un Protagonista.",
-    "Sostituzione":"Scambia la tua Reliquia con quella di un Protagonista.",
-    "Protezione":"Reazione: annulla un Maleficio scagliato contro di te."
-  },
-  reliquie:["Grimorio","Maschera","Dipinto","Orologio","Anfora","Pugnale","Chiave","Marionetta","Clessidra","Fotografia","Sfera di Vetro","Bussola","Specchio","Statua","Carillon","Telefono","Pianta","Sarcofago","Matriosca","Tarocchi"],
-  domini:[
-    ["Maniero","Un guscio di velluto e polvere dove il silenzio pesa più dell'oro."],["Cimitero","Un giardino di marmo che culla un sonno senza sogni."],["Manicomio","Un labirinto di urla cucite sui muri della mente."],["Luna Park","Un miraggio di neon che maschera il ghigno della ruggine."],["Orfanotrofio","Un nido di brandine fredde, dove il pianto si condensa sulle pareti."],["Villaggio","Un groviglio di case cieche che mastica segreti e sputa sospetti."],["Castello","Una corona di pietra innalzata per difendere paure più antiche dei suoi re."],["Crociera","Un'isola di ferro sospesa su un profondo abisso."],["Albergo","Una prigione di chiavi d'oro e stanze vuote."],["Museo","Un santuario di vetro dove il passato resta immobile per giudicare."]
-  ],
-  presagi:{
-    "Flashback":"Ogni giocatore deve usare il primo Indizio nella pila degli scarti, se presente.",
-    "Confusione":"Per questo round l'ordine di narrazione procede in senso contrario.",
-    "Premonizione":"Le carte Indizio restano scoperte sul tavolo.",
-    "Fer...NarratorVotes();
-}
-function checkNarratorVotes(){
-  if(!game||!game.ended)return;
-  const humanPlayers=game.players.filter(p=>p.controller!=="ai"&&p.controller!=="open");
-  const votes=game.narratorVotes||{};
-  const humanVotes=humanPlayers.map(p=>votes[p.id]).filter(v=>v!==undefined);
-  if(humanVotes.length<humanPlayers.length)return;
-  const tally={};
-  humanVotes.forEach(v=>{tally[v]=(tally[v]||0)+1;});
-  const maxV=Math.max(...Object.values(tally));
-  const hostPlayer=game.players.find(p=>p.id===game.hostId);
-  const hostVote=hostPlayer?votes[hostPlayer.id]:null;
-  const candidates=Object.keys(tally).filter(id=>tally[id]===maxV);
-  let narratorId=candidates[0];
-  if(hostVote&&candidates.includes(hostVote))narratorId=hostVote;
-  resolveNarrator(narratorId);
-}
-function resolveNarrator(narratorId){
-  game.narratorId=narratorId;
-  const narrator=game.players.find(p=>p.id===narratorId);
-  log(`${narrator?escape(narrator.name):"?"} narrerà l'Epilogo.`);
-  save();
-  showEpilogueScreen();
-}
-function showEpilogueScreen(){
-  const winner=game.scale.sun>=game.scale.moon?"Innocenti":"Corrotti";
-  const isPositive=winner==="Innocenti";
-  const narrator=game.players.find(p=>p.id===game.narratorId);
-  const isNarrator=narrator&&narrator.controller===clientId;
-  $("modal").classList.remove("hidden");
-  $("modal").style.placeItems="center";
-  $("sheet").innerHTML=`
-    <div style="text-align:center;padding:10px 0 18px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:${isPositive?"var(--sun)":"var(--blood)"};margin-bottom:14px">Fine della storia</div>
-      <h1 style="font-size:28px;letter-spacing:.1em;margin:0 0 10px;color:${isPositive?"var(--sun)":"var(--blood)"}">
-        ${isPositive?"EPILOGO POSITIVO":"EPILOGO NEGATIVO"}
-      </h1>
-      <p style="color:var(--muted);font-size:14px;margin:0 0 16px;line-height:1.5">
-        ${isPositive?"Gli Innocenti hanno preservato la luce.<br>Il male è sconfitto.":"I Corrotti hanno soggiogato il Dominio.<br>Le tenebre trionfano."}
-      </p>
-      ${narrator?`<p class="small" style="margin:0 0 20px;color:var(--muted)">Narratore: <b style="color:var(--gold)">${escape(narrator.name)}</b></p>`:""}
-      ${isNarrator
-        ?`<button class="btn wide" style="width:100%;margin-top:8px;background:${isPositive?"var(--green)":"var(--blood)"}" onclick="finisciPartita()">Finisci Partita</button>`
-        :`<p class="small" style="color:var(--muted);margin-top:8px">Attendi che il narratore concluda la storia.</p>`}
-    </div>`;
-}
-function finisciPartita(){resetGame();}
+        // --- Core Functions ---
 
-function openTargets(title,filter,callbackName){
-  const targets=game.players.filter(filter);
-  const locLabel=human().location==="isolato"?"Isolato":`nel tuo gruppo`;
-  const noTargetMsg=callbackName==="castHumanCurse"
-    ?`<p style="color:var(--muted)">Nessun bersaglio valido.<br><span style="font-size:12px">I Malefici colpiscono solo chi è ${locLabel}. In questo momento nessun altro condivide la tua posizione.</span></p>`
-    :`<p>Nessun bersaglio valido.</p>`;
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>${title}</h2><div class="target-grid">${targets.map(p=>`<button class="target" onclick="${callbackName}('${p.id}')"><b>${p.name}</b><div class="small">${p.hero} · ${p.location} · Reliquia ${p.relic}</div></button>`).join("")||noTargetMsg}</div><button class="option" onclick="closeModal()">Annulla</button>`;
-}
-function showDeckInfo(type){openMsg("Mazzo",`Carte rimaste in ${type}: ${game.decks[type].length}.`)}
-function showDiscard(){
-  const d=game.discard||[];
-  if(!d.length)return openMsg("Scarti Indizi vuoti","Nessuna carta nella pila degli scarti Indizi.");
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>Scarti Indizi (${d.length})</h2><div style="display:grid;gap:6px;max-height:55svh;overflow:auto">${[...d].reverse().map(c=>`<div style="background:#1a1015;border:1px solid var(--line);border-radius:10px;padding:9px"><b>${escape(c.name)}</b><div class="small">${c.symbols?c.symbols.join(""):"—"}</div></div>`).join("")}</div><button class="option" style="margin-top:10px" onclick="closeModal()">Chiudi</button>`;
-}
-function showDiscardMalefici(){
-  const d=game.discardMalefici||[];
-  if(!d.length)return openMsg("Scarti Malefici vuoti","Nessun Maleficio nella pila degli scarti.");
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>Scarti Malefici (${d.length})</h2><div style="display:grid;gap:6px;max-height:55svh;overflow:auto">${[...d].reverse().map(c=>`<div style="background:#140d1e;border:1px solid var(--line);border-radius:10px;padding:9px"><b>${escape(c.name)}</b><div class="small">${escape(c.text||DATA.malefici[c.name]||"")}</div></div>`).join("")}</div><button class="option" style="margin-top:10px" onclick="closeModal()">Chiudi</button>`;
-}
-function showRoomLink(){const url=location.href.split("#")[0]+"#room="+game.roomId;openMsg("Codice stanza",`Codice: <b style="font-size:22px;letter-spacing:.15em;color:var(--gold)">${(game.roomId||"").toUpperCase()}</b><br><br>Oppure condividi il link:<br><b style="font-size:11px;word-break:break-all">${escape(url)}</b>`)}
-function openRules(){openMsg("Promemoria regole","Round 1: prefazione. Dal Round 2: pesca a inizio turno, gioca un Indizio, usa Malefici solo se nello stesso luogo, Presagio attivo fino a fine round. Alla fine di ogni Atto tutti mettono un Indizio coperto e i simboli opposti si annullano.")}
-function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();}
-function openMsg(title,body){$("modal").classList.remove("hidden");$("sheet").innerHTML=`<h2>${title}</h2><p>${body}</p><button class="option" onclick="closeModal()">Ok</button>`}
-function closeModal(){$("modal").classList.add("hidden");$("modal").style.placeItems="";}
+        function showNewGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('game-area').style.display = 'flex';
+            initGame();
+        }
 
-// ===== SISTEMA POTERI =====
-const ABILITIES={
-  "SOLDATO":{name:"Affiancamento",type:"active",
-    desc:"Una volta per round puoi cambiare la tua posizione (gruppo o isolamento) anche durante il turno di un altro giocatore.",
-    canUse:h=>!isHumanTurn()&&!h.abilityUsed&&game.round>1&&!game.ended},
-  "DETECTIVE":{name:"Ispezione",type:"passive",
-    desc:"Quando spendi Pegni Oscuri per ottenere una Reliquia, vedi 2 carte e ne scegli 1. Si attiva automaticamente."},
-  "RAMINGO":{name:"Recupero",type:"passive",
-    desc:"Quando peschi un Indizio a inizio turno, puoi sceglierlo dalla pila degli Scarti invece che dal mazzo. Si attiva automaticamente."},
-  "MEDIUM":{name:"Veggenza",type:"active",
-    desc:"Spendi 2 Pegni Oscuri per guardare in segreto l'Identità di un altro Protagonista, oppure rivela la tua a tutti.",
-    canUse:h=>h.dark>=2&&!h.abilityUsed&&!game.ended},
-  "GIORNALISTA":{name:"Fiuto",type:"passive",
-    desc:"Quando peschi un Indizio a inizio turno, peschi 2 carte e ne tieni 1 (l'altra torna nel mazzo). Si attiva automaticamente."},
-  "SACERDOTE":{name:"Grazia",type:"passive",
-    desc:"Quando peschi un Maleficio, puoi scegliere di ricevere Protezione al suo posto. Si attiva automaticamente."},
-  "FANCIULLO":{name:"Complicità",type:"active",
-    desc:"Se sei In Gruppo, scegli uno dei tuoi Indizi da cedere a un compagno casuale e ricevi in cambio uno dei suoi.",
-    canUse:h=>isHumanTurn()&&!h.abilityUsed&&h.location!=="isolato"&&h.hand.indizi.length>0&&game.players.some(p=>p.id!==h.id&&p.location===h.location&&p.location!=="isolato"&&p.hand.indizi.length>0)&&!game.ended},
-  "TURISTA":{name:"Baratto",type:"active",
-    desc:"Scarta un Maleficio dalla tua mano per pescare un Indizio dal mazzo. Puoi farlo in qualsiasi momento del tuo turno.",
-    canUse:h=>isHumanTurn()&&!h.abilityUsed&&h.hand.malefici.length>0&&!game.ended}
-};
+        function initGame() {
+            // Reset state
+            gameState.turn = 1;
+            gameState.isPlayerTurn = true;
+            gameState.player.mana = 1;
+            gameState.player.maxMana = 1;
+            gameState.player.hand = [];
+            gameState.player.field = [];
+            gameState.enemy.hand = [];
+            gameState.enemy.field = [];
+            
+            // Create Decks
+            gameState.player.deck = createDeck();
+            gameState.enemy.deck = createDeck();
 
-function openAbility(){
-  const h=human(); const ab=ABILITIES[h.hero]; if(!ab)return;
-  const isActive=ab.type==="active";
-  const canUse=isActive&&ab.canUse(h);
-  const reasonDisabled=isActive&&!canUse?getAbilityDisabledReason(h,ab):"";
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`
-    <h2>${h.hero}</h2>
-    <div style="background:#1a0d2e;border:1px solid rgba(142,97,255,.4);border-radius:14px;padding:14px;margin:8px 0">
-      <div style="font-weight:900;font-size:15px;margin-bottom:6px">⚡ ${ab.name}</div>
-      <div class="small" style="line-height:1.6">${ab.desc}</div>
-    </div>
-    <div style="font-size:12px;color:var(--muted);margin:10px 0">
-      Tipo: <b style="color:var(--text)">${isActive?"Attivo — clicca per usare":"Passivo — si attiva da solo"}</b>
-      ${h.abilityUsed?` · <span style="color:var(--blood)">Già usato questo round</span>`:""}
-    </div>
-    ${isActive
-      ?`<button class="btn ${canUse?"":"secondary"}" style="width:100%;${canUse?"background:#8a632d":""}" ${canUse?"":"disabled"} onclick="activateAbility('${h.hero}')">
-          ${canUse?"Attiva Potere":"Non disponibile"}
-        </button>
-        ${reasonDisabled?`<div style="margin-top:8px;font-size:12px;color:var(--muted);text-align:center">${reasonDisabled}</div>`:""}`
-      :`<div style="background:rgba(142,97,255,.08);border:1px solid rgba(142,97,255,.2);border-radius:10px;padding:10px;font-size:12px;color:var(--muted)">
-          Il potere si attiva automaticamente al momento opportuno, senza bisogno di premere nulla.
-        </div>`}
-    <button class="option" style="margin-top:10px" onclick="closeModal()">Chiudi</button>`;
-}
-function getAbilityDisabledReason(h,ab){
-  const map={
-    "SOLDATO":h.abilityUsed?"Già usato questo round.":isHumanTurn()?"Funziona solo durante il turno altrui.":game.round===1?"Non disponibile nel round di prefazione.":"",
-    "MEDIUM":h.dark<2?`Ti servono 2 Pegni Oscuri (ne hai ${h.dark}).`:"",
-    "FANCIULLO":h.location==="isolato"?"Devi essere In Gruppo.":!h.hand.indizi.length?"Non hai Indizi da cedere.":"Nessun compagno di gruppo con Indizi.",
-    "TURISTA":!h.hand.malefici.length?"Non hai Malefici da sacrificare.":!isHumanTurn()?"Funziona solo durante il tuo turno.":""
-  };
-  return map[h.hero]||"";
-}
-function activateAbility(hero){
-  closeModal();
-  const fns={SOLDATO:abilitySoldato,MEDIUM:abilityMedium,FANCIULLO:abilityFanciullo,TURISTA:abilityTurista};
-  if(fns[hero])fns[hero]();
-}
+            // Draw initial hands (3 cards)
+            for(let i=0; i<3; i++) {
+                drawCard('player');
+                drawCard('enemy');
+            }
 
-// --- SOLDATO ---
-function abilitySoldato(){
-  const h=human();
-  const others=game.players.filter(p=>p.id!==h.id);
-  const gruppiAltrui=[...new Set(others.filter(p=>p.location!=="isolato").map(p=>p.location))];
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>⚡ Affiancamento</h2><p class="small">Scegli la tua nuova posizione per questo momento.</p>
-  ${h.location!=="isolato"?`<button class="option" onclick="soldatoMove('isolato')"><b>Isolati</b><span>Esci dal gruppo attuale.</span></button>`:""}
-  ${gruppiAltrui.map(gid=>{
-    const members=others.filter(p=>p.location===gid);
-    return `<button class="option" onclick="soldatoMove('${gid}')"><b>Unisciti a: ${members.map(p=>escape(p.name)).join(", ")}</b><span>${members.map(p=>p.hero).join(" · ")}</span></button>`;
-  }).join("")}
-  ${h.location==="isolato"&&!gruppiAltrui.length?`<p class="small">Tutti sono Isolati: nessun gruppo a cui unirti.</p>`:""}
-  <button class="option" onclick="closeModal()">Annulla</button>`;
-}
-function soldatoMove(gid){
-  const h=human();
-  if(gid==="isolato"){h.location="isolato";}
-  else{
-    const stillThere=game.players.some(p=>p.id!==h.id&&p.location===gid);
-    h.location=stillThere?gid:"g_"+uid();
-  }
-  h.abilityUsed=true;
-  closeModal();
-  log(`${h.name} usa Affiancamento: ora è ${h.location==="isolato"?"Isolato":"In Gruppo"}.`);
-  save();render();
-}
-function promptSoldatoInterject(done){
-  const h=human(),p=current();
-  pendingTurnStart=true;
-  const others=game.players.filter(x=>x.id!==h.id);
-  const gruppiAltrui=[...new Set(others.filter(x=>x.location!=="isolato").map(x=>x.location))];
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>⚡ Affiancamento</h2>
-  <p class="small">Prima che <b>${escape(p.name)}</b> agisca: vuoi cambiare la tua posizione?</p>
-  ${h.location!=="isolato"?`<button class="option" onclick="soldatoInterjectMove('isolato')"><b>Isolati</b><span>Esci dal gruppo attuale.</span></button>`:""}
-  ${gruppiAltrui.map(gid=>{const members=others.filter(x=>x.location===gid);return `<button class="option" onclick="soldatoInterjectMove('${gid}')"><b>Unisciti a: ${members.map(x=>escape(x.name)).join(", ")}</b><span>${members.map(x=>x.hero).join(" · ")}</span></button>`;}).join("")}
-  ${h.location==="isolato"&&!gruppiAltrui.length?`<p class="small">Tutti sono Isolati: nessun gruppo a cui unirti.</p>`:""}
-  <button class="option" onclick="soldatoInterjectSkip()"><b>Salta — non usare il Potere ora</b></button>`;
-  window._soldatoInterjectDone=done;
-}
-function soldatoInterjectMove(gid){
-  const h=human();
-  if(gid==="isolato"){h.location="isolato";}
-  else{const stillThere=game.players.some(p=>p.id!==h.id&&p.location===gid);h.location=stillThere?gid:"g_"+uid();}
-  h.abilityUsed=true;pendingTurnStart=false;closeModal();
-  log(`${h.name} usa Affiancamento: ora è ${h.location==="isolato"?"Isolato":"In Gruppo"}.`);
-  save();render();
-  const done=window._soldatoInterjectDone;window._soldatoInterjectDone=null;if(done)done();
-}
-function soldatoInterjectSkip(){
-  pendingTurnStart=false;closeModal();
-  const done=window._soldatoInterjectDone;window._soldatoInterjectDone=null;if(done)done();
-}
+            log("Nuova partita iniziata! Sei al turno 1.");
+            updateUI();
+        }
 
-// --- MEDIUM ---
-function abilityMedium(){
-  const h=human();
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>⚡ Veggenza (2 Pegni Oscuri)</h2>
-  <button class="option" onclick="mediumPeekIdentity()"><b>Guarda l'Identità di qualcuno</b><span>Scopri in segreto l'Identità di un altro Protagonista.</span></button>
-  <button class="option" onclick="mediumRevealSelf()"><b>Rivela la tua Identità</b><span>Mostra la tua Identità a tutti i presenti al tavolo.</span></button>
-  <button class="option" onclick="closeModal()">Annulla</button>`;
-}
-function mediumPeekIdentity(){
-  const targets=game.players.filter(p=>p.controller!==clientId);
-  $("sheet").innerHTML=`<h2>Di chi vuoi vedere l'Identità?</h2>
-  <div class="target-grid">${targets.map(p=>`<button class="target" onclick="mediumReveal('${p.id}')"><b>${escape(p.name)}</b><div class="small">${p.hero}</div></button>`).join("")}</div>
-  <button class="option" style="margin-top:8px" onclick="closeModal()">Annulla</button>`;
-}
-function mediumReveal(id){
-  const h=human(),t=game.players.find(p=>p.id===id); if(!t)return;
-  h.dark-=2; t.known=true; closeModal();
-  openMsg(`⚡ Veggenza — ${escape(t.name)}`,`L'Identità di <b>${escape(t.name)}</b> è:<br><br><b style="font-size:22px;color:${t.identity==="Corrotto"?"var(--blood)":"var(--green)"}">${t.identity}</b>`);
-  log(`${h.name} usa Veggenza e scopre l'Identità di ${t.name}.`); save();render();
-}
-function mediumRevealSelf(){
-  const h=human();
-  const targets=game.players.filter(p=>p.controller!==clientId);
-  $("sheet").innerHTML=`<h2>⚡ Veggenza — A chi ti riveli?</h2><p class="small">Solo quel Protagonista vedrà la tua Identità.</p>
-  <div class="target-grid">${targets.map(p=>`<button class="target" onclick="mediumRevealSelfTo('${p.id}')"><b>${escape(p.name)}</b><div class="small">${p.hero}</div></button>`).join("")}</div>
-  <button class="option" style="margin-top:8px" onclick="closeModal()">Annulla</button>`;
-}
-function mediumRevealSelfTo(targetId){
-  const h=human(),t=game.players.find(p=>p.id===targetId);if(!t)return;
-  h.dark-=2;closeModal();
-  openMsg(`⚡ Veggenza — Solo per ${escape(t.name)}`,`Mostra questo schermo <b>solo</b> a <b>${escape(t.name)}</b>.<br><br>${escape(h.name)} rivela la propria Identità:<br><br><b style="font-size:26px;color:${h.identity==="Corrotto"?"var(--blood)":"var(--green)"}">${h.identity}</b>`);
-  log(`${h.name} usa Veggenza e rivela la propria Identità a ${t.name}.`);save();render();
-}
+        function createDeck() {
+            let deck = [];
+            for(let i=0; i<20; i++) {
+                const randomCard = cardDatabase[Math.floor(Math.random() * cardDatabase.length)];
+                // Clone object to avoid reference issues
+                deck.push({ ...randomCard, uid: Math.random().toString(36).substr(2, 9) });
+            }
+            return deck;
+        }
 
-// --- FANCIULLO ---
-function abilityFanciullo(){
-  const h=human();
-  if(!h.hand.indizi.length)return openMsg("Complicità","Non hai Indizi da cedere.");
-  const companions=game.players.filter(p=>p.id!==h.id&&p.location===h.location&&p.location!=="isolato"&&p.hand.indizi.length>0);
-  if(!companions.length)return openMsg("Complicità","Nessun compagno di gruppo con Indizi disponibili.");
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>⚡ Complicità</h2><p class="small">Con chi vuoi scambiare un Indizio?</p>
-  <div style="display:grid;gap:7px">${companions.map(p=>`<button class="option" onclick="fanciulloPickCompanion('${p.id}')"><b>${escape(p.name)}</b><span>${p.hero} · ${p.hand.indizi.length} Indizi disponibili</span></button>`).join("")}</div>
-  <button class="option" style="margin-top:6px" onclick="closeModal()">Annulla</button>`;
-}
-function fanciulloPickCompanion(companionId){
-  const h=human();
-  $("sheet").innerHTML=`<h2>⚡ Complicità</h2><p class="small">Quale tuo Indizio vuoi cedere?</p>
-  ${h.hand.indizi.map(c=>`<button class="option" onclick="fanciulloSwap('${c.id}','${companionId}')"><b>${escape(c.name)}</b><span>${c.symbols.join("")}</span></button>`).join("")}
-  <button class="option" style="margin-top:6px" onclick="abilityFanciullo()">← Torna</button>`;
-}
-function fanciulloSwap(cardId,companionId){
-  const h=human(),companion=game.players.find(p=>p.id===companionId);
-  if(!companion||!companion.hand.indizi.length)return openMsg("Complicità","Nessun Indizio disponibile.");
-  const myCard=h.hand.indizi.find(c=>c.id===cardId);if(!myCard)return closeModal();
-  const theirCard=rand(companion.hand.indizi);
-  h.hand.indizi=h.hand.indizi.filter(c=>c.id!==myCard.id);
-  companion.hand.indizi=companion.hand.indizi.filter(c=>c.id!==theirCard.id);
-  h.hand.indizi.push(theirCard);companion.hand.indizi.push(myCard);
-  closeModal();
-  openMsg("⚡ Complicità",`Hai ceduto <b>${escape(myCard.name)}</b> a ${escape(companion.name)}<br>e ricevuto <b>${escape(theirCard.name)}</b> (${theirCard.symbols.join("")}).`);
-  log(`${h.name} usa Complicità con ${companion.name}.`); save();render();
-}
+        function drawCard(who) {
+            const deck = gameState[who].deck;
+            const hand = gameState[who].hand;
+            
+            if(deck.length > 0 && hand.length < 6) {
+                const card = deck.pop();
+                hand.push(card);
+                if(who === 'player') log(`Hai pescato: ${card.name}`);
+            } else if (deck.length === 0) {
+                if(who === 'player') log("Il tuo mazzo è esaurito! Subisci danno da fatica (non implementato).");
+            }
+        }
 
-// --- TURISTA ---
-function abilityTurista(){
-  const h=human();
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>⚡ Baratto</h2><p class="small">Scegli un Maleficio da sacrificare. Pescherai un Indizio dal mazzo in cambio.</p>
-  ${h.hand.malefici.map(c=>`<button class="option" onclick="turistaSwap('${c.id}')"><b>${escape(c.name)}</b><span>${escape(DATA.malefici[c.name]||c.text||"")}</span></button>`).join("")}
-  <button class="option" onclick="closeModal()">Annulla</button>`;
-}
-function turistaSwap(cardId){
-  const h=human(); const curse=h.hand.malefici.find(c=>c.id===cardId); if(!curse)return;
-  h.hand.malefici=h.hand.malefici.filter(c=>c.id!==cardId);
-  if(!game.discardMalefici)game.discardMalefici=[];
-  game.discardMalefici.push(curse);
-  const newCard=drawIndizio(); h.hand.indizi.push(newCard); enforceHandLimit(h);
-  closeModal();
-  log(`${h.name} usa Baratto: sacrifica ${escape(curse.name)} e pesca ${newCard.name} (${newCard.symbols.join("")}).`);
-  save();render();
-}
+        function playCard(index) {
+            if(!gameState.isPlayerTurn) return;
 
-// --- RAMINGO (passivo) ---
-function promptRamingoChoice(){
-  $("modal").classList.remove("hidden");
-  const discardOptions=game.discard.slice(-5).reverse();
-  $("sheet").innerHTML=`<h2>⚡ Recupero (Ramingo)</h2><p class="small">Puoi scegliere un Indizio dagli Scarti oppure pescarne uno dal mazzo.</p>
-  <div style="display:grid;gap:6px;margin-bottom:10px">${discardOptions.map(c=>`<button class="option" onclick="ramingoPickDiscard('${c.id}')"><b>${escape(c.name)}</b><span>${c.symbols.join("")} · dagli Scarti</span></button>`).join("")}</div>
-  <button class="option" onclick="ramingoPickDeck()"><b>Pesca dal mazzo</b><span>Indizio casuale dal mazzo.</span></button>
-  <button class="option" onclick="closeModal()" style="margin-top:4px">Annulla pesca</button>`;
-}
-function ramingoPickDiscard(id){
-  const h=human(); const card=game.discard.find(c=>c.id===id); if(!card)return;
-  game.discard=game.discard.filter(c=>c.id!==id);
-  h.hand.indizi.push(card); h.hasDrawn=true; enforceHandLimit(h);
-  closeModal(); log(`${h.name} usa Recupero e prende ${card.name} dagli Scarti.`); promptLocationChoice();
-}
-function ramingoPickDeck(){
-  const h=human(); drawTurnCard("indizio"); closeModal(); promptLocationChoice();
-}
+            const card = gameState.player.hand[index];
+            
+            if(gameState.player.mana >= card.cost) {
+                // Pay cost
+                gameState.player.mana -= card.cost;
+                
+                // Move to field
+                gameState.player.hand.splice(index, 1);
+                gameState.player.field.push(card);
+                
+                gameState.selectedCardIndex = null;
+                
+                log(`Hai giocato: ${card.name}`);
+                updateUI();
+                
+                // Simple AI response trigger could go here, but we wait for End Turn
+            } else {
+                log("Mana insufficiente!");
+            }
+        }
 
-// --- GIORNALISTA (passivo) ---
-function promptGiornalistaChoice(){
-  if(!game.decks.indizi.length)game.decks.indizi=makeDeck(DATA.indizi);
-  const c1=makeIndizio(game.decks.indizi.pop().name);
-  if(!game.decks.indizi.length)game.decks.indizi=makeDeck(DATA.indizi);
-  const c2=makeIndizio(game.decks.indizi.pop().name);
-  window._giornalistaCards=[c1,c2];
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>⚡ Fiuto (Giornalista)</h2><p class="small">Hai pescato 2 Indizi: tienine uno, l'altro torna nel mazzo.</p>
-  <button class="option" onclick="giornalistaPick(0)"><b>${escape(c1.name)}</b><span>${c1.symbols.join("")}</span></button>
-  <button class="option" onclick="giornalistaPick(1)"><b>${escape(c2.name)}</b><span>${c2.symbols.join("")}</span></button>`;
-}
-function giornalistaPick(keepIdx){
-  const h=human(); const cards=window._giornalistaCards||[];
-  const keep=cards[keepIdx]; const ret=cards[1-keepIdx];
-  if(ret)game.decks.indizi.unshift({id:uid(),name:ret.name});
-  if(keep){h.hand.indizi.push(keep); h.hasDrawn=true; enforceHandLimit(h);}
-  window._giornalistaCards=null; closeModal();
-  log(`${h.name} usa Fiuto e sceglie ${escape(keep.name)} (${keep.symbols.join("")}).`);
-  promptLocationChoice();
-}
+        function endTurn() {
+            if(!gameState.isPlayerTurn) return;
 
-// --- SACERDOTE (passivo) ---
-function promptSacerdoteChoice(){
-  $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>⚡ Grazia (Sacerdote)</h2><p class="small">Stai per pescare un Maleficio. Puoi scegliere Protezione invece.</p>
-  <button class="option" onclick="sacerdotePickProtection()"><b>Prendi Protezione</b><span>Reazione: annulla un Maleficio scagliato contro di te.</span></button>
-  <button class="option" onclick="sacerdotePickRandom()"><b>Pesca un Maleficio casuale</b><span>Dal mazzo, come di norma.</span></button>`;
-}
-function sacerdotePickProtection(){
-  const h=human();
-  h.hand.malefici.push(drawMaleficio("Protezione")); h.hasDrawn=true;
-  closeModal(); log(`${h.name} usa Grazia e prende Protezione.`); promptLocationChoice();
-}
-function sacerdotePickRandom(){
-  drawTurnCard("maleficio"); closeModal(); promptLocationChoice();
-}
+            gameState.isPlayerTurn = false;
+            document.getElementById('end-turn-btn').disabled = true;
+            log("Turno terminato. Tocca al nemico...");
+            
+            // Enemy Turn Logic (Simulated)
+            setTimeout(enemyTurn, 1000);
+        }
 
-// ===== LOBBY =====
-const AVATAR_SVG=`<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="13" r="8" fill="currentColor"/><path d="M2 36c0-9.4 7.2-15 16-15s16 5.6 16 15" fill="currentColor"/></svg>`;
+        function enemyTurn() {
+            // 1. Increase Mana
+            if(gameState.enemy.maxMana < 10) gameState.enemy.maxMana++;
+            gameState.enemy.mana = gameState.enemy.maxMana;
 
-function showVotingModal(){
-  if(!game||!game.lobbyPhase)return;
-  $("modal").style.placeItems="center";
-  $("modal").classList.remove("hidden");
-  renderVotingModal();
-}
+            // 2. Draw Card
+            drawCard('enemy');
+            updateUI();
 
-function renderVotingModal(){
-  if(!game||!game.lobbyPhase)return;
-  const choices=game.domainChoices||[];
-  const domainVotes=game.domainVotes||{};
-  const prefVotes=game.prefatoreVotes||{};
-  const myId=human()?.id;
-  const myDomainVote=myId!=null?domainVotes[myId]:undefined;
-  const myPrefVote=myId!=null?prefVotes[myId]:undefined;
-  const humanPlayers=game.players.filter(p=>p.controller!=="ai"&&p.controller!=="open");
-  const domainVoted=humanPlayers.filter(p=>domainVotes[p.id]!==undefined).length;
-  const prefVoted=humanPlayers.filter(p=>prefVotes[p.id]!==undefined).length;
-  const total=humanPlayers.length;
-  $("sheet").innerHTML=`
-    <h2 style="text-align:center;margin-bottom:4px">Lobby</h2>
-    <p class="small" style="text-align:center;margin:0 0 10px;color:var(--muted)">Vota il Dominio e il Prefatore. La partita inizia quando tutti hanno votato entrambi.</p>
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Dominio (${domainVoted}/${total})</div>
-    <div class="domain-choices">
-      ${choices.map((d,i)=>{
-        const count=Object.values(domainVotes).filter(v=>v===i).length;
-        const isVoted=myDomainVote===i;
-        return `<button class="domain-choice${isVoted?" voted":""}" onclick="voteForDomain(${i})">
-          <div class="domain-choice-name">${escape(d[0])}</div>
-          <div class="domain-choice-text">${escape(d[1])}</div>
-          <div class="domain-vote-badge">${count>0?`▲ ${count} vot${count===1?"o":"i"}`:"&nbsp;"}</div>
-        </button>`;
-      }).join("")}
-    </div>
-    <div style="margin:14px 0 6px;border-top:1px solid var(--line);padding-top:12px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Chi inizia la storia? — Prefatore (${prefVoted}/${total})</div>
-      <div style="display:grid;gap:5px">
-        ${game.players.map(p=>{
-          const prefCount=Object.values(prefVotes).filter(v=>v===p.id).length;
-          const isMyPrefVote=myPrefVote===p.id;
-          const isAI=p.controller==="ai";
-          const isOpen=p.controller==="open";
-          const label=isOpen?"In attesa...":isAI?escape(p.hero)+" (AI)":escape(p.name);
-          return `<button class="option" style="margin:0;padding:8px 12px;${isMyPrefVote?"border-color:var(--gold);background:rgba(198,155,84,.1);":""}" onclick="voteForPrefatore('${p.id}')">
-            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:900;font-size:13px">${label}</span>${prefCount>0?`<span style="color:var(--gold);font-size:11px;font-weight:800">▲ ${prefCount}</span>`:""}</div>
-          </button>`;
-        }).join("")}
-      </div>
-    </div>
-    <div class="lobby-players" style="margin-top:10px">
-      ${game.players.map(p=>{
-        const isMe=p.controller===clientId;
-        const isAI=p.controller==="ai";
-        const isOpen=p.controller==="open";
-        const hasDV=domainVotes[p.id]!==undefined;
-        const hasPV=prefVotes[p.id]!==undefined;
-        const domName=hasDV&&choices[domainVotes[p.id]]?choices[domainVotes[p.id]][0]:"";
-        const prefName=hasPV?game.players.find(x=>x.id===prefVotes[p.id])?.name||"":"";
-        const joined=!isAI&&!isOpen;
-        const cls=`lobby-player${isMe?" me":joined?" joined":""}`;
-        return `<div class="${cls}">
-          <div class="lp-avatar">${AVATAR_SVG}</div>
-          <div class="lp-name">${isOpen?"In attesa...":isAI?escape(p.hero)+" (AI)":escape(p.name)}</div>
-          <div class="lp-vote">${isAI?"—":(hasDV&&hasPV)?escape(domName):"..."}</div>
-        </div>`;
-      }).join("")}
-    </div>
-  `;
-}
+            // 3. Simple AI: Play cards if possible
+            setTimeout(() => {
+                const hand = gameState.enemy.hand;
+                // Sort hand by cost descending to play big cards first (dumb AI)
+                // We iterate backwards because we might splice
+                for(let i = hand.length - 1; i >= 0; i--) {
+                    if(gameState.enemy.mana >= hand[i].cost && gameState.enemy.field.length < 5) {
+                        const card = hand[i];
+                        gameState.enemy.mana -= card.cost;
+                        gameState.enemy.hand.splice(i, 1);
+                        gameState.enemy.field.push(card);
+                        log(`Il nemico ha giocato: ${card.name}`);
+                        updateUI();
+                    }
+                }
 
-function voteForDomain(domainIndex){
-  const h=human(); if(!h||h.controller==="ai")return;
-  if(!game.domainVotes)game.domainVotes={};
-  game.domainVotes[h.id]=domainIndex;
-  save();renderVotingModal();
-  if(game.hostId===clientId)checkLobbyVotes();
-}
+                // 4. End Enemy Turn
+                setTimeout(() => {
+                    startPlayerTurn();
+                }, 1000);
 
-function voteForPrefatore(playerId){
-  const h=human(); if(!h||h.controller==="ai")return;
-  if(!game.prefatoreVotes)game.prefatoreVotes={};
-  game.prefatoreVotes[h.id]=playerId;
-  save();renderVotingModal();
-  if(game.hostId===clientId)checkLobbyVotes();
-}
+            }, 1000);
+        }
 
-function checkLobbyVotes(){
-  if(!game||!game.lobbyPhase)return;
-  const humanPlayers=game.players.filter(p=>p.controller!=="ai"&&p.controller!=="open");
-  if(!humanPlayers.length)return;
-  const domainVotes=game.domainVotes||{};
-  const prefVotes=game.prefatoreVotes||{};
-  const humanDomainVotes=humanPlayers.map(p=>domainVotes[p.id]).filter(v=>v!==undefined);
-  const humanPrefVotes=humanPlayers.map(p=>prefVotes[p.id]).filter(v=>v!==undefined);
-  if(humanDomainVotes.length<humanPlayers.length)return;
-  if(humanPrefVotes.length<humanPlayers.length)return;
-  // Dominio vincente — maggioranza, parità risolta dal voto dell'host
-  const choices=game.domainChoices||[];
-  const tally=Array(choices.length).fill(0);
-  humanDomainVotes.forEach(v=>{if(v>=0&&v<choices.length)tally[v]++;});
-  const maxD=Math.max(...tally);
-  const hostPlayer=game.players.find(p=>p.id===game.hostId);
-  const hostDV=hostPlayer&&domainVotes[hostPlayer.id]!==undefined?domainVotes[hostPlayer.id]:null;
-  let domainWinner=tally.indexOf(maxD);
-  if(hostDV!==null&&tally[hostDV]===maxD)domainWinner=hostDV;
-  // Prefatore vincente — maggioranza, parità risolta dal voto dell'host
-  const prefTally={};
-  humanPrefVotes.forEach(v=>{prefTally[v]=(prefTally[v]||0)+1;});
-  const maxP=Math.max(...Object.values(prefTally));
-  const hostPV=hostPlayer&&prefVotes[hostPlayer.id]?prefVotes[hostPlayer.id]:null;
-  const prefCandidates=Object.keys(prefTally).filter(id=>prefTally[id]===maxP);
-  let prefWinner=prefCandidates[0];
-  if(hostPV&&prefCandidates.includes(hostPV))prefWinner=hostPV;
-  startFromLobby(choices[domainWinner],prefWinner);
-}
+        function startPlayerTurn() {
+            gameState.turn++;
+            gameState.isPlayerTurn = true;
+            
+            if(gameState.player.maxMana < 10) gameState.player.maxMana++;
+            gameState.player.mana = gameState.player.maxMana;
 
-function startFromLobby(domain,prefatoreId){
-  game.lobbyPhase=false;
-  game.domain={name:domain[0],text:domain[1]};
-  game.domainChoices=null;
-  game.domainVotes=null;
-  game.prefatoreVotes=null;
-  game.prefatoreId=prefatoreId||null;
-  const prefIdx=game.players.findIndex(p=>p.id===prefatoreId);
-  if(prefIdx>=0)game.turn=prefIdx;
-  log(`Dominio: ${game.domain.name}. Prefatore: ${game.players[game.turn]?.name||"?"}. Round 1 — niente carte, pesca o isolamento.`);
-  save();
-  closeModal();
-  render();beginTurn();
-}
+            drawCard('player');
+            
+            log(`--- Turno ${gameState.turn} ---`);
+            updateUI();
+        }
 
-window.addEventListener("load",initSetup);
-</script>
+        function log(msg) {
+            const logEl = document.getElementById('game-log');
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+            logEl.innerHTML += `<div>[${time}] ${msg}</div>`;
+            logEl.scrollTop = logEl.scrollHeight;
+        }
+
+        // --- UI Rendering ---
+
+        function updateUI() {
+            // Update Resources
+            document.getElementById('player-mana').textContent = gameState.player.mana;
+            document.getElementById('player-max-mana').textContent = gameState.player.maxMana;
+            document.getElementById('turn-text').textContent = gameState.isPlayerTurn ? `Turno ${gameState.turn}: Tu` : `Turno ${gameState.turn}: Nemico`;
+            document.getElementById('end-turn-btn').disabled = !gameState.isPlayerTurn;
+
+            // Render Fields
+            renderField('player-field', gameState.player.field, true);
+            renderField('enemy-field', gameState.enemy.field, false);
+
+            // Render Hand
+            renderHand();
+        }
+
+        function renderField(elementId, cards, isPlayer) {
+            const container = document.getElementById(elementId);
+            // Keep the label
+            const label = container.querySelector('.field-label');
+            container.innerHTML = '';
+            container.appendChild(label);
+
+            cards.forEach(card => {
+                const cardEl = createCardElement(card, false, -1);
+                container.appendChild(cardEl);
+            });
+        }
+
+        function renderHand() {
+            const container = document.getElementById('player-hand');
+            container.innerHTML = '';
+
+            gameState.player.hand.forEach((card, index) => {
+                const cardEl = createCardElement(card, true, index);
+                
+                // Highlight if selected
+                if(gameState.selectedCardIndex === index) {
+                    cardEl.classList.add('selected');
+                }
+
+                // Click event
+                cardEl.onclick = () => {
+                    if(gameState.isPlayerTurn) {
+                        if(gameState.selectedCardIndex === index) {
+                            gameState.selectedCardIndex = null; // Deselect
+                        } else {
+                            gameState.selectedCardIndex = index; // Select
+                        }
+                        updateUI();
+                        
+                        // Auto play on second click logic handled by a separate button or double click?
+                        // Let's add a "Play Selected" logic or just play on click if valid?
+                        // For this simple version: Click selects, then click "Play" button? 
+                        // Or simpler: Click plays immediately if affordable.
+                        
+                        // Let's change behavior: Click plays immediately if affordable.
+                        playCard(index);
+                    }
+                };
+
+                container.appendChild(cardEl);
+            });
+        }
+
+        function createCardElement(card, isClickable, index) {
+            const el = document.createElement('div');
+            el.className = 'card';
+            if(isClickable && gameState.player.mana < card.cost) {
+                el.style.opacity = '0.6';
+                el.style.cursor = 'not-allowed';
+            }
+
+            el.innerHTML = `
+                <div class="card-cost">${card.cost}</div>
+                <div class="card-image">${card.icon}</div>
+                <div class="card-name">${card.name}</div>
+                <div class="card-stats">
+                    <span class="stat-atk">⚔️${card.atk}</span>
+                    <span class="stat-hp">❤️${card.hp}</span>
+                </div>
+            `;
+            return el;
+        }
+
+    </script>
 </body>
 </html>
