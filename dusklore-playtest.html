@@ -70,6 +70,22 @@
   .target-grid{display:grid;gap:8px}.target{background:#241c27;color:var(--text);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:left}
   .footer-space{height:224px}
   @media (min-width:760px){.app{max-width:980px}.screen{padding:22px 18px 96px}.layout{grid-template-columns:1.25fr .9fr}.hand-wrap{width:min(980px,100vw)}.card{flex-basis:138px;height:188px}.table{min-height:500px}.players{grid-template-columns:repeat(4,1fr)}}
+  #lobby{background:radial-gradient(circle at 20% 0,#2b1f31 0,#08070a 34rem);display:flex;align-items:center;justify-content:center;padding:20px 14px;min-height:100svh}
+  .lobby-box{background:rgba(21,17,22,.96);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow);width:min(480px,100%)}
+  .domain-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+  .domain-choice{width:100%;background:linear-gradient(145deg,#1a1224,#0d0a14);border:2px solid var(--line);border-radius:14px;padding:12px 8px;color:var(--text);cursor:pointer;text-align:center;display:flex;flex-direction:column;gap:5px;transition:border-color .2s,box-shadow .2s}
+  .domain-choice:hover{border-color:var(--violet);box-shadow:0 0 14px rgba(143,97,255,.22)}
+  .domain-choice.voted{border-color:var(--gold);background:linear-gradient(145deg,#1e1408,#110d00);box-shadow:0 0 18px rgba(198,155,84,.25)}
+  .domain-choice-name{font-weight:900;font-size:13px}
+  .domain-choice-text{font-size:9px;color:var(--muted);line-height:1.4;flex:1;text-align:left}
+  .domain-vote-badge{font-size:10px;color:var(--gold);font-weight:900}
+  .lobby-players{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-top:16px}
+  .lobby-player{background:#18111e;border:1px solid var(--line);border-radius:12px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
+  .lobby-player.me{border-color:var(--gold)}
+  .lobby-player .lp-avatar{color:rgba(255,255,255,.2)}
+  .lobby-player.me .lp-avatar,.lobby-player.joined .lp-avatar{color:rgba(143,97,255,.75)}
+  .lp-name{font-size:10px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding:0 2px}
+  .lp-vote{font-size:9px;color:var(--gold);font-weight:700;min-height:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding:0 2px}
 </style>
 </head>
 <body>
@@ -155,8 +171,8 @@
           <div class="actions">
             <button id="playBtn" class="btn good wide" onclick="mainAction()">Prosegui</button>
             <button id="curseBtn" class="btn danger" onclick="openCurse()">Usa Maleficio</button>
-            <button id="darkBtn" class="btn gold" onclick="openDarkPawns()">Pegni Oscuri</button>
-            <button id="abilityBtn" class="btn wide" style="background:#4a2060" onclick="openAbility()">⚡ Potere</button>
+            <button id="darkBtn" class="btn" onclick="openDarkPawns()">Pegni Oscuri</button>
+            <button id="abilityBtn" class="btn gold wide" onclick="openAbility()">⚡ Potere</button>
             <button id="scartaBtn" class="btn danger wide hidden" onclick="discardSelected()">🗑 Scarta Indizio Selezionato</button>
           </div>
           <div id="abilityDesc" class="small" style="margin-top:6px;color:var(--muted);font-style:italic;min-height:14px"></div>
@@ -266,8 +282,7 @@ async function initSetup(){
   await initFirebase();
   const urlRoom=new URLSearchParams(location.hash.slice(1)).get("room");
   if(urlRoom){showJoinGame();$("joinCodeField").value=urlRoom;$("joinFeedback").textContent="";$("joinFeedback").style.color="var(--muted)";$("joinFeedback").textContent="Codice rilevato dall'URL. Premi Entra per unirti.";return;}
-  const saved=localStorage.getItem("dusklore-app");
-  if(saved){try{const parsed=JSON.parse(saved);if(parsed.version===3&&!parsed.ended){game=parsed;showGame();render();beginTurn();return;}else if(parsed.version===3&&parsed.ended)localStorage.removeItem("dusklore-app");}catch{}}
+  localStorage.removeItem("dusklore-app");
   showLanding();
 }
 
@@ -282,7 +297,10 @@ function setupRoomListener(code){
     syncing=true;game=doc.data();syncing=false;
     if(!game.discardMalefici)game.discardMalefici=[];
     localStorage.setItem("dusklore-app",JSON.stringify(game));
-    if(game.players.some(p=>p.controller===clientId)){showGame();render();beginTurn();}
+    if(game.players.some(p=>p.controller===clientId)){
+      if(game.lobbyPhase){showGame();showVotingModal();if(game.hostId===clientId)checkLobbyVotes();}
+      else{closeModal();showGame();render();beginTurn();}
+    }
   },err=>console.warn("Sync error:",err.message));
 }
 
@@ -321,7 +339,7 @@ async function joinByCode(){
     roomId=code;
     localStorage.setItem("dusklore-app",JSON.stringify(game));
     // Already in this room?
-    if(game.players.some(p=>p.controller===clientId)){setupRoomListener(code);showGame();render();beginTurn();return;}
+    if(game.players.some(p=>p.controller===clientId)){setupRoomListener(code);if(game.lobbyPhase){showGame();showVotingModal();}else{showGame();render();beginTurn();}return;}
     // Find open seat
     const open=game.players.filter(p=>p.controller==="open");
     if(!open.length){fb.style.color="var(--blood)";fb.textContent="Nessun posto libero in questa stanza.";return;}
@@ -339,7 +357,7 @@ async function joinByCode(){
     if(heroVal==="SACERDOTE"&&!seat.hand.malefici.some(c=>c.name==="Protezione"))seat.hand.malefici.push(drawMaleficio("Protezione"));
     game.roomId=code;
     log(`${nameVal} (${heroVal}) entra nella partita.`);
-    save();setupRoomListener(code);showGame();render();beginTurn();
+    save();setupRoomListener(code);if(game.lobbyPhase){showGame();showVotingModal();}else{showGame();render();beginTurn();}
   }catch(e){fb.style.color="var(--blood)";fb.textContent=`Errore: ${e.message}`;}
 }
 
@@ -357,9 +375,9 @@ function startGame(){
   const count=Number($("playerCount").value||4);
   const corrupt={4:2,5:2,6:2,7:3,8:3}[count], innocents=count-corrupt;
   const identities=shuffle([...Array(innocents).fill("Innocente"),...Array(corrupt).fill("Corrotto")]);
-  const domain=rand(DATA.domini);
+  const domainChoices=shuffle([...DATA.domini]).slice(0,3);
   const rid=pendingRoomId||uid();pendingRoomId=null;roomId=rid;
-  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:domain[0],text:domain[1]},presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
+  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,domainChoices,domainVotes:{},presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
   const heroes=[$("heroSelect").value,...shuffle(DATA.heroes.filter(h=>h!==$("heroSelect").value))];
   Array.from({length:count},(_,i)=>{
     const kind=i===0?"local":($(`slot${i+1}`)?.value||"ai");
@@ -368,10 +386,9 @@ function startGame(){
     const p={id:uid(),name,hero:heroes[i],controller:kind==="local"?clientId:kind,isHuman:kind!=="ai",identity:identities.pop(),mission,missionDone:[false,false],missionDoneThisAct:0,relic:drawRelic(),location:"insieme",dark:0,hasPlayed:false,hasDrawn:false,abilityUsed:false,protected:false,known:false,hand:{indizi:[drawIndizio(),drawIndizio(),drawIndizio()],malefici:[drawMaleficio(heroes[i]==="SACERDOTE"?"Protezione":null)]}};
     game.players.push(p);
   });
-  log(`Dominio scelto: ${game.domain.name}. Round 1 di prefazione: niente carte, pesca o isolamento.`);
   location.hash="room="+game.roomId;
   if(db)setupRoomListener(game.roomId);
-  showGame();
+  save();showGame();showVotingModal();
 }
 
 function showGame(){$("setup").classList.add("hidden");$("game").classList.remove("hidden");$("handWrap").classList.remove("hidden");}
@@ -385,7 +402,7 @@ function canUseCurses(){return game.presage!=="Panico" && human().location!=="is
 function escape(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 
 function render(){
-  if(!game)return;
+  if(!game||game.lobbyPhase)return;
   const h=human(),t=threshold(),act=actFromScale();
   $("sunScore").textContent=game.scale.sun;$("moonScore").textContent=game.scale.moon;$("winThreshold").textContent=t[0];
   $("sunBar").style.width=Math.min(100,game.scale.sun/t[0]*100)+"%";$("moonBar").style.width=Math.min(100,game.scale.moon/t[0]*100)+"%";
@@ -440,7 +457,7 @@ function render(){
       btn.textContent=`⚡ ${ab.name}${h.abilityUsed?" ✓":""}`;
       btn.disabled=ended||isR1||(isActive&&!canUse);
       btn.style.opacity=(isR1||(isActive&&!canUse))?"0.5":"1";
-      btn.style.background=isActive&&canUse?"#6a2fa0":ab.type==="passive"?"#2d2040":"#3d1f5a";
+      btn.style.background=isActive&&canUse?"#8a632d":ab.type==="passive"?"#3d2a15":"#2d1e0a";
       if(descEl)descEl.textContent=ab.desc;
     }
   }catch(e){console.warn("Ability render error:",e);}
@@ -495,24 +512,40 @@ function drawTurnCard(choice){
 
 function promptDrawChoice(){
   const h=human();
-  if(!isHumanTurn()||h.hasDrawn||h.hasPlayed||game.round===1)return;
+  if(!isHumanTurn()||h.hasDrawn||h.hasPlayed)return;
+  if(game.round===1){
+    $("modal").style.placeItems="center";
+    $("modal").classList.remove("hidden");
+    $("sheet").innerHTML=`<h2 style="text-align:center;margin-bottom:10px">Presenta il Protagonista</h2><p class="small" style="text-align:center;margin-bottom:18px">Racconta al gruppo chi sei: il tuo nome, il tuo aspetto, cosa ti ha portato qui. Quando hai finito, premi Fatto per passare il turno.</p><button class="btn wide" style="width:100%" onclick="presentaProtagonista()">Fatto</button>`;
+    return;
+  }
   const lim=handLimit();
   if(h.hand.indizi.length>lim){
     $("modal").classList.remove("hidden");
     $("sheet").innerHTML=`<h2>⚠️ Ferimento</h2><p class="small">Il Presagio limita la mano a <b>${lim} Indizi</b>. Hai ${h.hand.indizi.length}: devi scartare prima di poter pescare.</p><button class="option" onclick="closeModal()">Chiudi e Scarta</button>`;
     return;
   }
+  const mustDrawIndizio=h.hand.indizi.length===0;
   const indiziHint={
     "GIORNALISTA":"⚡ Fiuto: vedrai 2 Indizi e ne terrai 1.",
     "RAMINGO":game.discard.length>0?"⚡ Recupero: potrai scegliere dagli Scarti o dal mazzo.":"Aggiungi un Indizio alla mano (gli Scarti sono vuoti)."
   }[h.hero]||"Aggiungi un Indizio alla mano (max 3).";
-  const maleficoHint={
+  const maleficoHint=mustDrawIndizio?"Devi pescare un Indizio: non ne hai nessuno e devi giocarne almeno uno.":({
     "SACERDOTE":"⚡ Grazia: potrai scegliere Protezione al posto di un Maleficio casuale."
-  }[h.hero]||"Aggiungi un Maleficio alla mano.";
+  }[h.hero]||"Aggiungi un Maleficio alla mano.");
   $("modal").classList.remove("hidden");
   $("sheet").innerHTML=`<h2>Pesca di inizio turno</h2><p class="small">Cosa peschi questo turno?</p>
   <button class="option" onclick="chooseTurnDraw('indizio')"><b>Pesca Indizio</b><span>${indiziHint}</span></button>
-  <button class="option" onclick="chooseTurnDraw('maleficio')"><b>Pesca Maleficio</b><span>${maleficoHint}</span></button>`;
+  <button class="option" ${mustDrawIndizio?"disabled style='opacity:.45;cursor:not-allowed'":""} ${mustDrawIndizio?"":"onclick=\"chooseTurnDraw('maleficio')\""} ><b>Pesca Maleficio</b><span>${maleficoHint}</span></button>`;
+}
+function presentaProtagonista(){
+  closeModal();
+  if(game.round===1&&isHumanTurn()){
+    const h=human();
+    h.hasPlayed=true;
+    log(`${h.name} presenta ${h.hero} nel Dominio.`);
+    nextTurn();
+  }
 }
 function chooseTurnDraw(choice){
   closeModal();
@@ -533,10 +566,13 @@ function promptLocationChoice(){
     const gid=game.players.find(p=>p.id!==h.id&&p.location!=="isolato")?.location||("g_"+uid());
     h.location=gid;log(`${h.name} è costretto In Gruppo dal Presagio.`);render();return;
   }
+  $("modal").style.placeItems="center";
   $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>Dove sei questo turno?</h2><p class="small">La posizione determina cosa puoi fare e cosa gli altri vedono di te.</p>
-  <button class="option" onclick="promptGroupWith()"><b>In Gruppo</b><span>Scegli con chi stare. Puoi lanciare Malefici contro i membri del tuo gruppo.</span></button>
-  <button class="option" onclick="chooseIsolato()"><b>Isolato</b><span>Non puoi usare Malefici. La tua carta va coperta: gli altri non sanno quale Indizio hai giocato.</span></button>`;
+  $("sheet").innerHTML=`<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);text-align:center;margin-bottom:6px">Narra la Scena</div><h2 style="text-align:center;margin-bottom:6px">Dove sei questo turno?</h2><p class="small" style="text-align:center;margin-bottom:16px">La posizione determina cosa puoi fare e cosa gli altri vedono di te.</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <button class="option" style="margin:0;text-align:center" onclick="promptGroupWith()"><b>In Gruppo</b><span>Scegli con chi stare. Puoi usare i Malefici.</span></button>
+  <button class="option" style="margin:0;text-align:center" onclick="chooseIsolato()"><b>Isolato</b><span>Malefici disabilitati. La tua carta va coperta.</span></button>
+  </div>`;
 }
 function chooseIsolato(){const h=human();h.location="isolato";closeModal();log(`${h.name} è Isolato.`);render();}
 function promptGroupWith(){
@@ -614,18 +650,22 @@ function endRound(){
 }
 
 function beginTurn(){
-  if(!game||game.ended||pendingTurnStart)return;
+  if(!game||game.ended||game.lobbyPhase||pendingTurnStart)return;
   render();
   const p=current();
   if(p.controller==="open")return openMsg("Posto libero",`${p.name} non è ancora occupato. Usa un posto AI oppure fai entrare un amico prima di continuare.`);
   askDarkInterrupt(()=>{
     if(isHumanTurn()){promptDrawChoice();}
     else if(p.controller==="ai"&&game.hostId===clientId){
-      const h=human();
-      if(h.hero==="SOLDATO"&&!h.abilityUsed&&game.round>1&&!game.ended){
-        promptSoldatoInterject(()=>setTimeout(aiTurn,450));
-      }else{
-        setTimeout(aiTurn,450);
+      if(game.round===1){
+        aiTurn();
+      } else {
+        const h=human();
+        if(h.hero==="SOLDATO"&&!h.abilityUsed&&!game.ended){
+          promptSoldatoInterject(()=>setTimeout(aiTurn,450));
+        }else{
+          setTimeout(aiTurn,450);
+        }
       }
     }
   });
@@ -826,6 +866,7 @@ function darkInterrupt(){const h=human(); if(h.dark<3)return; h.dark-=3; const n
 
 function completeMissionPhase(i){
   const h=human();
+  if(game.round===1)return openMsg("Missione bloccata","Le Fasi della Missione non possono essere segnate durante il Round di Prefazione.");
   if(i===1&&!h.missionDone[0])return openMsg("Fase bloccata","La Fase 2 richiede prima la Fase 1.");
   if(!h.missionDone[i]){
     if((h.missionDoneThisAct||0)>=1)return openMsg("Fase bloccata","Puoi completare solo una Fase Missione per Atto. Aspetta il prossimo Atto.");
@@ -977,7 +1018,7 @@ function showRoomLink(){const url=location.href.split("#")[0]+"#room="+game.room
 function openRules(){openMsg("Promemoria regole","Round 1: prefazione. Dal Round 2: pesca a inizio turno, gioca un Indizio, usa Malefici solo se nello stesso luogo, Presagio attivo fino a fine round. Alla fine di ogni Atto tutti mettono un Indizio coperto e i simboli opposti si annullano.")}
 function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();}
 function openMsg(title,body){$("modal").classList.remove("hidden");$("sheet").innerHTML=`<h2>${title}</h2><p>${body}</p><button class="option" onclick="closeModal()">Ok</button>`}
-function closeModal(){$("modal").classList.add("hidden")}
+function closeModal(){$("modal").classList.add("hidden");$("modal").style.placeItems="";}
 
 // ===== SISTEMA POTERI =====
 const ABILITIES={
@@ -1020,7 +1061,7 @@ function openAbility(){
       ${h.abilityUsed?` · <span style="color:var(--blood)">Già usato questo round</span>`:""}
     </div>
     ${isActive
-      ?`<button class="btn ${canUse?"":"secondary"}" style="width:100%;${canUse?"background:#6a2fa0":""}" ${canUse?"":"disabled"} onclick="activateAbility('${h.hero}')">
+      ?`<button class="btn ${canUse?"":"secondary"}" style="width:100%;${canUse?"background:#8a632d":""}" ${canUse?"":"disabled"} onclick="activateAbility('${h.hero}')">
           ${canUse?"Attiva Potere":"Non disponibile"}
         </button>
         ${reasonDisabled?`<div style="margin-top:8px;font-size:12px;color:var(--muted);text-align:center">${reasonDisabled}</div>`:""}`
@@ -1238,6 +1279,89 @@ function sacerdotePickProtection(){
 }
 function sacerdotePickRandom(){
   drawTurnCard("maleficio"); closeModal(); promptLocationChoice();
+}
+
+// ===== LOBBY =====
+const AVATAR_SVG=`<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="13" r="8" fill="currentColor"/><path d="M2 36c0-9.4 7.2-15 16-15s16 5.6 16 15" fill="currentColor"/></svg>`;
+
+function showVotingModal(){
+  if(!game||!game.lobbyPhase)return;
+  $("modal").style.placeItems="center";
+  $("modal").classList.remove("hidden");
+  renderVotingModal();
+}
+
+function renderVotingModal(){
+  if(!game||!game.lobbyPhase)return;
+  const choices=game.domainChoices||[];
+  const votes=game.domainVotes||{};
+  const myId=human()?.id;
+  const myVote=myId!=null?votes[myId]:undefined;
+  const humanPlayers=game.players.filter(p=>p.controller!=="ai"&&p.controller!=="open");
+  const humanVoted=humanPlayers.filter(p=>votes[p.id]!==undefined).length;
+
+  $("sheet").innerHTML=`
+    <h2 style="text-align:center;margin-bottom:4px">Scegli il Dominio</h2>
+    <p class="small" style="text-align:center;margin:0 0 14px;color:var(--muted)">Vota il luogo della storia. La partita inizia quando tutti concordano.</p>
+    <div class="domain-choices">
+      ${choices.map((d,i)=>{
+        const count=Object.values(votes).filter(v=>v===i).length;
+        const isVoted=myVote===i;
+        return `<button class="domain-choice${isVoted?" voted":""}" onclick="voteForDomain(${i})">
+          <div class="domain-choice-name">${escape(d[0])}</div>
+          <div class="domain-choice-text">${escape(d[1])}</div>
+          <div class="domain-vote-badge">${count>0?`▲ ${count} vot${count===1?"o":"i"}`:"&nbsp;"}</div>
+        </button>`;
+      }).join("")}
+    </div>
+    <div class="lobby-players">
+      ${game.players.map(p=>{
+        const isMe=p.controller===clientId;
+        const isAI=p.controller==="ai";
+        const isOpen=p.controller==="open";
+        const hasVoted=votes[p.id]!==undefined;
+        const votedName=hasVoted&&choices[votes[p.id]]?choices[votes[p.id]][0]:"";
+        const joined=!isAI&&!isOpen;
+        const cls=`lobby-player${isMe?" me":joined?" joined":""}`;
+        return `<div class="${cls}">
+          <div class="lp-avatar">${AVATAR_SVG}</div>
+          <div class="lp-name">${isOpen?"In attesa...":isAI?escape(p.hero)+" (AI)":escape(p.name)}</div>
+          <div class="lp-vote">${isAI?"—":hasVoted?escape(votedName):"..."}</div>
+        </div>`;
+      }).join("")}
+    </div>
+    <p class="small" style="text-align:center;margin:12px 0 0;color:var(--muted)">${humanVoted}/${humanPlayers.length} giocatori hanno votato</p>
+  `;
+}
+
+function voteForDomain(domainIndex){
+  const h=human(); if(!h||h.controller==="ai")return;
+  if(!game.domainVotes)game.domainVotes={};
+  game.domainVotes[h.id]=domainIndex;
+  save();renderVotingModal();
+  if(game.hostId===clientId)checkLobbyVotes();
+}
+
+function checkLobbyVotes(){
+  if(!game||!game.lobbyPhase)return;
+  const humanPlayers=game.players.filter(p=>p.controller!=="ai"&&p.controller!=="open");
+  if(!humanPlayers.length)return;
+  const votes=game.domainVotes||{};
+  const humanVotes=humanPlayers.map(p=>votes[p.id]).filter(v=>v!==undefined);
+  if(humanVotes.length<humanPlayers.length)return;
+  if(!humanVotes.every(v=>v===humanVotes[0]))return;
+  startFromLobby(game.domainChoices[humanVotes[0]]);
+}
+
+function startFromLobby(domain){
+  game.lobbyPhase=false;
+  game.domain={name:domain[0],text:domain[1]};
+  game.domainChoices=null;
+  game.domainVotes=null;
+  log(`Dominio scelto: ${game.domain.name}. Round 1 di prefazione: niente carte, pesca o isolamento.`);
+  save();
+  closeModal();
+  render();beginTurn();
 }
 
 window.addEventListener("load",initSetup);
