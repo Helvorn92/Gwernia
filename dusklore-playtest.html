@@ -146,8 +146,8 @@
             <button class="deck indizi" onclick="showDeckInfo('indizi')">Mazzo<br>Indizi<br><span id="indiziCount"></span></button>
             <button class="deck malefici" onclick="showDeckInfo('malefici')">Mazzo<br>Malefici<br><span id="maleficiCount"></span></button>
             <button class="deck reliquie" onclick="showDeckInfo('reliquie')">Reliquiario<br><span id="relicCount"></span></button>
-            <button class="deck" style="background:linear-gradient(145deg,#2e2020,#100808);color:#c9a8a8;border-color:rgba(180,68,68,.4)" onclick="showDiscard()">Scarti<br>Indizi<br><span id="discardCount">0</span></button>
-            <button class="deck" style="background:linear-gradient(145deg,#1a0d2e,#0a0810);color:#d0aaff;border-color:rgba(143,97,255,.4)" onclick="showDiscardMalefici()">Scarti<br>Malefici<br><span id="discardMaleficiCount">0</span></button>
+            <button id="discardDeckBtn" class="deck" style="background:linear-gradient(145deg,#2e2020,#100808);color:#c9a8a8;border-color:rgba(180,68,68,.4)" onclick="showDiscard()">Scarti<br>Indizi<br>—</button>
+            <button id="discardMaleficiDeckBtn" class="deck" style="background:linear-gradient(145deg,#1a0d2e,#0a0810);color:#d0aaff;border-color:rgba(143,97,255,.4)" onclick="showDiscardMalefici()">Scarti<br>Malefici<br>—</button>
           </div>
           <div id="players" class="players"></div>
           <div class="table-center">
@@ -271,8 +271,12 @@ function drawMaleficio(name=null){if(name)return makeMaleficio(name); if(!game.d
 function drawRelic(){if(!game.decks.reliquie.length) game.decks.reliquie=makeDeck(DATA.reliquie);return game.decks.reliquie.pop().name;}
 function log(msg){game.log.unshift(msg);game.log=game.log.slice(0,60);save();render();}
 function save(){
+  game.lastSavedBy=clientId;
   localStorage.setItem("dusklore-app",JSON.stringify(game));
-  if(db&&game?.roomId&&!syncing) db.collection("duskloreRooms").doc(game.roomId).set(game).catch(console.warn);
+  if(db&&game?.roomId&&!syncing){
+    const docData={...game,domainChoices:game.domainChoices!=null?JSON.stringify(game.domainChoices):null};
+    db.collection("duskloreRooms").doc(game.roomId).set(docData).catch(console.warn);
+  }
 }
 
 async function initSetup(){
@@ -294,8 +298,13 @@ function setupRoomListener(code){
   if(!db)return;
   db.collection("duskloreRooms").doc(code).onSnapshot(doc=>{
     if(!doc.exists)return;
-    syncing=true;game=doc.data();syncing=false;
-    if(!game.discardMalefici)game.discardMalefici=[];
+    const data=doc.data();
+    if(!data.discardMalefici)data.discardMalefici=[];
+    if(typeof data.domainChoices==="string")data.domainChoices=JSON.parse(data.domainChoices);
+    // Non tornare in lobby se la partita è già avviata localmente
+    if(game&&!game.lobbyPhase&&data.lobbyPhase)return;
+    if(!data.lobbyPhase&&data.lastSavedBy===clientId){render();return;}
+    syncing=true;game=data;syncing=false;
     localStorage.setItem("dusklore-app",JSON.stringify(game));
     if(game.players.some(p=>p.controller===clientId)){
       if(game.lobbyPhase){showGame();showVotingModal();if(game.hostId===clientId)checkLobbyVotes();}
@@ -336,6 +345,7 @@ async function joinByCode(){
     if(!snap.exists){fb.style.color="var(--blood)";fb.textContent="Stanza non trovata. Controlla il codice.";return;}
     syncing=true;game=snap.data();syncing=false;
     if(!game.discardMalefici)game.discardMalefici=[];
+    if(typeof game.domainChoices==="string")game.domainChoices=JSON.parse(game.domainChoices);
     roomId=code;
     localStorage.setItem("dusklore-app",JSON.stringify(game));
     // Already in this room?
@@ -377,12 +387,13 @@ function startGame(){
   const identities=shuffle([...Array(innocents).fill("Innocente"),...Array(corrupt).fill("Corrotto")]);
   const domainChoices=shuffle([...DATA.domini]).slice(0,3);
   const rid=pendingRoomId||uid();pendingRoomId=null;roomId=rid;
-  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,domainChoices,domainVotes:{},presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
+  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,domainChoices,domainVotes:{},prefatoreVotes:{},prefatoreId:null,narratorVotes:{},narratorId:null,presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
   const heroes=[$("heroSelect").value,...shuffle(DATA.heroes.filter(h=>h!==$("heroSelect").value))];
+  const missionPool=shuffle(Object.keys(DATA.missions));
   Array.from({length:count},(_,i)=>{
     const kind=i===0?"local":($(`slot${i+1}`)?.value||"ai");
     const name=i===0?($("nameInput").value.trim()||"Giocatore"):kind==="ai"?heroes[i]:`Posto ${i+1} libero`;
-    const mission=rand(Object.keys(DATA.missions));
+    const mission=missionPool[i];
     const p={id:uid(),name,hero:heroes[i],controller:kind==="local"?clientId:kind,isHuman:kind!=="ai",identity:identities.pop(),mission,missionDone:[false,false],missionDoneThisAct:0,relic:drawRelic(),location:"insieme",dark:0,hasPlayed:false,hasDrawn:false,abilityUsed:false,protected:false,known:false,hand:{indizi:[drawIndizio(),drawIndizio(),drawIndizio()],malefici:[drawMaleficio(heroes[i]==="SACERDOTE"?"Protezione":null)]}};
     game.players.push(p);
   });
@@ -438,8 +449,10 @@ function render(){
   $("missionTitle").textContent=h.mission;$("missionRelic").textContent=`Reliquia: ${h.relic}`;
   $("missionPhases").innerHTML=DATA.missions[h.mission].map((txt,i)=>`<div class="mission-phase"><button class="tick ${h.missionDone[i]?'done':''}" onclick="completeMissionPhase(${i})" title="Clicca per segnare/deselezionare">${h.missionDone[i]?'✓':i+1}</button><div><b>Fase ${i+1}</b><div class="small">${escape(txt)}</div></div></div>`).join("");
   $("log").innerHTML=game.log.map(x=>`<div class="logitem">${escape(x)}</div>`).join("");
-  if($("discardCount"))$("discardCount").textContent=game.discard.length;
-  if($("discardMaleficiCount"))$("discardMaleficiCount").textContent=(game.discardMalefici||[]).length;
+  {const topInd=game.discard.length?game.discard[game.discard.length-1]:null;
+  if($("discardDeckBtn"))$("discardDeckBtn").innerHTML=`Scarti<br>Indizi<br>${topInd?`<span style="font-size:9px;opacity:.9;line-height:1.3;word-break:break-word">${escape(topInd.name)}</span><br><span style="font-size:15px">${topInd.symbols.join("")}</span><br>`:"—<br>"}<span style="font-size:10px;opacity:.55">${game.discard.length}</span>`;}
+  {const topMal=(game.discardMalefici||[]).length?game.discardMalefici[game.discardMalefici.length-1]:null;
+  if($("discardMaleficiDeckBtn"))$("discardMaleficiDeckBtn").innerHTML=`Scarti<br>Malefici<br>${topMal?`<span style="font-size:9px;opacity:.9;line-height:1.3;word-break:break-word">${escape(topMal.name)}</span><br>`:"—<br>"}<span style="font-size:10px;opacity:.55">${(game.discardMalefici||[]).length}</span>`;}
   const ended=game.ended;
   const isR1=game.round===1;
   const overLimit=h.hand.indizi.length>handLimit();
@@ -974,23 +987,73 @@ function epilogue(){
   game.players.forEach(p=>{const bonus=p.missionDone[1]?(p.identity==="Corrotto"?7:5):p.missionDone[0]?(p.identity==="Corrotto"?3:2):0; if(p.identity==="Corrotto")game.scale.moon+=bonus; else game.scale.sun+=bonus});
   const winner=game.scale.sun>=game.scale.moon?"Innocenti":"Corrotti";
   game.ended=true;
+  if(!game.narratorVotes)game.narratorVotes={};
+  game.narratorId=null;
   log(`Epilogo: vincono ${winner}. Identità rivelate.`);
   save();render();
   $("modal").classList.remove("hidden");
+  $("modal").style.placeItems="center";
   $("sheet").innerHTML=`<h2>⚖️ Epilogo — Fine Partita</h2>
   <p>Bilancia finale: ☀️ <b>${game.scale.sun}</b> · 🌙 <b>${game.scale.moon}</b> — Vincono: <b>${winner}</b></p>
   <h3 style="margin:12px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em">Identità rivelate</h3>
   ${game.players.map(p=>`<div style="background:#1e1620;border:1px solid var(--line);border-radius:12px;padding:10px;margin:6px 0"><b>${escape(p.name)}</b> — <span style="color:${p.identity==="Corrotto"?'var(--blood)':'var(--green)'}">${p.identity}</span><div class="small" style="margin-top:4px">${p.hero} · Missione: <i>${escape(p.mission)}</i> (${p.missionDone[1]?"completa":p.missionDone[0]?"fase 1/2":"non completata"})</div></div>`).join("")}
   <h3 style="margin:14px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em">Chi narra l'Epilogo?</h3>
-  <p class="small">Votate chi tra i presenti narrerà il finale della storia.</p>
+  <p class="small">Vota chi tra i presenti narrerà il finale della storia.</p>
   <div class="target-grid">${game.players.map(p=>`<button class="target" onclick="voteNarrator('${p.id}')"><b>${escape(p.name)}</b><div class="small">${p.hero} · ${p.identity}</div></button>`).join("")}</div>`;
 }
 function voteNarrator(id){
-  const narrator=game.players.find(p=>p.id===id);
-  $("modal").classList.add("hidden");
-  log(`${narrator?escape(narrator.name):"?"} narrerà l'Epilogo. La partita è conclusa.`);
-  save();render();
+  const h=human(); if(!h)return;
+  if(!game.narratorVotes)game.narratorVotes={};
+  game.narratorVotes[h.id]=id;
+  save();
+  if(game.hostId===clientId)checkNarratorVotes();
 }
+function checkNarratorVotes(){
+  if(!game||!game.ended)return;
+  const humanPlayers=game.players.filter(p=>p.controller!=="ai"&&p.controller!=="open");
+  const votes=game.narratorVotes||{};
+  const humanVotes=humanPlayers.map(p=>votes[p.id]).filter(v=>v!==undefined);
+  if(humanVotes.length<humanPlayers.length)return;
+  const tally={};
+  humanVotes.forEach(v=>{tally[v]=(tally[v]||0)+1;});
+  const maxV=Math.max(...Object.values(tally));
+  const hostPlayer=game.players.find(p=>p.id===game.hostId);
+  const hostVote=hostPlayer?votes[hostPlayer.id]:null;
+  const candidates=Object.keys(tally).filter(id=>tally[id]===maxV);
+  let narratorId=candidates[0];
+  if(hostVote&&candidates.includes(hostVote))narratorId=hostVote;
+  resolveNarrator(narratorId);
+}
+function resolveNarrator(narratorId){
+  game.narratorId=narratorId;
+  const narrator=game.players.find(p=>p.id===narratorId);
+  log(`${narrator?escape(narrator.name):"?"} narrerà l'Epilogo.`);
+  save();
+  showEpilogueScreen();
+}
+function showEpilogueScreen(){
+  const winner=game.scale.sun>=game.scale.moon?"Innocenti":"Corrotti";
+  const isPositive=winner==="Innocenti";
+  const narrator=game.players.find(p=>p.id===game.narratorId);
+  const isNarrator=narrator&&narrator.controller===clientId;
+  $("modal").classList.remove("hidden");
+  $("modal").style.placeItems="center";
+  $("sheet").innerHTML=`
+    <div style="text-align:center;padding:10px 0 18px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:${isPositive?"var(--sun)":"var(--blood)"};margin-bottom:14px">Fine della storia</div>
+      <h1 style="font-size:28px;letter-spacing:.1em;margin:0 0 10px;color:${isPositive?"var(--sun)":"var(--blood)"}">
+        ${isPositive?"EPILOGO POSITIVO":"EPILOGO NEGATIVO"}
+      </h1>
+      <p style="color:var(--muted);font-size:14px;margin:0 0 16px;line-height:1.5">
+        ${isPositive?"Gli Innocenti hanno preservato la luce.<br>Il male è sconfitto.":"I Corrotti hanno soggiogato il Dominio.<br>Le tenebre trionfano."}
+      </p>
+      ${narrator?`<p class="small" style="margin:0 0 20px;color:var(--muted)">Narratore: <b style="color:var(--gold)">${escape(narrator.name)}</b></p>`:""}
+      ${isNarrator
+        ?`<button class="btn wide" style="width:100%;margin-top:8px;background:${isPositive?"var(--green)":"var(--blood)"}" onclick="finisciPartita()">Finisci Partita</button>`
+        :`<p class="small" style="color:var(--muted);margin-top:8px">Attendi che il narratore concluda la storia.</p>`}
+    </div>`;
+}
+function finisciPartita(){resetGame();}
 
 function openTargets(title,filter,callbackName){
   const targets=game.players.filter(filter);
@@ -1294,19 +1357,23 @@ function showVotingModal(){
 function renderVotingModal(){
   if(!game||!game.lobbyPhase)return;
   const choices=game.domainChoices||[];
-  const votes=game.domainVotes||{};
+  const domainVotes=game.domainVotes||{};
+  const prefVotes=game.prefatoreVotes||{};
   const myId=human()?.id;
-  const myVote=myId!=null?votes[myId]:undefined;
+  const myDomainVote=myId!=null?domainVotes[myId]:undefined;
+  const myPrefVote=myId!=null?prefVotes[myId]:undefined;
   const humanPlayers=game.players.filter(p=>p.controller!=="ai"&&p.controller!=="open");
-  const humanVoted=humanPlayers.filter(p=>votes[p.id]!==undefined).length;
-
+  const domainVoted=humanPlayers.filter(p=>domainVotes[p.id]!==undefined).length;
+  const prefVoted=humanPlayers.filter(p=>prefVotes[p.id]!==undefined).length;
+  const total=humanPlayers.length;
   $("sheet").innerHTML=`
-    <h2 style="text-align:center;margin-bottom:4px">Scegli il Dominio</h2>
-    <p class="small" style="text-align:center;margin:0 0 14px;color:var(--muted)">Vota il luogo della storia. La partita inizia quando tutti concordano.</p>
+    <h2 style="text-align:center;margin-bottom:4px">Lobby</h2>
+    <p class="small" style="text-align:center;margin:0 0 10px;color:var(--muted)">Vota il Dominio e il Prefatore. La partita inizia quando tutti hanno votato entrambi.</p>
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Dominio (${domainVoted}/${total})</div>
     <div class="domain-choices">
       ${choices.map((d,i)=>{
-        const count=Object.values(votes).filter(v=>v===i).length;
-        const isVoted=myVote===i;
+        const count=Object.values(domainVotes).filter(v=>v===i).length;
+        const isVoted=myDomainVote===i;
         return `<button class="domain-choice${isVoted?" voted":""}" onclick="voteForDomain(${i})">
           <div class="domain-choice-name">${escape(d[0])}</div>
           <div class="domain-choice-text">${escape(d[1])}</div>
@@ -1314,23 +1381,39 @@ function renderVotingModal(){
         </button>`;
       }).join("")}
     </div>
-    <div class="lobby-players">
+    <div style="margin:14px 0 6px;border-top:1px solid var(--line);padding-top:12px">
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Chi inizia la storia? — Prefatore (${prefVoted}/${total})</div>
+      <div style="display:grid;gap:5px">
+        ${game.players.map(p=>{
+          const prefCount=Object.values(prefVotes).filter(v=>v===p.id).length;
+          const isMyPrefVote=myPrefVote===p.id;
+          const isAI=p.controller==="ai";
+          const isOpen=p.controller==="open";
+          const label=isOpen?"In attesa...":isAI?escape(p.hero)+" (AI)":escape(p.name);
+          return `<button class="option" style="margin:0;padding:8px 12px;${isMyPrefVote?"border-color:var(--gold);background:rgba(198,155,84,.1);":""}" onclick="voteForPrefatore('${p.id}')">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:900;font-size:13px">${label}</span>${prefCount>0?`<span style="color:var(--gold);font-size:11px;font-weight:800">▲ ${prefCount}</span>`:""}</div>
+          </button>`;
+        }).join("")}
+      </div>
+    </div>
+    <div class="lobby-players" style="margin-top:10px">
       ${game.players.map(p=>{
         const isMe=p.controller===clientId;
         const isAI=p.controller==="ai";
         const isOpen=p.controller==="open";
-        const hasVoted=votes[p.id]!==undefined;
-        const votedName=hasVoted&&choices[votes[p.id]]?choices[votes[p.id]][0]:"";
+        const hasDV=domainVotes[p.id]!==undefined;
+        const hasPV=prefVotes[p.id]!==undefined;
+        const domName=hasDV&&choices[domainVotes[p.id]]?choices[domainVotes[p.id]][0]:"";
+        const prefName=hasPV?game.players.find(x=>x.id===prefVotes[p.id])?.name||"":"";
         const joined=!isAI&&!isOpen;
         const cls=`lobby-player${isMe?" me":joined?" joined":""}`;
         return `<div class="${cls}">
           <div class="lp-avatar">${AVATAR_SVG}</div>
           <div class="lp-name">${isOpen?"In attesa...":isAI?escape(p.hero)+" (AI)":escape(p.name)}</div>
-          <div class="lp-vote">${isAI?"—":hasVoted?escape(votedName):"..."}</div>
+          <div class="lp-vote">${isAI?"—":(hasDV&&hasPV)?escape(domName):"..."}</div>
         </div>`;
       }).join("")}
     </div>
-    <p class="small" style="text-align:center;margin:12px 0 0;color:var(--muted)">${humanVoted}/${humanPlayers.length} giocatori hanno votato</p>
   `;
 }
 
@@ -1342,23 +1425,54 @@ function voteForDomain(domainIndex){
   if(game.hostId===clientId)checkLobbyVotes();
 }
 
+function voteForPrefatore(playerId){
+  const h=human(); if(!h||h.controller==="ai")return;
+  if(!game.prefatoreVotes)game.prefatoreVotes={};
+  game.prefatoreVotes[h.id]=playerId;
+  save();renderVotingModal();
+  if(game.hostId===clientId)checkLobbyVotes();
+}
+
 function checkLobbyVotes(){
   if(!game||!game.lobbyPhase)return;
   const humanPlayers=game.players.filter(p=>p.controller!=="ai"&&p.controller!=="open");
   if(!humanPlayers.length)return;
-  const votes=game.domainVotes||{};
-  const humanVotes=humanPlayers.map(p=>votes[p.id]).filter(v=>v!==undefined);
-  if(humanVotes.length<humanPlayers.length)return;
-  if(!humanVotes.every(v=>v===humanVotes[0]))return;
-  startFromLobby(game.domainChoices[humanVotes[0]]);
+  const domainVotes=game.domainVotes||{};
+  const prefVotes=game.prefatoreVotes||{};
+  const humanDomainVotes=humanPlayers.map(p=>domainVotes[p.id]).filter(v=>v!==undefined);
+  const humanPrefVotes=humanPlayers.map(p=>prefVotes[p.id]).filter(v=>v!==undefined);
+  if(humanDomainVotes.length<humanPlayers.length)return;
+  if(humanPrefVotes.length<humanPlayers.length)return;
+  // Dominio vincente — maggioranza, parità risolta dal voto dell'host
+  const choices=game.domainChoices||[];
+  const tally=Array(choices.length).fill(0);
+  humanDomainVotes.forEach(v=>{if(v>=0&&v<choices.length)tally[v]++;});
+  const maxD=Math.max(...tally);
+  const hostPlayer=game.players.find(p=>p.id===game.hostId);
+  const hostDV=hostPlayer&&domainVotes[hostPlayer.id]!==undefined?domainVotes[hostPlayer.id]:null;
+  let domainWinner=tally.indexOf(maxD);
+  if(hostDV!==null&&tally[hostDV]===maxD)domainWinner=hostDV;
+  // Prefatore vincente — maggioranza, parità risolta dal voto dell'host
+  const prefTally={};
+  humanPrefVotes.forEach(v=>{prefTally[v]=(prefTally[v]||0)+1;});
+  const maxP=Math.max(...Object.values(prefTally));
+  const hostPV=hostPlayer&&prefVotes[hostPlayer.id]?prefVotes[hostPlayer.id]:null;
+  const prefCandidates=Object.keys(prefTally).filter(id=>prefTally[id]===maxP);
+  let prefWinner=prefCandidates[0];
+  if(hostPV&&prefCandidates.includes(hostPV))prefWinner=hostPV;
+  startFromLobby(choices[domainWinner],prefWinner);
 }
 
-function startFromLobby(domain){
+function startFromLobby(domain,prefatoreId){
   game.lobbyPhase=false;
   game.domain={name:domain[0],text:domain[1]};
   game.domainChoices=null;
   game.domainVotes=null;
-  log(`Dominio scelto: ${game.domain.name}. Round 1 di prefazione: niente carte, pesca o isolamento.`);
+  game.prefatoreVotes=null;
+  game.prefatoreId=prefatoreId||null;
+  const prefIdx=game.players.findIndex(p=>p.id===prefatoreId);
+  if(prefIdx>=0)game.turn=prefIdx;
+  log(`Dominio: ${game.domain.name}. Prefatore: ${game.players[game.turn]?.name||"?"}. Round 1 — niente carte, pesca o isolamento.`);
   save();
   closeModal();
   render();beginTurn();
