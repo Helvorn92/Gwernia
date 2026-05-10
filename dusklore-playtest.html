@@ -240,6 +240,7 @@
   }
   @media (max-width:759px){
     .table .decks{justify-content:center}
+    .hand{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;flex-wrap:nowrap}
   }
   #lobby{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px 14px;min-height:100svh}
   .lobby-box{background:linear-gradient(165deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.28);border-radius:14px;padding:22px;box-shadow:var(--shadow);width:min(480px,100%)}
@@ -252,6 +253,9 @@
   .domain-vote-badge{font-size:13px;color:var(--gold);font-family:var(--display-2);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
   .lobby-players{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:8px}
   .sheet div:has(>.option){grid-template-columns:1fr 1fr;gap:6px}
+  .lobby-hero-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+  .lobby-hero-grid .hero-card{width:100%;height:auto;aspect-ratio:2/3;min-height:0}
+  .lobby-hero-grid .hero-card-img{flex:0 0 60%;min-height:0}
   .lobby-player{background:#1e1630;border:1px solid rgba(201,165,88,.18);border-radius:6px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
   .lobby-player.me{border-color:var(--gold);box-shadow:0 0 12px rgba(201,165,88,.12)}
   .lobby-player .lp-avatar{color:rgba(255,255,255,.2)}
@@ -285,51 +289,6 @@
         </div>
       </div>
 
-      <!-- Selezione protagonista: griglia 4x2 ritratto -->
-      <div class="ng-block">
-        <div class="ng-block-lbl">Protagonista</div>
-        <select id="heroSelect" style="display:none"></select>
-        <div class="hero-grid">
-          <button type="button" class="hero-card selected" data-hero="SOLDATO" data-ability-name="Affiancamento" data-ability-desc="Una volta per round puoi unirti o separarti durante il turno altrui." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
-            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094131/Soldato_b6xyxl.jpg" alt="Ritratto Soldato" class="protagonist-portrait" data-character="soldato"></div>
-            <div class="hero-card-info"><div class="hero-card-name">Soldato</div><div class="hero-card-ab">Affiancamento</div></div>
-          </button>
-          <button type="button" class="hero-card" data-hero="DETECTIVE" data-ability-name="Ispezione" data-ability-desc="Quando peschi dal Reliquiario guardi 2 carte e ne scegli 1." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
-            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094164/Investigatore_ac2seg.jpg" alt="Ritratto Detective" class="protagonist-portrait" data-character="detective"></div>
-            <div class="hero-card-info"><div class="hero-card-name">Detective</div><div class="hero-card-ab">Ispezione</div></div>
-          </button>
-          <button type="button" class="hero-card" data-hero="RAMINGO" data-ability-name="Recupero" data-ability-desc="Quando peschi Indizi puoi scegliere dalla pila degli scarti." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
-            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094141/Vagabondo_syv1nn.jpg" alt="Ritratto Ramingo" class="protagonist-portrait" data-character="ramingo"></div>
-            <div class="hero-card-info"><div class="hero-card-name">Ramingo</div><div class="hero-card-ab">Recupero</div></div>
-          </button>
-          <button type="button" class="hero-card" data-hero="MEDIUM" data-ability-name="Veggenza" data-ability-desc="Spendi 2 Pegni Oscuri per guardare un'Identità o mostrare la tua." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
-            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094113/Indovina_zsq73e.jpg" alt="Ritratto Medium" class="protagonist-portrait" data-character="medium"></div>
-            <div class="hero-card-info"><div class="hero-card-name">Medium</div><div class="hero-card-ab">Veggenza</div></div>
-          </button>
-          <button type="button" class="hero-card" data-hero="GIORNALISTA" data-ability-name="Fiuto" data-ability-desc="Quando peschi Indizi guardi 2 carte e ne scegli 1." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
-            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094097/Giornalista_x8dfdn.jpg" class="protagonist-portrait" data-character="giornalista"></div>
-            <div class="hero-card-info"><div class="hero-card-name">Giornalista</div><div class="hero-card-ab">Fiuto</div></div>
-          </button>
-          <button type="button" class="hero-card" data-hero="SACERDOTE" data-ability-name="Grazia" data-ability-desc="Inizi con Protezione; quando peschi Malefici puoi scegliere Protezione e rimescolare il mazzo." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
-            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094105/Sacerdote_swfvfc.jpg" alt="Ritratto Sacerdote" class="protagonist-portrait" data-character="sacerdote"></div>
-            <div class="hero-card-info"><div class="hero-card-name">Sacerdote</div><div class="hero-card-ab">Grazia</div></div>
-          </button>
-          <button type="button" class="hero-card" data-hero="FANCIULLO" data-ability-name="Complicità" data-ability-desc="Se sei in presenza di altri Protagonisti puoi scambiare una tua carta Indizio con una casuale dalla mano di un altro." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
-            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094148/Bambino_mcex1v.jpg" alt="Ritratto Fanciullo" class="protagonist-portrait" data-character="fanciullo"></div>
-            <div class="hero-card-info"><div class="hero-card-name">Fanciullo</div><div class="hero-card-ab">Complicità</div></div>
-          </button>
-          <button type="button" class="hero-card" data-hero="TURISTA" data-ability-name="Baratto" data-ability-desc="Nel tuo turno puoi sacrificare una o più carte Maleficio per ottenere altrettanti Indizi." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
-            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094155/Forestiero_shpzsp.jpg" alt="Ritratto Turista" class="protagonist-portrait" data-character="turista"></div>
-            <div class="hero-card-info"><div class="hero-card-name">Turista</div><div class="hero-card-ab">Baratto</div></div>
-          </button>
-        </div>
-        <div class="hero-detail-panel hidden" id="heroDetailPanel">
-          <div class="hero-detail-name"></div>
-          <div class="hero-detail-ab"></div>
-          <p class="hero-detail-desc"></p>
-        </div>
-      </div>
-
       <!-- Posti al tavolo: griglia 2 colonne -->
       <div class="ng-block">
         <div class="ng-block-lbl">Posti al tavolo</div>
@@ -352,7 +311,6 @@
       <h1>DUSKLORE</h1>
       <p>Inserisci il codice della stanza e scegli il tuo Protagonista.</p>
       <div class="field"><label>Nome</label><input id="joinNameField" placeholder="Il tuo nome" value="Giocatore"></div>
-      <div class="field"><label>Protagonista</label><select id="joinHeroField"></select></div>
       <div class="field"><label>Codice stanza</label><input id="joinCodeField" placeholder="Es. abc1234" maxlength="10" style="letter-spacing:.12em;text-transform:uppercase" oninput="this.value=this.value.toLowerCase()"></div>
       <div id="joinFeedback" class="small" style="margin:6px 0;min-height:16px;color:var(--blood)"></div>
       <button class="btn wide" style="width:100%;margin-bottom:8px" onclick="joinByCode()">Entra nella stanza</button>
@@ -482,6 +440,16 @@ const DATA={
     "FANCIULLO":"Complicità: se sei in presenza di altri Protagonisti puoi scambiare una tua carta Indizio con una casuale dalla mano di un altro.",
     "TURISTA":"Baratto: nel tuo turno puoi sacrificare una o più carte Maleficio per ottenere altrettanti Indizi."
   },
+  heroImages:{
+    "SOLDATO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094131/Soldato_b6xyxl.jpg",
+    "DETECTIVE":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094164/Investigatore_ac2seg.jpg",
+    "RAMINGO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094141/Vagabondo_syv1nn.jpg",
+    "MEDIUM":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094113/Indovina_zsq73e.jpg",
+    "GIORNALISTA":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094097/Giornalista_x8dfdn.jpg",
+    "SACERDOTE":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094105/Sacerdote_swfvfc.jpg",
+    "FANCIULLO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094148/Bambino_mcex1v.jpg",
+    "TURISTA":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094155/Forestiero_shpzsp.jpg"
+  },
   missions:{
     "Il Lutto":["Introduci una Comparsa e legala emotivamente a un Protagonista.","Usa la Reliquia per causare la morte della Comparsa in presenza di quel Protagonista."],
     "Il Tradimento":["Crea narrativamente un legame di complicità con un altro Protagonista (fare gruppo, non «maledirsi»).","Usa la Reliquia per spezzare narrativamente quel legame (lo lasci solo, gli lanci un Maleficio)."],
@@ -537,8 +505,6 @@ function save(){
 }
 
 async function initSetup(){
-  $("heroSelect").innerHTML=DATA.heroes.map(h=>`<option value="${h}">${h} - ${DATA.heroAbilities[h]}</option>`).join("");
-  $("joinHeroField").innerHTML=DATA.heroes.map(h=>`<option value="${h}">${h}</option>`).join("");
   renderSlotSetup();
   await initFirebase();
   const urlRoom=new URLSearchParams(location.hash.slice(1)).get("room");
@@ -607,17 +573,11 @@ async function joinByCode(){
     if(game.players.some(p=>p.controller===clientId)){setupRoomListener(code);if(game.lobbyPhase){showGame();showVotingModal();}else{showGame();render();beginTurn();}return;}
     const open=game.players.filter(p=>p.controller==="open");
     if(!open.length){fb.style.color="var(--blood)";fb.textContent="Nessun posto libero in questa stanza.";return;}
-    const heroVal=$("joinHeroField").value;
-    const takenByReal=game.players.filter(p=>p.controller!=="open"&&p.controller!=="ai").map(p=>p.hero);
-    if(takenByReal.includes(heroVal)){fb.style.color="var(--blood)";fb.textContent=`${heroVal} è già occupato. Scegli un altro Protagonista.`;return;}
-    const aiWithHero=game.players.find(x=>x.controller==="ai"&&x.hero===heroVal);
-    if(aiWithHero){const taken=game.players.filter(x=>x.id!==aiWithHero.id).map(x=>x.hero);const free=DATA.heroes.find(h=>!taken.includes(h));if(free){aiWithHero.hero=free;aiWithHero.name=free;}}
     const seat=open[0];
     const nameVal=($("joinNameField").value||"").trim()||"Giocatore";
-    seat.controller=clientId;seat.isHuman=true;seat.name=nameVal;seat.hero=heroVal;
-    if(heroVal==="SACERDOTE"&&!seat.hand.malefici.some(c=>c.name==="Protezione"))seat.hand.malefici.push(drawMaleficio("Protezione"));
+    seat.controller=clientId;seat.isHuman=true;seat.name=nameVal;
     game.roomId=code;
-    log(`${nameVal} (${heroVal}) entra nella partita.`);
+    log(`${nameVal} entra nella partita.`);
     save();setupRoomListener(code);if(game.lobbyPhase){showGame();showVotingModal();}else{showGame();render();beginTurn();}
   }catch(e){fb.style.color="var(--blood)";fb.textContent=`Errore: ${e.message}`;}
 }
@@ -638,14 +598,15 @@ function startGame(){
   const identities=shuffle([...Array(innocents).fill("Innocente"),...Array(corrupt).fill("Corrotto")]);
   const domainChoices=shuffle([...DATA.domini]).slice(0,3);
   const rid=pendingRoomId||uid();pendingRoomId=null;roomId=rid;
-  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,domainChoices,domainVotes:{},prefatoreVotes:{},prefatoreId:null,narratorVotes:{},narratorId:null,presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
-  const heroes=[$("heroSelect").value,...shuffle(DATA.heroes.filter(h=>h!==$("heroSelect").value))];
+  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,domainChoices,domainVotes:{},prefatoreVotes:{},heroVotes:{},prefatoreId:null,narratorVotes:{},narratorId:null,presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
+  const aiHeroes=shuffle([...DATA.heroes]);let aiIdx=0;
   const missionPool=shuffle(Object.keys(DATA.missions));
   Array.from({length:count},(_,i)=>{
     const kind=i===0?"local":($(`slot${i+1}`)?.value||"ai");
-    const name=i===0?($("nameInput").value.trim()||"Giocatore"):kind==="ai"?heroes[i]:`Posto ${i+1} libero`;
+    const heroVal=kind==="ai"?aiHeroes[aiIdx++]:null;
+    const name=i===0?($("nameInput").value.trim()||"Giocatore"):kind==="ai"?heroVal:`Posto ${i+1} libero`;
     const mission=missionPool[i];
-    const p={id:uid(),name,hero:heroes[i],controller:kind==="local"?clientId:kind,isHuman:kind!=="ai",identity:identities.pop(),mission,missionDone:[false,false],missionDoneThisAct:0,relic:drawRelic(),location:"insieme",dark:0,hasPlayed:false,hasDrawn:false,abilityUsed:false,protected:false,known:false,hand:{indizi:[drawIndizio(),drawIndizio(),drawIndizio()],malefici:[drawMaleficio(heroes[i]==="SACERDOTE"?"Protezione":null)]}};
+    const p={id:uid(),name,hero:heroVal,controller:kind==="local"?clientId:kind,isHuman:kind!=="ai",identity:identities.pop(),mission,missionDone:[false,false],missionDoneThisAct:0,relic:drawRelic(),location:"insieme",dark:0,hasPlayed:false,hasDrawn:false,abilityUsed:false,protected:false,known:false,hand:{indizi:[drawIndizio(),drawIndizio(),drawIndizio()],malefici:[drawMaleficio(heroVal==="SACERDOTE"?"Protezione":null)]}};
     game.players.push(p);
   });
   location.hash="room="+game.roomId;
@@ -1786,19 +1747,27 @@ function renderVotingModal(){
   const choices=game.domainChoices||[];
   const domainVotes=game.domainVotes||{};
   const prefVotes=game.prefatoreVotes||{};
+  const heroVotes=game.heroVotes||{};
   const myId=human()?.id;
   const myDomainVote=myId!=null?domainVotes[myId]:undefined;
   const myPrefVote=myId!=null?prefVotes[myId]:undefined;
+  const myHeroVote=myId!=null?heroVotes[myId]:undefined;
   const humanPlayers=game.players.filter(p=>p.isHuman);
   const domainVoted=humanPlayers.filter(p=>domainVotes[p.id]!==undefined).length;
   const prefVoted=humanPlayers.filter(p=>prefVotes[p.id]!==undefined).length;
+  const heroVoted=humanPlayers.filter(p=>heroVotes[p.id]!==undefined).length;
   const total=humanPlayers.length;
   const myLobbyPlayer=human();const myIdentity=myLobbyPlayer?.identity;
+  const aiTakenHeroes=new Set(game.players.filter(p=>p.controller==="ai"&&p.hero).map(p=>p.hero));
   $("sheet").innerHTML=`
     <h2 style="text-align:center;margin-bottom:4px">Lobby</h2>
-    <p class="small" style="text-align:center;margin:0 0 10px;color:var(--muted)">Vota Dominio e Prefatore. La partita inizia quando tutti hanno votato.</p>
+    <p class="small" style="text-align:center;margin:0 0 10px;color:var(--muted)">Scegli il Protagonista, vota Dominio e Prefatore. La partita inizia quando tutti hanno votato.</p>
     ${myIdentity?`<div style="background:rgba(${myIdentity==='Corrotto'?'107,31,58':'28,90,45'},.22);border:1px solid ${myIdentity==='Corrotto'?'rgba(180,50,80,.45)':'rgba(50,160,80,.45)'};border-radius:8px;padding:8px 14px;margin-bottom:14px;text-align:center"><div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px">La tua identità</div><div style="font-size:20px;font-weight:800;color:${myIdentity==='Corrotto'?'var(--blood)':'var(--green)'}">${myIdentity}</div></div>`:''}
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Vota il Dominio (${domainVoted}/${total})</div>
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Scegli il Protagonista (${heroVoted}/${total})</div>
+    <div class="lobby-hero-grid">
+      ${DATA.heroes.map(h=>{const[abName]=DATA.heroAbilities[h].split(": ");const dispName=h.charAt(0)+h.slice(1).toLowerCase();const voteCount=Object.values(heroVotes).filter(v=>v===h).length;const isSelected=myHeroVote===h;const isTaken=aiTakenHeroes.has(h);return `<button type="button" class="hero-card${isSelected?" selected":""}" ${isTaken?'disabled style="opacity:.35;cursor:not-allowed"':''} onclick="voteForHero('${h}')"><div class="hero-card-img">${h.slice(0,3)}<img src="${DATA.heroImages[h]}" alt="${dispName}" class="protagonist-portrait"></div><div class="hero-card-info"><div class="hero-card-name">${dispName}</div><div class="hero-card-ab">${abName}</div>${voteCount>0?`<div style="font-size:9px;color:var(--gold);font-weight:800">▲ ${voteCount}</div>`:""}</div></button>`;}).join("")}
+    </div>
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 8px;border-top:1px solid var(--line);padding-top:12px">Vota il Dominio (${domainVoted}/${total})</div>
     <div class="domain-choices">
       ${choices.map((d,i)=>{
         const count=Object.values(domainVotes).filter(v=>v===i).length;
@@ -1862,16 +1831,27 @@ function voteForPrefatore(playerId){
   if(game.hostId===clientId)checkLobbyVotes();
 }
 
+function voteForHero(heroId){
+  const h=human();if(!h||h.controller==="ai")return;
+  if(!game.heroVotes)game.heroVotes={};
+  game.heroVotes[h.id]=heroId;
+  save();renderVotingModal();
+  if(game.hostId===clientId)checkLobbyVotes();
+}
+
 function checkLobbyVotes(){
   if(!game||!game.lobbyPhase)return;
   const humanPlayers=game.players.filter(p=>p.isHuman);
   if(!humanPlayers.length)return;
   const domainVotes=game.domainVotes||{};
   const prefVotes=game.prefatoreVotes||{};
+  const heroVotes=game.heroVotes||{};
   const humanDomainVotes=humanPlayers.map(p=>domainVotes[p.id]).filter(v=>v!==undefined);
   const humanPrefVotes=humanPlayers.map(p=>prefVotes[p.id]).filter(v=>v!==undefined);
+  const humanHeroVotes=humanPlayers.map(p=>heroVotes[p.id]).filter(v=>v!==undefined);
   if(humanDomainVotes.length<humanPlayers.length)return;
   if(humanPrefVotes.length<humanPlayers.length)return;
+  if(humanHeroVotes.length<humanPlayers.length)return;
   const choices=game.domainChoices||[];
   const tally=Array(choices.length).fill(0);
   humanDomainVotes.forEach(v=>{if(v>=0&&v<choices.length)tally[v]++;});
@@ -1891,6 +1871,17 @@ function checkLobbyVotes(){
 }
 
 function startFromLobby(domain,prefatoreId){
+  const heroVotes=game.heroVotes||{};
+  const takenAI=new Set(game.players.filter(p=>!p.isHuman).map(p=>p.hero).filter(Boolean));
+  const assigned=new Set();
+  game.players.filter(p=>p.isHuman).forEach(p=>{
+    const voted=heroVotes[p.id];
+    let hero=voted&&!assigned.has(voted)&&!takenAI.has(voted)?voted:DATA.heroes.find(h=>!takenAI.has(h)&&!assigned.has(h))||DATA.heroes[0];
+    assigned.add(hero);
+    p.hero=hero;
+    if(hero==="SACERDOTE"&&!p.hand.malefici.some(c=>c.name==="Protezione"))p.hand.malefici.push(drawMaleficio("Protezione"));
+  });
+  game.heroVotes=null;
   game.lobbyPhase=false;
   game.domain={name:domain[0],text:domain[1]};
   game.domainChoices=null;
