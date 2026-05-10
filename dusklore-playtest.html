@@ -217,10 +217,11 @@
   .toastlog{max-height:160px;overflow:auto;display:grid;gap:8px;padding-right:4px}
   .logitem{font-size:14px;color:var(--bone-dim);border-left:2px solid rgba(201,165,88,.35);padding-left:10px;line-height:1.6;font-family:var(--serif);font-weight:400}
   .modal{position:fixed;inset:0;background:rgba(26,20,40,.85);backdrop-filter:blur(4px);display:grid;place-items:center;z-index:20;padding:14px}
-  .sheet{width:min(520px,100%);max-height:86svh;overflow:auto;background:linear-gradient(180deg,#1e1630,#1a1428);
-    border:1px solid rgba(201,165,88,.28);border-radius:14px 14px 8px 8px;padding:18px;box-shadow:var(--shadow),var(--glow-gold)}
+  .sheet{width:min(480px,100%);max-height:90svh;overflow:auto;background:linear-gradient(180deg,#1e1630,#1a1428);
+    border:1px solid rgba(201,165,88,.28);border-radius:14px 14px 8px 8px;padding:14px;box-shadow:var(--shadow),var(--glow-gold)}
+  #sheet{width:min(720px,90vw)}
   .sheet h2{font-family:var(--display);color:var(--gold);letter-spacing:.08em;font-size:1.2rem;font-weight:700}
-  .option{width:100%;text-align:left;background:#17122a;color:var(--bone);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:12px;margin:8px 0;font-family:var(--ui);font-size:14px;font-weight:400}
+  .option{width:100%;text-align:left;background:#17122a;color:var(--bone);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:12px;margin:5px 0;font-family:var(--ui);font-size:14px;font-weight:400}
   .option:disabled{opacity:.45}.option b{display:block;font-family:var(--display-2);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}.option span{display:block;color:var(--bone-deep);font-size:13px;margin-top:3px;font-style:italic}
   .target-grid{display:grid;gap:8px}.target{background:#17122a;color:var(--bone);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:12px;text-align:left;font-family:var(--ui);font-size:14px;font-weight:400}
   .footer-space{height:230px}
@@ -242,14 +243,15 @@
   }
   #lobby{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px 14px;min-height:100svh}
   .lobby-box{background:linear-gradient(165deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.28);border-radius:14px;padding:22px;box-shadow:var(--shadow);width:min(480px,100%)}
-  .domain-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
-  .domain-choice{width:100%;background:linear-gradient(145deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:12px 8px;color:var(--bone);cursor:pointer;text-align:center;display:flex;flex-direction:column;gap:5px;transition:border-color .2s,box-shadow .2s}
+  .domain-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}
+  .domain-choice{width:100%;background:linear-gradient(145deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:8px;color:var(--bone);cursor:pointer;text-align:center;display:flex;flex-direction:column;gap:4px;transition:border-color .2s,box-shadow .2s}
   .domain-choice:hover{border-color:rgba(201,165,88,.45);box-shadow:0 0 14px rgba(201,165,88,.12)}
   .domain-choice.voted{border-color:var(--gold);background:linear-gradient(145deg,#1e1a0e,#141008);box-shadow:0 0 20px rgba(201,165,88,.18)}
   .domain-choice-name{font-weight:700;font-size:15px;font-family:var(--display);letter-spacing:.08em}
   .domain-choice-text{font-size:14px;color:var(--bone-deep);line-height:1.6;flex:1;text-align:center;font-family:var(--book);font-style:italic}
   .domain-vote-badge{font-size:13px;color:var(--gold);font-family:var(--display-2);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
-  .lobby-players{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-top:16px}
+  .lobby-players{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .sheet div:has(>.option){grid-template-columns:1fr 1fr;gap:6px}
   .lobby-player{background:#1e1630;border:1px solid rgba(201,165,88,.18);border-radius:6px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
   .lobby-player.me{border-color:var(--gold);box-shadow:0 0 12px rgba(201,165,88,.12)}
   .lobby-player .lp-avatar{color:rgba(255,255,255,.2)}
