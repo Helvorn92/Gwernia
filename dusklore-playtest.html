@@ -90,6 +90,41 @@
   .slot-row{display:grid;grid-template-columns:1fr 128px;gap:8px;align-items:center;border:1px solid rgba(201,165,88,.18);background:rgba(23,18,42,.72);border-radius:6px;padding:10px}
   .slot-row b{font-size:14px;font-family:var(--ui);font-weight:700}.slot-row span{display:block;color:var(--bone-deep);font-size:13px;margin-top:2px;font-style:italic}
   .join-box{border:1px dashed var(--gold);background:rgba(201,165,88,.06);border-radius:8px;padding:10px;margin:10px 0}
+  /* ===== NUOVA SCHERMATA CONFIGURAZIONE ===== */
+  #setup.screen{padding-bottom:16px}
+  #newGameView{margin-top:clamp(4px,2svh,18px);padding:16px 18px;max-width:720px;margin-left:auto;margin-right:auto}
+  #newGameView h1{font-size:1.35rem;margin-bottom:3px}
+  #newGameView>p{margin-bottom:10px;font-size:13px}
+  #newGameView input,#newGameView select{padding:7px 10px}
+  .ng-top{display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:10px}
+  .ng-field{display:grid;gap:4px}
+  .ng-lbl{font-size:11px;color:var(--bone-deep);font-family:var(--display-2);font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+  .ng-block{margin-bottom:10px}
+  .ng-block-lbl{font-size:11px;color:var(--bone-deep);font-family:var(--display-2);font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+  .hero-grid{display:grid;grid-template-columns:repeat(4,140px);gap:8px;justify-content:center}
+  .hero-card{width:140px;height:210px;background:#17122a;border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:0;cursor:pointer;display:flex;flex-direction:column;overflow:hidden;text-align:center;transition:border-color .15s,background .15s}
+  .hero-card:hover{border-color:rgba(201,165,88,.42)}
+  .hero-card.selected{border-color:var(--gold);border-width:2px;background:rgba(201,165,88,.07);box-shadow:0 0 14px rgba(201,165,88,.18)}
+  .hero-card-img{flex:0 0 65%;background:#211a30;display:grid;place-items:center;font-size:16px;font-weight:700;font-family:var(--display);color:rgba(201,165,88,.45);position:relative;overflow:hidden;letter-spacing:.06em}
+  .protagonist-portrait{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top}
+  .hero-card-info{flex:1;padding:5px 6px;display:flex;flex-direction:column;gap:2px;justify-content:center}
+  .hero-card-name{font-size:11px;font-weight:700;font-family:var(--display-2);letter-spacing:.04em;text-transform:uppercase;color:var(--bone);line-height:1.15}
+  .hero-card-ab{font-size:10px;font-style:italic;color:var(--bone-deep);font-family:var(--book);line-height:1.3}
+  .hero-detail-panel{background:#1e1630;border:1px solid rgba(201,165,88,.3);border-radius:8px;padding:12px 14px;margin-top:8px}
+  .hero-detail-name{font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:.08em;color:var(--gold);text-transform:uppercase;margin-bottom:3px}
+  .hero-detail-ab{font-family:var(--display-2);font-size:12px;font-weight:600;color:var(--bone);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+  .hero-detail-desc{font-size:13px;font-style:italic;color:var(--bone-dim);font-family:var(--book);line-height:1.6;margin:0}
+  #slotSetup{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:0}
+  #slotSetup .slot-row{grid-template-columns:auto 1fr;padding:5px 7px;gap:6px}
+  #slotSetup .slot-row div:first-child>span{display:none}
+  #slotSetup .slot-row b{font-size:11px;white-space:nowrap}
+  #slotSetup .slot-row select{padding:4px 5px;font-size:12px}
+  .ng-footer{display:flex;flex-direction:row;align-items:stretch;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid rgba(201,165,88,.14)}
+  .ng-code{border:1px dashed var(--gold);background:rgba(198,155,84,.08);border-radius:8px;padding:7px 12px;text-align:center;white-space:nowrap;flex:0 0 auto;display:flex;flex-direction:column;justify-content:center}
+  .ng-code-lbl{font-size:10px;color:var(--muted);font-family:var(--display-2);letter-spacing:.08em;text-transform:uppercase;font-weight:600;margin-bottom:1px}
+  .ng-btns{display:flex;flex-direction:row;gap:8px;flex:1}
+  .ng-btns .btn{flex:1;padding:9px 14px;font-size:13px;margin:0;height:auto}
+  /* ===== FINE CONFIGURAZIONE ===== */
   .layout{display:grid;gap:14px}
   .side{display:flex;flex-direction:column;gap:12px}
   .status{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;
@@ -112,10 +147,10 @@
     padding:14px;overflow:hidden}
   .domain{font-size:14px;color:var(--bone-deep);text-align:center;margin-bottom:10px;font-family:var(--ui);font-weight:400;font-style:normal}
   .domain strong{display:block;font-family:var(--display);font-size:1rem;color:var(--gold);letter-spacing:.08em;font-weight:700;margin-bottom:4px;font-style:normal}
-  .decks{display:flex;justify-content:center;gap:8px;margin:6px 0 12px;flex-wrap:wrap}
-  .deck{width:74px;min-height:88px;border-radius:6px;border:1px solid var(--deck-border);
+  .decks{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:6px 0 12px}
+  .deck{width:100%;min-height:88px;border-radius:6px;border:1px solid var(--deck-border);
     display:grid;place-content:center;text-align:center;font-family:var(--display-2);font-weight:600;font-size:13px;line-height:1.25;
-    letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 20px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.06);padding:6px;color:var(--card-ink)}
+    letter-spacing:.04em;text-transform:uppercase;box-shadow:0 8px 20px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.06);padding:6px;color:var(--card-ink)}
   .deck.indizi{background:linear-gradient(155deg,var(--card),#dcd4aa)}.deck.malefici{background:linear-gradient(155deg,var(--maleficio-fill),#1e0f1e);color:var(--bone);border-color:rgba(201,165,88,.22)}
   .deck.reliquie{background:linear-gradient(155deg,#d4bc5a,var(--reliquia-fill));color:#1f1808;border-color:rgba(180,155,70,.65)}
   .deck.discard-indizi{background:linear-gradient(155deg,#3a2828,#1e1428);color:#d4b8b8;border-color:rgba(160,72,82,.4)}
@@ -167,7 +202,8 @@
   .card{flex:0 0 122px;height:174px;border-radius:8px;background:linear-gradient(165deg,var(--card),#e8dfc8);color:var(--card-ink);padding:10px;
     box-shadow:0 12px 24px rgba(0,0,0,.5);border:1px solid rgba(201,165,88,.4);display:flex;flex-direction:column;justify-content:space-between;scroll-snap-align:start}
   .card.selected{outline:3px solid var(--moon);box-shadow:0 0 16px rgba(181,126,220,.25)}
-  .card.maleficio{background:linear-gradient(165deg,#3d2450,#211a30);color:var(--bone);border-color:rgba(201,165,88,.28)}
+  .card.maleficio{background:linear-gradient(165deg,#3d2450,#211a30);color:var(--bone);border-color:rgba(201,165,88,.28);overflow:hidden}
+  .card.maleficio .card-text{font-size:11px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical}
   .card.reaction{outline:3px solid var(--green)}.card.over-limit{border-color:#a44!important;box-shadow:0 0 14px rgba(160,68,80,.45)}
   .card-title{font-family:var(--display);font-weight:700;font-size:15px;letter-spacing:.04em}
   .card-type{font-size:12px;opacity:.75;text-transform:uppercase;letter-spacing:.12em;font-family:var(--display-2);font-weight:600}
@@ -194,10 +230,10 @@
     .layout{grid-template-columns:1.22fr .78fr;align-items:start}
     .hand-wrap{width:min(1180px,100vw)}
     .card,.relic-card{flex-basis:138px;height:192px}
-    .table{min-height:480px;display:grid;grid-template-columns:92px minmax(0,1fr);grid-template-rows:auto minmax(200px,1fr) auto;gap:12px 14px}
+    .table{min-height:480px;display:grid;grid-template-columns:120px minmax(0,1fr);grid-template-rows:auto minmax(200px,1fr) auto;gap:12px 14px}
     .domain{grid-column:1/-1}
-    .decks{grid-column:1;grid-row:2;flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;align-self:start;margin:0;gap:8px}
-    .deck{width:100%;max-width:88px;min-height:76px;font-size:13px}
+    .decks{grid-column:1;grid-row:2;grid-template-columns:1fr;align-self:start;margin:0;gap:8px}
+    .deck{width:100%;max-width:116px;min-height:76px;font-size:13px}
     #players.players{grid-column:1/-1;grid-row:3;margin:0}
     .table-center{grid-column:2;grid-row:2;margin:0;width:100%;min-height:200px;display:flex;flex-direction:column;justify-content:center}
   }
@@ -211,7 +247,7 @@
   .domain-choice:hover{border-color:rgba(201,165,88,.45);box-shadow:0 0 14px rgba(201,165,88,.12)}
   .domain-choice.voted{border-color:var(--gold);background:linear-gradient(145deg,#1e1a0e,#141008);box-shadow:0 0 20px rgba(201,165,88,.18)}
   .domain-choice-name{font-weight:700;font-size:15px;font-family:var(--display);letter-spacing:.08em}
-  .domain-choice-text{font-size:14px;color:var(--bone-deep);line-height:1.6;flex:1;text-align:left;font-family:var(--book);font-style:italic}
+  .domain-choice-text{font-size:14px;color:var(--bone-deep);line-height:1.6;flex:1;text-align:center;font-family:var(--book);font-style:italic}
   .domain-vote-badge{font-size:13px;color:var(--gold);font-family:var(--display-2);font-weight:600;letter-spacing:.1em;text-transform:uppercase}
   .lobby-players{display:grid;grid-template-columns:repeat(auto-fill,minmax(78px,1fr));gap:8px;margin-top:16px}
   .lobby-player{background:#1e1630;border:1px solid rgba(201,165,88,.18);border-radius:6px;padding:10px 6px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px}
@@ -227,23 +263,88 @@
   <section id="setup" class="screen">
     <div id="landingView" class="setup-card">
       <h1>DUSKLORE</h1>
-      <p>App solitaria da playtest: tavolo, mano, mazzi, AI, Malefici, Pegni Oscuri, Missioni e fine Atto.</p>
+      <p>La notte è certa. L'alba va guadagnata</p>
       <button class="btn wide" style="width:100%;margin-bottom:10px" onclick="showNewGame()">Nuova Partita</button>
       <button class="btn secondary wide" style="width:100%" onclick="showJoinGame()">Unisciti a una Partita</button>
     </div>
     <div id="newGameView" class="setup-card hidden">
       <h1>DUSKLORE</h1>
       <p>Configura la partita e condividi il codice con i tuoi amici.</p>
-      <div class="field"><label>Nome</label><input id="nameInput" value="Vincenzo"></div>
-      <div class="field"><label>Protagonista</label><select id="heroSelect"></select></div>
-      <div class="field"><label>Numero giocatori</label><select id="playerCount" onchange="renderSlotSetup()"><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select></div>
-      <div class="field"><label>Posti al tavolo</label><div id="slotSetup" class="slot-list"></div></div>
-      <div style="border:1px dashed var(--gold);background:rgba(198,155,84,.08);border-radius:14px;padding:12px;margin:12px 0;text-align:center">
-        <div class="small" style="margin-bottom:4px">Codice stanza — condividilo con i tuoi amici</div>
-        <div id="pendingCode" style="font-size:26px;font-weight:900;letter-spacing:.18em;color:var(--gold)">---</div>
+
+      <!-- Nome + Numero giocatori sulla stessa riga -->
+      <div class="ng-top">
+        <div class="ng-field">
+          <div class="ng-lbl">Nome</div>
+          <input id="nameInput" value="Vincenzo">
+        </div>
+        <div class="ng-field">
+          <div class="ng-lbl">Giocatori</div>
+          <select id="playerCount" onchange="renderSlotSetup()"><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+        </div>
       </div>
-      <button class="btn wide" style="width:100%;margin-bottom:8px" onclick="startGame()">Inizia partita</button>
-      <button class="btn secondary wide" style="width:100%" onclick="showLanding()">← Indietro</button>
+
+      <!-- Selezione protagonista: griglia 4x2 ritratto -->
+      <div class="ng-block">
+        <div class="ng-block-lbl">Protagonista</div>
+        <select id="heroSelect" style="display:none"></select>
+        <div class="hero-grid">
+          <button type="button" class="hero-card selected" data-hero="SOLDATO" data-ability-name="Affiancamento" data-ability-desc="Una volta per round puoi unirti o separarti durante il turno altrui." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
+            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094131/Soldato_b6xyxl.jpg" alt="Ritratto Soldato" class="protagonist-portrait" data-character="soldato"></div>
+            <div class="hero-card-info"><div class="hero-card-name">Soldato</div><div class="hero-card-ab">Affiancamento</div></div>
+          </button>
+          <button type="button" class="hero-card" data-hero="DETECTIVE" data-ability-name="Ispezione" data-ability-desc="Quando peschi dal Reliquiario guardi 2 carte e ne scegli 1." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
+            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094164/Investigatore_ac2seg.jpg" alt="Ritratto Detective" class="protagonist-portrait" data-character="detective"></div>
+            <div class="hero-card-info"><div class="hero-card-name">Detective</div><div class="hero-card-ab">Ispezione</div></div>
+          </button>
+          <button type="button" class="hero-card" data-hero="RAMINGO" data-ability-name="Recupero" data-ability-desc="Quando peschi Indizi puoi scegliere dalla pila degli scarti." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
+            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094141/Vagabondo_syv1nn.jpg" alt="Ritratto Ramingo" class="protagonist-portrait" data-character="ramingo"></div>
+            <div class="hero-card-info"><div class="hero-card-name">Ramingo</div><div class="hero-card-ab">Recupero</div></div>
+          </button>
+          <button type="button" class="hero-card" data-hero="MEDIUM" data-ability-name="Veggenza" data-ability-desc="Spendi 2 Pegni Oscuri per guardare un'Identità o mostrare la tua." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
+            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094113/Indovina_zsq73e.jpg" alt="Ritratto Medium" class="protagonist-portrait" data-character="medium"></div>
+            <div class="hero-card-info"><div class="hero-card-name">Medium</div><div class="hero-card-ab">Veggenza</div></div>
+          </button>
+          <button type="button" class="hero-card" data-hero="GIORNALISTA" data-ability-name="Fiuto" data-ability-desc="Quando peschi Indizi guardi 2 carte e ne scegli 1." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
+            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094097/Giornalista_x8dfdn.jpg" class="protagonist-portrait" data-character="giornalista"></div>
+            <div class="hero-card-info"><div class="hero-card-name">Giornalista</div><div class="hero-card-ab">Fiuto</div></div>
+          </button>
+          <button type="button" class="hero-card" data-hero="SACERDOTE" data-ability-name="Grazia" data-ability-desc="Inizi con Protezione; quando peschi Malefici puoi scegliere Protezione e rimescolare il mazzo." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
+            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094105/Sacerdote_swfvfc.jpg" alt="Ritratto Sacerdote" class="protagonist-portrait" data-character="sacerdote"></div>
+            <div class="hero-card-info"><div class="hero-card-name">Sacerdote</div><div class="hero-card-ab">Grazia</div></div>
+          </button>
+          <button type="button" class="hero-card" data-hero="FANCIULLO" data-ability-name="Complicità" data-ability-desc="Se sei in presenza di altri Protagonisti puoi scambiare una tua carta Indizio con una casuale dalla mano di un altro." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
+            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094148/Bambino_mcex1v.jpg" alt="Ritratto Fanciullo" class="protagonist-portrait" data-character="fanciullo"></div>
+            <div class="hero-card-info"><div class="hero-card-name">Fanciullo</div><div class="hero-card-ab">Complicità</div></div>
+          </button>
+          <button type="button" class="hero-card" data-hero="TURISTA" data-ability-name="Baratto" data-ability-desc="Nel tuo turno puoi sacrificare una o più carte Maleficio per ottenere altrettanti Indizi." onclick="(function(b){var g=b.closest('.hero-grid'),p=document.getElementById('heroDetailPanel'),h=b.dataset.hero,c=p.classList.contains('hidden'),same=$('heroSelect').value===h;g.querySelectorAll('.hero-card').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');$('heroSelect').value=h;if(same&&!c){p.classList.add('hidden')}else{p.querySelector('.hero-detail-name').textContent=h;p.querySelector('.hero-detail-ab').textContent=b.dataset.abilityName;p.querySelector('.hero-detail-desc').textContent=b.dataset.abilityDesc;p.classList.remove('hidden')}})(this)">
+            <div class="hero-card-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094155/Forestiero_shpzsp.jpg" alt="Ritratto Turista" class="protagonist-portrait" data-character="turista"></div>
+            <div class="hero-card-info"><div class="hero-card-name">Turista</div><div class="hero-card-ab">Baratto</div></div>
+          </button>
+        </div>
+        <div class="hero-detail-panel hidden" id="heroDetailPanel">
+          <div class="hero-detail-name"></div>
+          <div class="hero-detail-ab"></div>
+          <p class="hero-detail-desc"></p>
+        </div>
+      </div>
+
+      <!-- Posti al tavolo: griglia 2 colonne -->
+      <div class="ng-block">
+        <div class="ng-block-lbl">Posti al tavolo</div>
+        <div id="slotSetup" class="slot-list"></div>
+      </div>
+
+      <!-- Codice stanza + tasti in fondo -->
+      <div class="ng-footer">
+        <div class="ng-code">
+          <div class="ng-code-lbl">Codice stanza</div>
+          <div id="pendingCode" style="font-size:20px;font-weight:900;letter-spacing:.18em;color:var(--gold);line-height:1.3">---</div>
+        </div>
+        <div class="ng-btns">
+          <button class="btn btn-gioca" onclick="startGame()">Inizia partita</button>
+          <button class="btn secondary" onclick="showLanding()">← Indietro</button>
+        </div>
+      </div>
     </div>
     <div id="joinGameView" class="setup-card hidden">
       <h1>DUSKLORE</h1>
@@ -305,11 +406,17 @@
             <button type="button" id="playBtn" class="btn btn-gioca wide" onclick="mainAction()">Gioca</button>
             <button type="button" id="curseBtn" class="btn btn-maleficio" onclick="openCurse()">Maleficio</button>
             <button type="button" id="darkBtn" class="btn btn-pegni" onclick="openDarkPawns()">Pegni</button>
-            <button type="button" id="abilityBtn" class="btn btn-abilita wide" onclick="openAbility()">Abilità</button>
             <button id="scartaBtn" class="btn danger wide hidden" onclick="discardSelected()">🗑 Scarta Indizio Selezionato</button>
           </div>
-          <div id="abilityDesc" class="small" style="margin-top:6px;color:var(--muted);font-style:italic;min-height:14px"></div>
           <div id="actionHint" class="small" style="margin-top:4px"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Abilità</h3>
+          <div class="actions">
+            <button type="button" id="abilityBtn" class="btn btn-abilita wide" onclick="openAbility()">Abilità</button>
+          </div>
+          <div id="abilityDesc" class="small" style="margin-top:6px;color:var(--muted);font-style:italic;min-height:14px"></div>
         </div>
 
         <div class="panel">
@@ -653,7 +760,7 @@ function hintText(){
 
 function renderHand(){
   const h=human(),lim=handLimit(),overLimit=h.hand.indizi.length>lim,list=[...h.hand.indizi,...h.hand.malefici];
-  $("handTitle").textContent=overLimit?`La tua mano — troppi Indizi (${h.hand.indizi.length}/${lim})`:"La tua mano - Indizi e Malefici";
+  $("handTitle").textContent=overLimit?`La tua mano — troppi Indizi (${h.hand.indizi.length}/${lim})`:"La tua mano";
   
   // Crea le carte della mano
   let html=list.map(c=>{
@@ -701,7 +808,7 @@ function promptDrawChoice(){
   if(game.round===1){
     $("modal").style.placeItems="center";
     $("modal").classList.remove("hidden");
-    $("sheet").innerHTML=`<h2 style="text-align:center;margin-bottom:10px">Presenta il Protagonista</h2><p class="small" style="text-align:center;margin-bottom:18px">Racconta al gruppo chi sei: il tuo nome, il tuo aspetto, cosa ti ha portato qui. Quando hai finito, premi Fatto per passare il turno.</p><button class="btn wide" style="width:100%" onclick="presentaProtagonista()">Fatto</button>`;
+    $("sheet").innerHTML=`<h2 style="text-align:center;margin-bottom:10px">Introduci il Protagonista</h2><p class="small" style="text-align:center;margin-bottom:18px">Racconta al gruppo chi sei. Il tuo nome, il tuo aspetto e cosa ti ha portato qui. Quando hai finito, premi Fatto per passare il turno.</p><button class="btn wide" style="width:100%" onclick="presentaProtagonista()">Fatto</button>`;
     return;
   }
   const lim=handLimit();
@@ -726,7 +833,7 @@ function promptDrawChoice(){
       "SACERDOTE":"⚡ Grazia: potrai scegliere Protezione al posto di un Maleficio casuale."
     }[h.hero]||"Aggiungi un Maleficio alla mano.");
   $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>Pesca di inizio turno</h2><p class="small">Cosa peschi questo turno?</p>
+  $("sheet").innerHTML=`<h2>Pesca di inizio turno</h2><p class="small">Puoi pescare da uno solo di questi due mazzi</p>
   <button class="option" onclick="chooseTurnDraw('indizio')"><b>Pesca Indizio</b><span>${indiziHint}</span></button>
   <button class="option" ${maleficoBlocked?"disabled style='opacity:.45;cursor:not-allowed'":""} ${maleficoBlocked?"":"onclick=\"chooseTurnDraw('maleficio')\""} ><b>Pesca Maleficio</b><span>${maleficoHint}</span></button>`;
 }
@@ -766,10 +873,10 @@ function promptLocationChoice(){
   }
   $("modal").style.placeItems="center";
   $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);text-align:center;margin-bottom:6px">Narra la Scena</div><h2 style="text-align:center;margin-bottom:6px">Dove sei questo turno?</h2><p class="small" style="text-align:center;margin-bottom:16px">La posizione determina cosa puoi fare e cosa gli altri vedono di te.</p>
+  $("sheet").innerHTML=`<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);text-align:center;margin-bottom:6px">Narra la Scena</div><h2 style="text-align:center;margin-bottom:6px">DOVE VUOI ESSERE?</h2><p class="small" style="text-align:center;margin-bottom:16px">Scegli la posizione del tuo Protagonista</p>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-  <button id="locBtnGruppo" class="option" style="margin:0;text-align:center" onclick="selectLocation('gruppo')"><b>In Gruppo</b><span>Scegli con chi stare. Puoi usare i Malefici.</span></button>
-  <button id="locBtnIsolato" class="option" style="margin:0;text-align:center" onclick="selectLocation('isolato')"><b>Isolato</b><span>Malefici disabilitati. La tua carta va coperta.</span></button>
+  <button id="locBtnGruppo" class="option" style="margin:0;text-align:center" onclick="selectLocation('gruppo')"><b>In Gruppo</b><span>Puoi usare i Malefici. Gli Indizi sono scoperti.</span></button>
+  <button id="locBtnIsolato" class="option" style="margin:0;text-align:center" onclick="selectLocation('isolato')"><b>Isolato</b><span>Malefici disabilitati. Gli Indizi sono coperti</span></button>
   </div>
   <button id="locBtnFinito" class="option" disabled style="text-align:center;opacity:.38;pointer-events:none"><b>Finito</b><span>Prima scegli la tua posizione.</span></button>`;
 }
@@ -788,7 +895,7 @@ function promptGroupWith(){
   const h=human();
   const others=game.players.filter(p=>p.id!==h.id);
   $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>Con chi sei In Gruppo?</h2><p class="small">Scegli il giocatore con cui unirti.</p>
+  $("sheet").innerHTML=`<h2>A CHI VUOI UNIRTI?</h2><p class="small">Scegli un Protagonista</p>
   <div style="display:grid;gap:7px">${others.map(p=>`<button class="option" onclick="joinPlayerGroup('${p.id}')"><b>${escape(p.name)}</b><span>${p.hero} · ${p.location==="isolato"?"Isolato":"In Gruppo"}</span></button>`).join("")}</div>
   <button class="option" style="margin-top:6px" onclick="chooseIsolato()">Vai Isolato invece</button>`;
 }
@@ -1381,8 +1488,7 @@ function openRules(){openMsg("Promemoria regole","Round 1: prefazione. Dal Round
 function openConsigli(){
   openMsg("Consigli per la narrazione",`
     <div style="text-align:left;line-height:1.6;font-size:13px">
-      <p style="margin:0 0 14px;padding:12px;background:rgba(42,26,61,.55);border:1px solid rgba(212,175,55,.28);border-radius:10px"><strong>Regola d'oro:</strong> in caso di conflitto fra questo manuale e il testo di Protagonista, Maleficio o Presagio, vale sempre quanto indicato sulla carta.</p>
-      <p style="margin:0 0 12px"><strong>Ascolta e connetti.</strong> La narrazione è collettiva, per mantenere continuità riprendi i dettagli introdotti dagli altri giocatori, e trasformali a tuo piacimento.</p>
+<p style="margin:0 0 12px"><strong>Ascolta e connetti.</strong> La narrazione è collettiva, per mantenere continuità riprendi i dettagli introdotti dagli altri giocatori, e trasformali a tuo piacimento.</p>
       <p style="margin:0 0 12px"><strong>Suggerisci, non spiegare.</strong> Il mistero è più potente della certezza. Descrivi l'inquietudine di un oggetto senza svelarne subito il segreto. Il fascino risiede in ciò che resta nell'ombra.</p>
       <p style="margin:0 0 12px"><strong>Non temere le pause.</strong> Un respiro trattenuto o uno sguardo prolungato creano più tensione di mille parole. Lascia che l'atmosfera pesi sulla scena.</p>
       <p style="margin:0 0 12px"><strong>Sfrutta i cinque sensi.</strong> Non limitarti alla vista. Descrivi l'odore della stanza, il freddo sulla pelle o un rumore lontano. Coinvolgere i sensi migliora l'immedesimazione.</p>
@@ -1688,9 +1794,9 @@ function renderVotingModal(){
   const myLobbyPlayer=human();const myIdentity=myLobbyPlayer?.identity;
   $("sheet").innerHTML=`
     <h2 style="text-align:center;margin-bottom:4px">Lobby</h2>
-    <p class="small" style="text-align:center;margin:0 0 10px;color:var(--muted)">Vota il Dominio e il Prefatore. La partita inizia quando tutti hanno votato entrambi.</p>
+    <p class="small" style="text-align:center;margin:0 0 10px;color:var(--muted)">Vota Dominio e Prefatore. La partita inizia quando tutti hanno votato.</p>
     ${myIdentity?`<div style="background:rgba(${myIdentity==='Corrotto'?'107,31,58':'28,90,45'},.22);border:1px solid ${myIdentity==='Corrotto'?'rgba(180,50,80,.45)':'rgba(50,160,80,.45)'};border-radius:8px;padding:8px 14px;margin-bottom:14px;text-align:center"><div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px">La tua identità</div><div style="font-size:20px;font-weight:800;color:${myIdentity==='Corrotto'?'var(--blood)':'var(--green)'}">${myIdentity}</div></div>`:''}
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Dominio (${domainVoted}/${total})</div>
+    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Vota il Dominio (${domainVoted}/${total})</div>
     <div class="domain-choices">
       ${choices.map((d,i)=>{
         const count=Object.values(domainVotes).filter(v=>v===i).length;
@@ -1703,7 +1809,7 @@ function renderVotingModal(){
       }).join("")}
     </div>
     <div style="margin:14px 0 6px;border-top:1px solid var(--line);padding-top:12px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Chi inizia la storia? — Prefatore (${prefVoted}/${total})</div>
+      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Vota il Prefatore (${prefVoted}/${total})</div>
       <div style="display:grid;gap:5px">
         ${game.players.map(p=>{
           const prefCount=Object.values(prefVotes).filter(v=>v===p.id).length;
