@@ -7,7 +7,7 @@
 <title>DUSKLORE - App Playtest</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Cinzel+Decorative:wght@900&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Cinzel+Decorative:wght@900&family=Cormorant+Garamond:ital,wght@0,400;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Roboto:wght@700;900&display=swap" rel="stylesheet">
 <style>
   :root{
     --bone:#d4c9b0;--bone-dim:#c3b89f;--bone-deep:#9a8e78;
@@ -52,9 +52,9 @@
   .screen{min-height:100svh;padding:18px 14px 96px}
   .hidden{display:none!important}
   .topbar{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px}
-  .brand{font-family:var(--display);letter-spacing:.1em;font-weight:700;font-size:1.1rem;color:var(--gold);
+  .brand{font-family:var(--display);letter-spacing:.1em;font-weight:700;font-size:1.4rem;color:var(--gold);
     text-shadow:var(--glow-gold)}
-  #turnLine.small{margin-top:4px;font-size:14px;color:var(--bone-deep)!important;font-family:var(--ui);font-weight:400}
+  #turnLine.small{display:none}
   .pill{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(201,165,88,.22);
     background:rgba(30,22,48,.65);border-radius:4px;padding:7px 12px;color:var(--bone-deep);
     font-family:var(--display-2);font-size:12px;font-weight:600;
@@ -137,9 +137,10 @@
   /* ===== FINE CONFIGURAZIONE ===== */
   .layout{display:grid;gap:14px}
   .side{display:flex;flex-direction:column;gap:12px}
-  .status{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;
+  .status{display:grid;grid-template-columns:80px 1fr auto 1fr 80px;gap:10px;align-items:center;
     border:1px solid rgba(201,165,88,.22);background:linear-gradient(180deg,rgba(30,22,48,.7),rgba(23,18,42,.85));
     border-radius:10px;padding:12px 10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+  .status-deco{width:80px;height:80px;object-fit:contain;justify-self:center;align-self:center;display:block}
   .score{text-align:center}.score strong{display:block;font-size:2rem;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums;font-family:var(--display-num);font-style:normal}
   .score.sun strong{color:var(--sun);text-shadow:0 0 20px rgba(232,197,71,.35)}
   .score.moon strong{color:var(--moon);text-shadow:0 0 20px rgba(181,126,220,.28)}
@@ -259,12 +260,13 @@
   #lobby{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px 14px;min-height:100svh}
   .lobby-box{background:linear-gradient(165deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.28);border-radius:14px;padding:22px;box-shadow:var(--shadow);width:min(480px,100%)}
   .domain-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0}
-  .domain-choice{width:100%;background:linear-gradient(145deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:6px;color:var(--bone);cursor:pointer;text-align:center;display:flex;flex-direction:column;gap:3px;transition:border-color .2s,box-shadow .2s}
+  .domain-choice{width:100%;background:linear-gradient(145deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:6px;color:var(--bone);cursor:pointer;text-align:center;display:flex;flex-direction:column;gap:3px;transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
   .domain-choice:hover{border-color:rgba(201,165,88,.45);box-shadow:0 0 14px rgba(201,165,88,.12)}
-  .domain-choice.voted{border-color:var(--gold);background:linear-gradient(145deg,#1e1a0e,#141008);box-shadow:0 0 20px rgba(201,165,88,.18)}
-  .domain-choice-name{font-weight:700;font-size:13px;font-family:var(--display);letter-spacing:.06em}
-  .domain-choice-text{font-size:11px;color:var(--bone-deep);line-height:1.3;flex:1;text-align:center;font-family:var(--book);font-style:italic}
-  .domain-vote-badge{font-size:11px;color:var(--gold);font-family:var(--display-2);font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+  .domain-choice.voted{border-color:var(--gold);box-shadow:0 0 20px rgba(201,165,88,.18)}
+  .domain-choice-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,4,9,.45) 0%,rgba(5,4,9,.82) 60%,rgba(5,4,9,.95) 100%);z-index:0;pointer-events:none}
+  .domain-choice-name{font-weight:700;font-size:13px;font-family:var(--display);letter-spacing:.06em;position:relative;z-index:1;text-align:center;padding:50px}
+  .domain-choice-text{font-size:11px;color:var(--bone-deep);line-height:1.3;flex:1;text-align:center;font-family:var(--book);font-style:italic;position:relative;z-index:1}
+  .domain-vote-badge{font-size:11px;color:var(--gold);font-family:var(--display-2);font-weight:600;letter-spacing:.08em;text-transform:uppercase;position:relative;z-index:1}
   .lobby-players{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:8px}
   .sheet div:has(>.option){grid-template-columns:1fr 1fr;gap:6px}
   .lobby-hero-grid{display:flex;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:8px}
@@ -284,7 +286,7 @@
   .lp-name{font-size:10px;font-family:var(--display-2);font-weight:600;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding:0 2px;text-transform:uppercase}
   .lp-vote{font-size:11px;color:var(--gold);font-family:var(--display-em);font-weight:700;min-height:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding:0 2px;letter-spacing:.03em}
   /* ── Atmospheric background layers ── */
-  .vignette{position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 40%,rgba(0,0,0,.65) 100%);z-index:8500;pointer-events:none}
+  .vignette{position:fixed;inset:0;z-index:8500;pointer-events:none}
   .bg-parallax{position:fixed;inset:0;z-index:0;pointer-events:none}
   .bg-layer{position:absolute;inset:0}
   .bg-layer.l1{background:radial-gradient(ellipse 150% 130% at 15% 25%,rgba(20,5,35,.07),transparent 80%),radial-gradient(ellipse 140% 120% at 85% 75%,rgba(8,3,18,.05),transparent 80%);animation:bgDrift1 90s ease-in-out alternate infinite}
@@ -294,6 +296,7 @@
   @keyframes bgDrift2{0%{transform:translate(0,0) scale(1)}100%{transform:translate(-2%,2%) scale(1.03)}}
   @keyframes bgDrift3{0%{transform:translate(0,0) scale(1)}100%{transform:translate(1.5%,-2%) scale(1.02)}}
   .bg-bookshelf{position:fixed;inset:0;z-index:1;background-image:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778008976/Pattern_csbw7i.png');background-repeat:repeat;background-size:1000px 900px;opacity:.03;pointer-events:none}
+  body:has(#game:not(.hidden)) .bg-bookshelf{opacity:0}
   #dusk-particles{position:fixed;inset:0;z-index:2;pointer-events:none}
   /* ── Music widget ── */
   #dusk-music-widget{position:fixed;bottom:14px;right:14px;z-index:9000;display:flex;align-items:center;gap:8px;background:rgba(12,9,16,.82);border:1px solid rgba(201,165,88,.45);border-radius:8px;padding:6px 10px;pointer-events:auto}
@@ -302,9 +305,14 @@
   /* ── Custom cursor ── */
   *,a,button,input,select,textarea,label,[role='button']{cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0,none!important}
   @media(hover:none){*,a,button,input,select,textarea,label,[role='button']{cursor:auto!important}}
+  /* ── Domain background ── */
+  #domain-bg{position:fixed;inset:0;z-index:0;pointer-events:none;transition:opacity 1.2s ease;opacity:0}
+  #domain-bg.visible{opacity:1}
+  #domain-bg img{width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(6px) brightness(.65) saturate(.85);transform:scale(1.05)}
 </style>
 </head>
 <body>
+<div id="domain-bg"><img id="domain-bg-img" src="" alt=""></div>
 <div class="vignette"></div>
 <div class="bg-parallax">
   <div class="bg-layer l1"></div>
@@ -328,7 +336,7 @@
     </div>
     <div id="newGameView" class="setup-card hidden">
       <h1>DUSKLORE</h1>
-      <p>Configura la partita e condividi il codice con i tuoi amici.</p>
+      <p>Configura il gioco e condividi il codice con gli altri</p>
 
       <!-- Nome + Numero giocatori sulla stessa riga -->
       <div class="ng-top">
@@ -352,11 +360,11 @@
       <div class="ng-footer">
         <div class="ng-code">
           <div class="ng-code-lbl">Codice stanza</div>
-          <div id="pendingCode" style="font-size:20px;font-weight:900;letter-spacing:.18em;color:var(--gold);line-height:1.3">---</div>
+          <div id="pendingCode" style="font-size:20px;font-weight:900;letter-spacing:.18em;color:var(--gold);line-height:1.3;font-family:'Roboto',sans-serif">---</div>
         </div>
         <div class="ng-btns">
-          <button class="btn btn-gioca" onclick="startGame()">Inizia partita</button>
-          <button class="btn secondary" onclick="showLanding()">← Indietro</button>
+          <button class="btn btn-gioca" onclick="startGame()">Inizia</button>
+          <button class="btn secondary" onclick="showLanding()">Indietro</button>
         </div>
       </div>
     </div>
@@ -380,9 +388,11 @@
     <div class="layout">
       <main>
         <div class="status">
+          <img class="status-deco" src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777962323/Sole_knv9qw.png" alt="">
           <div class="score sun"><strong id="sunScore">0</strong><span>Sole</span><div class="track"><div id="sunBar" class="sunbar" style="width:0%"></div></div></div>
           <div class="act"><b id="roundLabel">Round 1</b><span id="actLabel">Prefazione</span><div class="small">Soglia <span id="winThreshold">22</span></div></div>
           <div class="score moon"><strong id="moonScore">0</strong><span>Luna</span><div class="track"><div id="moonBar" class="moonbar" style="width:0%"></div></div></div>
+          <img class="status-deco" src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1777962323/Luna_chsbb0.png" alt="">
         </div>
 
         <div class="table" data-testid="table">
@@ -468,7 +478,7 @@ const DATA={
   },
   reliquie:["Grimorio","Maschera","Dipinto","Orologio","Anfora","Pugnale","Chiave","Marionetta","Clessidra","Fotografia","Sfera di Vetro","Bussola","Specchio","Statua","Carillon","Telefono","Pianta","Sarcofago","Matriosca","Tarocchi"],
   domini:[
-    ["Maniero","Un guscio di velluto e polvere dove il silenzio pesa più dell'oro."],["Cimitero","Un giardino di marmo che culla un sonno senza sogni."],["Manicomio","Un labirinto di urla cucite sui muri della mente."],["Luna Park","Un miraggio di neon che maschera il ghigno della ruggine."],["Orfanotrofio","Un nido di brandine fredde, dove il pianto si condensa su pareti fredde."],["Villaggio","Un groviglio di case cieche che mastica segreti e sputa sospetti."],["Castello","Una corona di pietra innalzata per difendere paure più antiche dei suoi re."],["Crociera","Un'isola di ferro sospesa su un profondo abisso."],["Albergo","Una prigione di chiavi d'oro e stanze vuote, dove l'ospitalità è un debito da pagare."],["Museo","Un santuario di vetro dove il passato resta immobile per giudicare chi lo osserva."]
+    ["Maniero","Un guscio di velluto e polvere dove il silenzio pesa più dell'oro."],["Cimitero","Un giardino di marmo che culla un sonno senza sogni."],["Manicomio","Un labirinto di urla cucite sui muri della mente."],["Luna Park","Un miraggio di neon che maschera il ghigno della ruggine."],["Orfanotrofio","Un nido di brandine fredde, dove il pianto si condensa su pareti fredde."],["Villaggio","Un groviglio di case cieche che mastica segreti e sputa sospetti."],["Castello","Una corona di pietra innalzata per difendere paure più antiche dei suoi re."],["Traghetto","Un'isola di ferro sospesa su un profondo abisso."],["Albergo","Una prigione di chiavi d'oro e stanze vuote, dove l'ospitalità è un debito da pagare."],["Museo","Un santuario di vetro dove il passato resta immobile per giudicare chi lo osserva."]
   ],
   presagi:{
     "Flashback":"Ogni giocatore è obbligato ad utilizzare il primo Indizio presente nella pila degli scarti. Se nessun Indizio è presente, non accade nulla.",
@@ -578,6 +588,7 @@ function setupRoomListener(code){
     if(!data.discardMalefici)data.discardMalefici=[];
     if(typeof data.domainChoices==="string")data.domainChoices=JSON.parse(data.domainChoices);
     if(game&&!game.lobbyPhase&&data.lobbyPhase)return;
+    if(data.domain?.name)setDomainBackground(data.domain.name);
     if(!data.lobbyPhase&&data.lastSavedBy===clientId){render();return;}
     syncing=true;game=data;syncing=false;
     localStorage.setItem("dusklore-app",JSON.stringify(game));
@@ -1414,11 +1425,11 @@ function epilogue(){
   save();render();
   $("modal").classList.remove("hidden");
   $("modal").style.placeItems="center";
-  $("sheet").innerHTML=`<h2>️ Epilogo — Fine Partita</h2>
-  <p>Bilancia finale: ️ <b>${game.scale.sun}</b> · 🌙 <b>${game.scale.moon}</b> — Vincono: <b>${winner}</b></p>
-  <h3 style="margin:12px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em">Identità rivelate</h3>
-  ${game.players.map(p=>`<div style="background:#1e1620;border:1px solid var(--line);border-radius:12px;padding:10px;margin:6px 0"><b>${escape(p.name)}</b> — <span style="color:${p.identity==="Corrotto"?'var(--blood)':'var(--green)'}">${p.identity}</span><div class="small" style="margin-top:4px">${p.hero} · Missione: <i>${escape(p.mission)}</i> (${p.missionDone[1]?"completa":p.missionDone[0]?"fase 1/2":"non completata"})</div></div>`).join("")}
-  <h3 style="margin:14px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em">Chi narra l'Epilogo?</h3>
+  $("sheet").innerHTML=`<h2>️ Epilogo - Fine Partita</h2>
+  <p>Bilancia finale: ️ <b>${game.scale.sun}</b> · 🌙 <b>${game.scale.moon}</b> - Vincono: <b>${winner}</b></p>
+  <h3 style="margin:12px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;text-align:center">Identità rivelate</h3>
+  ${game.players.map(p=>`<div style="background:#1e1620;border:1px solid var(--line);border-radius:12px;padding:10px;margin:6px 0;text-align:center"><b>${escape(p.name)}</b> - <span style="color:${p.identity==="Corrotto"?'var(--blood)':'var(--green)'}">${p.identity}</span><div class="small" style="margin-top:4px">${p.hero} · Missione: <i>${escape(p.mission)}</i> (${p.missionDone[1]?"completa":p.missionDone[0]?"fase 1/2":"non completata"})</div></div>`).join("")}
+  <h3 style="margin:14px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;text-align:center">Chi narra l'Epilogo?</h3>
   <p class="small">Vota chi tra i presenti narrerà il finale della storia.</p>
   <div class="target-grid">${game.players.map(p=>`<button class="target" onclick="voteNarrator('${p.id}')"><b>${escape(p.name)}</b><div class="small">${p.hero} · ${p.identity}</div></button>`).join("")}</div>`;
 }
@@ -1498,7 +1509,7 @@ function showDiscardMalefici(){
   $("modal").classList.remove("hidden");
   $("sheet").innerHTML=`<h2>Scarti Malefici (${d.length})</h2><div style="display:grid;gap:6px;max-height:55svh;overflow:auto">${[...d].reverse().map(c=>`<div style="background:#140d1e;border:1px solid var(--line);border-radius:10px;padding:9px"><b>${escape(c.name)}</b><div class="small">${escape(c.text||DATA.malefici[c.name]||"")}</div></div>`).join("")}</div><button class="option" style="margin-top:10px" onclick="closeModal()">Chiudi</button>`;
 }
-function showRoomLink(){const url=location.href.split("#")[0]+"#room="+game.roomId;openMsg("Codice stanza",`Codice: <b style="font-size:22px;letter-spacing:.15em;color:var(--gold)">${(game.roomId||"").toUpperCase()}</b><br><br>Oppure condividi il link:<br><b style="font-size:11px;word-break:break-all">${escape(url)}</b>`)}
+function showRoomLink(){const url=location.href.split("#")[0]+"#room="+game.roomId;openMsg("Codice stanza",`Codice: <b style="font-size:22px;letter-spacing:.15em;color:var(--gold);font-family:'Roboto',sans-serif">${(game.roomId||"").toUpperCase()}</b><br><br>Oppure condividi il link:<br><b style="font-size:11px;word-break:break-all">${escape(url)}</b>`)}
 function openRules(){openMsg("Promemoria regole","Round 1: prefazione. Dal Round 2: pesca a inizio turno, gioca un Indizio, usa Malefici solo se nello stesso luogo, Presagio attivo fino a fine round. Alla fine di ogni Atto tutti mettono un Indizio coperto e i simboli opposti si annullano.")}
 
 function openConsigli(){
@@ -1516,7 +1527,7 @@ function openConsigli(){
   `);
 }
 
-function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();}
+function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();const _dbg=$("domain-bg");_dbg.classList.remove("visible");$("domain-bg-img").src="";}
 function openMsg(title,body){$("modal").classList.remove("hidden");$("sheet").innerHTML=`<h2>${title}</h2><p>${body}</p><button class="option" onclick="closeModal()">Ok</button>`}
 function closeModal(){$("modal").classList.add("hidden");$("modal").style.placeItems="";}
 
@@ -1623,7 +1634,7 @@ function promptSoldatoInterject(done){
   ${h.location!=="isolato"?`<button class="option" onclick="soldatoInterjectMove('isolato')"><b>Isolati</b><span>Esci dal gruppo attuale.</span></button>`:""}
   ${gruppiAltrui.map(gid=>{const members=others.filter(x=>x.location===gid);return `<button class="option" onclick="soldatoInterjectMove('${gid}')"><b>Unisciti a: ${members.map(x=>escape(x.name)).join(", ")}</b><span>${members.map(x=>x.hero).join(" · ")}</span></button>`;}).join("")}
   ${h.location==="isolato"&&!gruppiAltrui.length?`<p class="small">Tutti sono Isolati: nessun gruppo a cui unirti.</p>`:""}
-  <button class="option" onclick="soldatoInterjectSkip()"><b>Salta — non usare il Potere ora</b></button>`;
+  <button class="option" onclick="soldatoInterjectSkip()"><b>Salta - non usare il Potere ora</b></button>`;
   window._soldatoInterjectDone=done;
 }
 function soldatoInterjectMove(gid){
@@ -1825,7 +1836,9 @@ function renderVotingModal(){
       ${choices.map((d,i)=>{
         const count=Object.values(domainVotes).filter(v=>v===i).length;
         const isVoted=myDomainVote===i;
-        return `<button class="domain-choice${isVoted?" voted":""}" onclick="voteForDomain(${i})">
+        const _dcBg=DOMAIN_BG_MAP[(d[0]||"").trim().toLowerCase()]||"";
+        return `<button class="domain-choice${isVoted?" voted":""}" onclick="voteForDomain(${i})"${_dcBg?` style="background-image:url(${_dcBg});background-size:cover;background-position:center"`:""}>
+          <div class="domain-choice-overlay"></div>
           <div class="domain-choice-name">${escape(d[0])}</div>
           <div class="domain-choice-text">${escape(d[1])}</div>
           <div class="domain-vote-badge">${count>0?`▲ ${count} vot${count===1?"o":"i"}`:"&nbsp;"}</div>
@@ -1868,10 +1881,32 @@ function renderVotingModal(){
   `;
 }
 
+const DOMAIN_BG_MAP={
+  "luna park":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094516/Luna_Park_bsqwjx.png",
+  "orfanotrofio":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094524/Orfanotrofio_sjmhtp.png",
+  "cimitero":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094541/Cimitero_ll3kiu.png",
+  "museo":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094549/Museo_pgwazp.png",
+  "villaggio":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094559/Villaggio_aae8tq.png",
+  "traghetto":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094569/Nave_evmmhg.png",
+  "maniero":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094588/Magione_sl7a7m.png",
+  "castello":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094596/Castello_w0jpcf.png",
+  "albergo":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094603/Hotel_uucytf.png",
+  "manicomio":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094616/Manicomio_okpjch.png"
+};
+function setDomainBackground(domainName){
+  const key=(domainName||"").trim().toLowerCase();
+  const url=DOMAIN_BG_MAP[key];
+  const bg=$("domain-bg");
+  const img=$("domain-bg-img");
+  if(url){img.src=url;bg.classList.add("visible");}
+  else{bg.classList.remove("visible");}
+}
 function voteForDomain(domainIndex){
   const h=human(); if(!h||h.controller==="ai")return;
   if(!game.domainVotes)game.domainVotes={};
   game.domainVotes[h.id]=domainIndex;
+  const _chosenName=((game.domainChoices||[])[domainIndex]||[])[0];
+  if(_chosenName)setDomainBackground(_chosenName);
   save();renderVotingModal();
   if(game.hostId===clientId)checkLobbyVotes();
 }
