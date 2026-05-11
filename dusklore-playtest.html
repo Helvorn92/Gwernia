@@ -850,7 +850,7 @@ function setupRoomListener(code){
     localStorage.setItem("dusklore-app",JSON.stringify(game));
     if(game.players.some(p=>p.controller===clientId)){
       if(game.lobbyPhase){showGame();showVotingModal();if(game.hostId===clientId)checkLobbyVotes();}
-      else{closeModal();showGame();render();beginTurn();_sfxDetect(_prevSnap,game);if(_prevSnap&&_prevSnap.lobbyPhase&&!game.lobbyPhase&&window.duskSwitchTrack)duskSwitchTrack(TRACK_GAME,0.55);}
+      else{if(game.showingActSummary&&!_actProseguiDone){showGame();renderActSummaryModal();_checkActProseguiComplete();}else if(!game.showingActSummary){closeModal();showGame();render();beginTurn();}_sfxDetect(_prevSnap,game);if(_prevSnap&&_prevSnap.lobbyPhase&&!game.lobbyPhase&&window.duskSwitchTrack)duskSwitchTrack(TRACK_GAME,0.55);}
     }
   },err=>console.warn("Sync error:",err.message));
 }
@@ -1272,7 +1272,7 @@ function endRound(){
   if(game.presage==="Ferimento")game.players.forEach(enforceHandLimit);
   if(game.presage)showPresagioReveal(game.presage,DATA.presagi[game.presage]);
   log(`Inizia il Round ${game.round}. Presagio: ${game.presage||"nessuno"}.`);
-  beginTurn();
+  if(game.presage){setTimeout(()=>beginTurn(),5600);}else{beginTurn();}
 }
 
 function beginTurn(){
@@ -1651,35 +1651,64 @@ function revealCovered(){
   playFX(FX.END_ACT);
   game.round++; game.turn=0; game.players.forEach(p=>{p.hasPlayed=false;p.hasDrawn=false;p.missionDoneThisAct=0;});
   game.presage=rand(Object.keys(DATA.presagi));
-  showPresagioReveal(game.presage,DATA.presagi[game.presage]);
   log(`Fine Atto — Isolamento: ☀️${isoSun} ${isoMoon} (aggiunti diretti). Fine Atto: ☀️${actSun} 🌙${actMoon} → annullati ${cancelled} → +☀️${addSun} +🌙${addMoon}. Round ${game.round}, Presagio: ${game.presage}.`);
+  game.actSummaryDisplay={isoCards:isoCards.map(c=>({symbols:c.symbols})),actCards:actCards.map(c=>({symbols:c.symbols})),isoSun,isoMoon,actSun,actMoon,cancelled,addSun,addMoon};
+  game.showingActSummary=true;
+  game.proseguiVoti=[];
   save();render();
+  renderActSummaryModal();
+}
+function renderActSummaryModal(){
+  if(!game||!game.actSummaryDisplay)return;
+  const d=game.actSummaryDisplay;
+  const myVoted=(game.proseguiVoti||[]).includes(clientId);
   $("modal").classList.remove("hidden");
   $("sheet").innerHTML=`<h2>Fine Atto — Simboli Rivelati</h2>
-  ${isoCards.length?`
-  <div style="margin:10px 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--blood)">Fase 1 — Carte Isolamento (${isoCards.length})</div>
+  ${d.isoCards.length?`
+  <div style="margin:10px 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--blood)">Fase 1 — Carte Isolamento (${d.isoCards.length})</div>
   <p class="small" style="margin:0 0 6px">Aggiunte direttamente alla Bilancia, senza annullamento tra loro.</p>
   <div style="background:#200d0d;border:1px solid rgba(180,68,68,.3);border-radius:14px;padding:12px 16px;line-height:2">
-    ${isoCards.map((c,i)=>`<div style="font-size:13px">Carta ${i+1} — ${c.symbols.join("")}</div>`).join("")}
+    ${d.isoCards.map((c,i)=>`<div style="font-size:13px">Carta ${i+1} — ${c.symbols.join("")}</div>`).join("")}
     <div style="border-top:1px solid rgba(180,68,68,.25);margin:6px 0"></div>
-    <div>☀️ Sole aggiunti: <b style="color:var(--sun)">+${isoSun}</b> &nbsp;·&nbsp; 🌙 Luna aggiunti: <b style="color:var(--moon)">+${isoMoon}</b></div>
+    <div>☀️ Sole aggiunti: <b style="color:var(--sun)">+${d.isoSun}</b> &nbsp;·&nbsp; 🌙 Luna aggiunti: <b style="color:var(--moon)">+${d.isoMoon}</b></div>
   </div>`:""}
-  <div style="margin:14px 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--violet)">Fase 2 — Carte Fine Atto (${actCards.length})</div>
+  <div style="margin:14px 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--violet)">Fase 2 — Carte Fine Atto (${d.actCards.length})</div>
   <p class="small" style="margin:0 0 6px">I simboli opposti si annullano tra loro.</p>
   <div style="background:#1a1520;border:1px solid rgba(142,97,255,.25);border-radius:14px;padding:12px 16px;line-height:2">
-    ${actCards.map((c,i)=>`<div style="font-size:13px">Carta ${i+1} — ${c.symbols.join("")}</div>`).join("")}
+    ${d.actCards.map((c,i)=>`<div style="font-size:13px">Carta ${i+1} — ${c.symbols.join("")}</div>`).join("")}
     <div style="border-top:1px solid rgba(142,97,255,.2);margin:6px 0"></div>
-    <div style="font-size:13px">Totale ☀️ <b>${actSun}</b> · 🌙 <b>${actMoon}</b></div>
-    <div style="font-size:12px;color:var(--muted)">Annullati: <b>${cancelled}</b> ☀️ e <b>${cancelled}</b> 🌙</div>
-    <div style="font-size:14px;margin-top:4px">Aggiunti: <span style="color:var(--sun)">☀️ +${addSun}</span> &nbsp;·&nbsp; <span style="color:var(--moon)"> +${addMoon}</span></div>
+    <div style="font-size:13px">Totale ☀️ <b>${d.actSun}</b> · 🌙 <b>${d.actMoon}</b></div>
+    <div style="font-size:12px;color:var(--muted)">Annullati: <b>${d.cancelled}</b> ☀️ e <b>${d.cancelled}</b> 🌙</div>
+    <div style="font-size:14px;margin-top:4px">Aggiunti: <span style="color:var(--sun)">☀️ +${d.addSun}</span> &nbsp;·&nbsp; <span style="color:var(--moon)"> +${d.addMoon}</span></div>
   </div>
   <p class="small" style="margin-top:12px">Nuovo Presagio: <b>${game.presage}</b> — ${escape(DATA.presagi[game.presage]||"")}</p>
-  <button class="option" onclick="closeActSummary()">Inizia Round ${game.round}</button>`;
+  <button id="act-prosegui-btn" onclick="voteActProsegui()" ${myVoted?"disabled":""} style="display:block;width:100%;margin-top:16px;padding:12px;background:var(--gold);color:#1a0d0a;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;cursor:pointer">${myVoted?"In attesa...":"PROSEGUI"}</button>`;
 }
-function closeActSummary(){
-  game.covered=[];
-  closeModal();
-  beginTurn();
+var _actProseguiDone=false;
+function voteActProsegui(){
+  if(!game||!game.showingActSummary)return;
+  if(!game.proseguiVoti)game.proseguiVoti=[];
+  if(game.proseguiVoti.includes(clientId))return;
+  game.proseguiVoti=game.proseguiVoti.concat([clientId]);
+  const btn=document.getElementById('act-prosegui-btn');
+  if(btn){btn.disabled=true;btn.textContent='In attesa...';}
+  save();
+  _checkActProseguiComplete();
+}
+function _checkActProseguiComplete(){
+  if(!game||!game.showingActSummary||_actProseguiDone)return;
+  const humanCount=(game.players||[]).filter(p=>p.isHuman).length;
+  if((game.proseguiVoti||[]).length>=humanCount){
+    _actProseguiDone=true;
+    const pName=game.presage,pDesc=DATA.presagi[game.presage];
+    game.showingActSummary=false;game.actSummaryDisplay=null;game.proseguiVoti=[];game.covered=[];
+    pendingTurnStart=true;
+    closeModal();
+    setTimeout(()=>{
+      showPresagioReveal(pName,pDesc);
+      setTimeout(()=>{_actProseguiDone=false;pendingTurnStart=false;save();beginTurn();},5600);
+    },400);
+  }
 }
 function epilogue(){
   game.players.forEach(p=>{const bonus=p.missionDone[1]?(p.identity==="Corrotto"?7:5):p.missionDone[0]?(p.identity==="Corrotto"?3:2):0; if(p.identity==="Corrotto")game.scale.moon+=bonus; else game.scale.sun+=bonus});
