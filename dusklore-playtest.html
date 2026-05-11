@@ -287,6 +287,7 @@
   .lp-vote{font-size:11px;color:var(--gold);font-family:var(--display-em);font-weight:700;min-height:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding:0 2px;letter-spacing:.03em}
   /* ── Atmospheric background layers ── */
   .vignette{position:fixed;inset:0;z-index:8500;pointer-events:none}
+  #vignette{position:fixed;inset:0;z-index:9999;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55) 100%)}
   .bg-parallax{position:fixed;inset:0;z-index:0;pointer-events:none}
   .bg-layer{position:absolute;inset:0}
   .bg-layer.l1{background:radial-gradient(ellipse 150% 130% at 15% 25%,rgba(20,5,35,.07),transparent 80%),radial-gradient(ellipse 140% 120% at 85% 75%,rgba(8,3,18,.05),transparent 80%);animation:bgDrift1 90s ease-in-out alternate infinite}
@@ -312,6 +313,7 @@
 </style>
 </head>
 <body>
+<div id="vignette"></div>
 <div id="domain-bg"><img id="domain-bg-img" src="" alt=""></div>
 <div class="vignette"></div>
 <div class="bg-parallax">
