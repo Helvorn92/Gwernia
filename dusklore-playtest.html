@@ -478,7 +478,10 @@
   /* ── Music widget ── */
   #dusk-music-widget{position:fixed;bottom:14px;right:14px;z-index:9000;display:flex;align-items:center;gap:8px;background:rgba(12,9,16,.82);border:1px solid rgba(201,165,88,.45);border-radius:8px;padding:6px 10px;pointer-events:auto}
   #dusk-music-widget>button{background:none;border:none;color:var(--gold);font-size:18px;padding:0;line-height:1}
-  #dusk-vol{width:80px;accent-color:var(--gold)}
+  #dusk-vol{width:120px!important;min-width:120px!important;height:6px!important;accent-color:var(--gold);flex-shrink:0!important}
+  #dusk-vol::-webkit-slider-thumb{width:18px!important;height:18px!important;border-radius:50%;background:var(--gold);cursor:pointer;-webkit-appearance:none!important;appearance:none!important}
+  #dusk-vol::-moz-range-thumb{width:18px!important;height:18px!important;border-radius:50%;background:var(--gold);border:none;cursor:pointer}
+  @media(max-width:767px){#dusk-vol{width:120px!important;min-width:120px!important}}
   /* ── Custom cursor ── */
   *,a,button,input,select,textarea,label,[role='button']{cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1778181090/Mouse_svza6x.png') 0 0,none!important}
   @media(hover:none){*,a,button,input,select,textarea,label,[role='button']{cursor:auto!important}}
@@ -718,6 +721,44 @@ const FIREBASE_CONFIG={apiKey:"AIzaSyC_KzUfb-6HKFxtN4cRG5DmsjRXtvBlGzg",authDoma
 let game=null, handTab="all", selectedCard=null, selectedCurse=null, awaitingReaction=null, pendingTurnStart=false, db=null, roomId=null, syncing=false, pendingRoomId=null;
 const $=id=>document.getElementById(id);
 const rand=a=>a[Math.floor(Math.random()*a.length)];
+
+/* ── Sound Effects ─────────────────────────────────────────── */
+const TRACK_LAND='https://res.cloudinary.com/dkvotcvo6/video/upload/v1778007429/Dusklore_kkgfjy.mp3';
+const TRACK_GAME='https://res.cloudinary.com/dkvotcvo6/video/upload/v1778537744/Sottofondo_Teso_v1mpc3.mp3';
+const FX={
+  TICK    :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536348/Fase_Missione_pycqwh.mp3',
+  DRAW    :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536348/Pesca_j66cn0.mp3',
+  END_ACT :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536348/Fine_Atto_sivee3.mp3',
+  NEG     :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536348/Epilogo_Negativo_tcxvmo.mp3',
+  POS     :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536348/Epilogo_Positivo_hdkamk.mp3',
+  DARK    :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536347/Pegno_Oscuro_ofread.mp3',
+  INDIZIO :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536348/Gioca_Indizio_wr9ril.mp3',
+  PRESAGE :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536348/Presagio_ppdaom.mp3',
+  CURSE   :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536347/Maleficio_lbtv1b.mp3'
+};
+function playFX(url){
+  var a=new Audio(url);a.volume=0.25;a.play().catch(function(){});
+}
+/* Delta detector: fires sounds on remote clients when snapshot arrives */
+var _sfxPrev=null;
+function _sfxDetect(prev,next){
+  if(!prev||!next||next.lobbyPhase)return;
+  if(prev.presage!==next.presage&&next.presage)playFX(FX.PRESAGE);
+  if((prev.act||1)!==(next.act||1))playFX(FX.END_ACT);
+  if(!prev.ended&&next.ended)
+    playFX(next.scale.sun>=next.scale.moon?FX.POS:FX.NEG);
+  if((next.discardMalefici||[]).length>(prev.discardMalefici||[]).length)playFX(FX.CURSE);
+  if((next.discard||[]).length>(prev.discard||[]).length)playFX(FX.INDIZIO);
+  (next.players||[]).forEach(function(p,i){
+    var q=(prev.players||[])[i];if(!q)return;
+    if(!q.hasDrawn&&p.hasDrawn)playFX(FX.DRAW);
+    if(p.dark>q.dark)playFX(FX.DARK);
+    if(p.missionDone&&q.missionDone)
+      if((!q.missionDone[0]&&p.missionDone[0])||(!q.missionDone[1]&&p.missionDone[1]))
+        playFX(FX.TICK);
+  });
+}
+/* ────────────────────────────────────────────────────────────── */
 const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;};
 const uid=()=>Math.random().toString(36).slice(2,9);
 const clientId=localStorage.getItem("dusklore-client")||uid();
@@ -768,11 +809,12 @@ function setupRoomListener(code){
     if(game&&!game.lobbyPhase&&data.lobbyPhase)return;
     if(data.domain?.name)setDomainBackground(data.domain.name);
     if(!data.lobbyPhase&&data.lastSavedBy===clientId){render();return;}
+    var _prevSnap=game?JSON.parse(JSON.stringify(game)):null;
     syncing=true;game=data;syncing=false;
     localStorage.setItem("dusklore-app",JSON.stringify(game));
     if(game.players.some(p=>p.controller===clientId)){
       if(game.lobbyPhase){showGame();showVotingModal();if(game.hostId===clientId)checkLobbyVotes();}
-      else{closeModal();showGame();render();beginTurn();}
+      else{closeModal();showGame();render();beginTurn();_sfxDetect(_prevSnap,game);if(_prevSnap&&_prevSnap.lobbyPhase&&!game.lobbyPhase&&window.duskSwitchTrack)duskSwitchTrack(TRACK_GAME,0.55);}
     }
   },err=>console.warn("Sync error:",err.message));
 }
@@ -994,6 +1036,7 @@ function discardSelected(){
   if(!selectedCard||selectedCard.type!=="indizio")return;
   h.hand.indizi=h.hand.indizi.filter(c=>c.id!==selectedCard.id);
   game.discard.push(selectedCard);
+  playFX(FX.DRAW);
   log(`${h.name} scarta ${selectedCard.name}.`);
   selectedCard=null;
   save();render();
@@ -1004,6 +1047,7 @@ function drawTurnCard(choice){
   const h=human(); if(h.hasDrawn||game.round===1)return;
   if(choice==="indizio") h.hand.indizi.push(drawIndizio()); else h.hand.malefici.push(drawMaleficio());
   h.hasDrawn=true; enforceHandLimit(h);
+  playFX(FX.DRAW);
   log(`${h.name} pesca una carta ${choice}.`);
 }
 
@@ -1058,6 +1102,7 @@ function chooseTurnDraw(choice){
     if(game.presage==="Flashback"&&game.discard.length>0){
       const card=game.discard.pop();
       h.hand.indizi.push(card);h.hasDrawn=true;enforceHandLimit(h);
+      playFX(FX.DRAW);
       log(`${h.name} è costretto dal Flashback a recuperare "${card.name}" dagli Scarti.`);
       promptLocationChoice();return;
     }
@@ -1160,12 +1205,14 @@ function playIndizio(p,card,covered){
   if(game.presage==="Sovversione"&&symbols[0]===symbols[1]) symbols=symbols[0]==="☀️"?["🌙","🌙"]:["☀️","☀️"];
   applySymbols(p,symbols);
   game.discard.push(card);
+  playFX(FX.INDIZIO);
   log(`${p.name} gioca ${card.name} (${symbols.join("")}).`);
   checkActOrEnd();
 }
 function applySymbols(p,symbols){
   const sun=symbols.filter(s=>s==="☀️").length, moon=symbols.filter(s=>s==="🌙").length;
   game.scale.sun+=sun; game.scale.moon+=moon; p.dark+=moon;
+  if(moon>0)playFX(FX.DARK);
   if(sun===2&&game.scale.moon>0)game.scale.moon--;
   if(moon===2&&game.scale.sun>0)game.scale.sun--;
 }
@@ -1187,6 +1234,7 @@ function endRound(){
   game.round++; game.turn=0; game.players.forEach(p=>{p.hasPlayed=false;p.hasDrawn=false;p.abilityUsed=false;});
   game.presage=game.round>=2?rand(Object.keys(DATA.presagi)):null;
   if(game.presage==="Ferimento")game.players.forEach(enforceHandLimit);
+  if(game.presage)playFX(FX.PRESAGE);
   log(`Inizia il Round ${game.round}. Presagio: ${game.presage||"nessuno"}.`);
   beginTurn();
 }
@@ -1384,6 +1432,7 @@ function resolveRimozione(keep){
 }
 
 function applyCurse(source,target,curse){
+  playFX(FX.CURSE);
   if(!game.discardMalefici)game.discardMalefici=[];
   game.discardMalefici.push(curse);
   if(curse.name==="Osservazione"){
@@ -1494,6 +1543,7 @@ function completeMissionPhase(i){
     h.missionDone[i]=true;
     h.missionDoneThisAct=(h.missionDoneThisAct||0)+1;
     h.hand.malefici.push(drawMaleficio(),drawMaleficio());
+    playFX(FX.TICK);
     log(`${h.name} completa la Fase ${i+1} della Missione e pesca 2 Malefici.`);
   } else {
     h.missionDone[i]=false;
@@ -1562,8 +1612,10 @@ function revealCovered(){
   const cancelled=Math.min(actSun,actMoon),addSun=Math.max(0,actSun-actMoon),addMoon=Math.max(0,actMoon-actSun);
   game.scale.sun+=addSun; game.scale.moon+=addMoon;
   game.resolvingAct=false;
+  playFX(FX.END_ACT);
   game.round++; game.turn=0; game.players.forEach(p=>{p.hasPlayed=false;p.hasDrawn=false;p.missionDoneThisAct=0;});
   game.presage=rand(Object.keys(DATA.presagi));
+  playFX(FX.PRESAGE);
   log(`Fine Atto — Isolamento: ☀️${isoSun} ${isoMoon} (aggiunti diretti). Fine Atto: ☀️${actSun} 🌙${actMoon} → annullati ${cancelled} → +☀️${addSun} +🌙${addMoon}. Round ${game.round}, Presagio: ${game.presage}.`);
   save();render();
   $("modal").classList.remove("hidden");
@@ -1597,6 +1649,7 @@ function epilogue(){
   game.players.forEach(p=>{const bonus=p.missionDone[1]?(p.identity==="Corrotto"?7:5):p.missionDone[0]?(p.identity==="Corrotto"?3:2):0; if(p.identity==="Corrotto")game.scale.moon+=bonus; else game.scale.sun+=bonus});
   const winner=game.scale.sun>=game.scale.moon?"Innocenti":"Corrotti";
   game.ended=true;
+  playFX(winner==="Innocenti"?FX.POS:FX.NEG);
   if(!game.narratorVotes)game.narratorVotes={};
   game.narratorId=null;
   log(`Epilogo: vincono ${winner}. Identità rivelate.`);
@@ -1705,7 +1758,7 @@ function openConsigli(){
   `);
 }
 
-function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();const _dbg=$("domain-bg");_dbg.classList.remove("visible");$("domain-bg-img").src="";}
+function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();const _dbg=$("domain-bg");_dbg.classList.remove("visible");$("domain-bg-img").src="";if(window.duskSwitchTrack)duskSwitchTrack(TRACK_LAND,1.0);}
 function openMsg(title,body){$("modal").classList.remove("hidden");$("sheet").innerHTML=`<h2>${title}</h2><p>${body}</p><button class="option" onclick="closeModal()">Ok</button>`}
 function closeModal(){$("modal").classList.add("hidden");$("modal").style.placeItems="";}
 
@@ -1929,6 +1982,7 @@ function ramingoPickDiscard(id){
   const h=human(); const card=game.discard.find(c=>c.id===id); if(!card)return;
   game.discard=game.discard.filter(c=>c.id!==id);
   h.hand.indizi.push(card); h.hasDrawn=true; enforceHandLimit(h);
+  playFX(FX.DRAW);
   closeModal(); log(`${h.name} usa Recupero e prende ${card.name} dagli Scarti.`); promptLocationChoice();
 }
 function ramingoPickDeck(){
@@ -1951,7 +2005,7 @@ function giornalistaPick(keepIdx){
   const h=human(); const cards=window._giornalistaCards||[];
   const keep=cards[keepIdx]; const ret=cards[1-keepIdx];
   if(ret)game.decks.indizi.push({id:uid(),name:ret.name});
-  if(keep){h.hand.indizi.push(keep); h.hasDrawn=true; enforceHandLimit(h);}
+  if(keep){h.hand.indizi.push(keep); h.hasDrawn=true; enforceHandLimit(h); playFX(FX.DRAW);}
   window._giornalistaCards=null; closeModal();
   log(`${h.name} usa Fiuto e sceglie ${escape(keep.name)} (${keep.symbols.join("")}).`);
   promptLocationChoice();
@@ -1967,6 +2021,7 @@ function promptSacerdoteChoice(){
 function sacerdotePickProtection(){
   const h=human();
   h.hand.malefici.push(drawMaleficio("Protezione")); h.hasDrawn=true;
+  playFX(FX.DRAW);
   if(game.decks.malefici&&game.decks.malefici.length)game.decks.malefici=shuffle(game.decks.malefici);
   closeModal(); log(`${h.name} usa Grazia, prende Protezione e rimescola il mazzo Malefici.`); promptLocationChoice();
 }
@@ -2149,6 +2204,7 @@ function startFromLobby(domain,prefatoreId){
   });
   game.heroVotes=null;
   game.lobbyPhase=false;
+  if(window.duskSwitchTrack)duskSwitchTrack(TRACK_GAME,0.55);
   game.domain={name:domain[0],text:domain[1]};
   game.domainChoices=null;
   game.domainVotes=null;
@@ -2221,26 +2277,40 @@ window.addEventListener("load",initSetup);
   var savedMuted=localStorage.getItem('dusklore-muted')==='true';
   var vol=isNaN(savedVol)?0.5:savedVol;
   var muted=savedMuted;
-  au.volume=vol;
-  au.muted=muted;
+  au.volume=vol;au.muted=muted;
   sl.value=vol;
   btn.textContent=muted?'🔇':'🔊';
-  sl.style.display=muted?'none':'';
-  function tryPlay(){au.play().catch(function(){});}
+  var _cur=au;
+  var _fadeRAF=null;
+  function tryPlay(){_cur.play().catch(function(){});}
   tryPlay();
   document.addEventListener('click',tryPlay,{once:true});
   window.duskToggleMute=function(){
-    muted=!muted;au.muted=muted;
+    muted=!muted;_cur.muted=muted;
     localStorage.setItem('dusklore-muted',muted);
     btn.textContent=muted?'🔇':'🔊';
-    sl.style.display=muted?'none':'';
-    if(!muted&&au.paused)au.play().catch(function(){});
+    if(!muted&&_cur.paused)_cur.play().catch(function(){});
   };
   window.duskSetVol=function(v){
-    var val=parseFloat(v);au.volume=val;
+    var val=parseFloat(v);vol=val;
+    _cur.volume=val;
     localStorage.setItem('dusklore-volume',val);
-    if(val===0&&!muted){au.muted=true;muted=true;localStorage.setItem('dusklore-muted','true');btn.textContent='🔇';sl.style.display='none';}
-    else if(val>0&&muted){au.muted=false;muted=false;localStorage.setItem('dusklore-muted','false');btn.textContent='🔊';sl.style.display='';}
+  };
+  window.duskSwitchTrack=function(url,mult){
+    if(_fadeRAF)cancelAnimationFrame(_fadeRAF);
+    document.querySelectorAll('audio').forEach(function(a){a.pause();a.currentTime=0;});
+    var targetVol=vol*(mult||1);
+    var incoming=new Audio(url);
+    incoming.loop=true;incoming.volume=0;incoming.muted=muted;
+    incoming.play().catch(function(){});
+    var t0=performance.now();
+    function tick(now){
+      var t=Math.min(1,(now-t0)/1500);
+      incoming.volume=targetVol*t;
+      if(t<1){_fadeRAF=requestAnimationFrame(tick);}
+      else{incoming.volume=targetVol;_cur=incoming;_fadeRAF=null;}
+    }
+    _fadeRAF=requestAnimationFrame(tick);
   };
 })();
 </script>
