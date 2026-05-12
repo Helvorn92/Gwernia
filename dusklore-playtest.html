@@ -2374,6 +2374,7 @@ window.addEventListener("load",initSetup);
   };
   window.duskSwitchTrack=function(url,mult){
     if(_fadeRAF)cancelAnimationFrame(_fadeRAF);
+    _cur.pause();_cur.currentTime=0;
     document.querySelectorAll('audio').forEach(function(a){a.pause();a.currentTime=0;});
     var targetVol=vol*(mult||1);
     var incoming=new Audio(url);
