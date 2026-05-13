@@ -228,9 +228,12 @@
   .toastlog{max-height:160px;overflow:auto;display:grid;gap:8px;padding-right:4px}
   .logitem{font-size:14px;color:var(--bone-dim);border-left:2px solid rgba(201,165,88,.35);padding-left:10px;line-height:1.6;font-family:var(--serif);font-weight:400}
   .modal{position:fixed;inset:0;backdrop-filter:blur(4px);display:grid;place-items:center;z-index:20;padding:14px}
-  .sheet{width:min(480px,100%);max-height:90svh;overflow:auto;background:linear-gradient(180deg,#1e1630,#1a1428);
+  #handWrap{filter:none!important;pointer-events:auto!important;z-index:100000!important}
+  .app:has(#modal:not(.hidden) .lobby-players) #handWrap{z-index:1!important;position:relative!important;filter:none!important;pointer-events:auto!important}
+  .epilogo-attivo #handWrap{display:none!important}
+  .sheet{position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;max-height:62vh!important;max-width:88vw!important;overflow-y:auto!important;z-index:9000!important;width:min(480px,88vw);background:linear-gradient(180deg,#1e1630,#1a1428);
     border:1px solid rgba(201,165,88,.28);border-radius:14px 14px 8px 8px;padding:14px;box-shadow:var(--shadow),var(--glow-gold)}
-  #sheet{padding:10px 14px;max-height:92vh;scrollbar-width:none}
+  #sheet{position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;max-height:62vh!important;max-width:88vw!important;overflow-y:auto!important;z-index:9000!important;padding:10px 14px;scrollbar-width:none}
   #sheet::-webkit-scrollbar{display:none}
   .modal:has(.lobby-hero-grid) .sheet{width:min(1100px,94vw);text-align:center}
   .sheet h2{font-family:var(--display);color:var(--gold);letter-spacing:.08em;font-size:1.2rem;font-weight:700;text-align:center}
@@ -298,7 +301,7 @@
     .modal:has(.lobby-hero-grid) .sheet{
       width:96vw!important;
       max-width:96vw!important;
-      max-height:96svh!important;
+      max-height:90vh!important;
       padding:8px 10px!important
     }
     #sheet{padding:6px 10px!important}
@@ -440,7 +443,7 @@
   .domain-choice:hover{border-color:rgba(201,165,88,.45);box-shadow:0 0 14px rgba(201,165,88,.12)}
   .domain-choice.voted{border-color:var(--gold);box-shadow:0 0 20px rgba(201,165,88,.18)}
   .domain-choice-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(5,4,9,.45) 0%,rgba(5,4,9,.82) 60%,rgba(5,4,9,.95) 100%);z-index:0;pointer-events:none}
-  .domain-choice-name{font-weight:700;font-size:13px;font-family:var(--display);letter-spacing:.06em;position:relative;z-index:1;text-align:center;padding:50px}
+  .domain-choice-name{font-weight:700;font-size:13px;font-family:var(--display);letter-spacing:.06em;position:relative;z-index:1;text-align:center;padding:40px}
   .domain-choice-text{font-size:11px;color:var(--bone-deep);line-height:1.3;flex:1;text-align:center;font-family:var(--book);font-style:italic;position:relative;z-index:1}
   .domain-vote-badge{font-size:11px;color:var(--gold);font-family:var(--display-2);font-weight:600;letter-spacing:.08em;text-transform:uppercase;position:relative;z-index:1}
   .lobby-players{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin-top:8px}
@@ -491,6 +494,7 @@
   #domain-bg img{width:100%;height:100%;object-fit:cover;object-position:center;filter:blur(6px) brightness(.65) saturate(.85);transform:scale(1.05)}
   /* ── Presagio reveal overlay ── */
   #presagio-backdrop{position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .6s}
+  #handWrap{filter:none!important;pointer-events:auto!important;z-index:100000!important}
   #presagio-reveal{position:fixed;inset:0;z-index:99999;pointer-events:none;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .6s}
   .presagio-panel{background:linear-gradient(180deg,#1a0d2e,#0d0820);border:1px solid rgba(201,165,88,.55);clip-path:polygon(14px 0%,calc(100% - 14px) 0%,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0% calc(100% - 14px),0% 14px);padding:3rem 4rem;text-align:center;max-width:min(520px,88vw)}
   .presagio-label{font-family:'Cinzel',serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.5em;color:var(--gold);margin-bottom:.6rem}
@@ -500,6 +504,45 @@
   .presagio-bar-wrap{width:200px;height:3px;background:rgba(201,165,88,.18);margin:0 auto;border-radius:2px;overflow:hidden}
   .presagio-bar{height:100%;background:var(--gold);border-radius:2px;width:100%}
   @keyframes presagio-drain{from{width:100%}to{width:0%}}
+  /* ── Fine Atto: layout orizzontale ── */
+  #sheet:has(#act-prosegui-btn){width:min(680px,85vw)!important}
+  .act-phases-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+  .act-phase-col{overflow-y:auto;max-height:38vh}
+  .act-phase-col:empty{display:none}
+  /* ── Epilogo - Fine Partita: due colonne affiancate ── */
+  #sheet:has(.epilogue-body){max-width:820px!important;width:88vw!important;max-height:calc(100vh - 220px)!important;overflow:hidden!important}
+  .epilogue-body{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+  .epilogue-main{display:contents}
+  .epilogue-main>p:first-child{grid-column:1/-1;text-align:center;margin:0 0 .5rem}
+  .epilogue-main>h3{grid-column:1;grid-row:2}
+  .epilogue-players{grid-column:1;grid-row:3;display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:0;overflow-y:auto;max-height:calc(100vh - 400px);scrollbar-width:thin;scrollbar-color:rgba(201,165,88,.4) transparent}
+  .epilogue-side{grid-column:2;grid-row:2/4;overflow-y:auto;max-height:calc(100vh - 350px);scrollbar-width:thin;scrollbar-color:rgba(201,165,88,.4) transparent}
+  .epilogue-players::-webkit-scrollbar,.epilogue-side::-webkit-scrollbar{width:4px;background:transparent}
+  .epilogue-players::-webkit-scrollbar-thumb,.epilogue-side::-webkit-scrollbar-thumb{background:rgba(201,165,88,.4);border-radius:2px}
+  /* ── Schermata epilogo finale ── */
+  #sheet:has(.epilogue-screen){max-width:85vw!important}
+  /* ── Eccezioni 90vh: votazione Dominio, Prefatore/Narratore, Narra la Scena ── */
+  #sheet:has(.domain-choices),
+  #sheet:has(.lobby-hero-grid){max-height:90vh!important;overflow-y:auto!important}
+  .sheet:has(.lobby-hero-grid){padding:6px 10px!important}
+  #sheet:has(#locBtnGruppo){position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;max-height:calc(100vh - 220px)!important;max-width:85vw!important;width:max-content!important;overflow-y:auto!important;z-index:9000!important}
+  /* ── Narra la Scena: selezione gruppo in riga ── */
+  #groupPickerWrap{display:flex;flex-direction:row;flex-wrap:wrap;gap:10px;justify-content:center}
+  #groupPickerWrap>div:first-child{flex:0 0 100%}
+  #groupPickerWrap>.option:not(#confirmGroupBtn){width:auto;min-width:160px;max-width:220px;flex:0 0 auto;flex-shrink:0;margin:0}
+  #confirmGroupBtn{flex:0 0 100%}
+  .epilogue-screen{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem;padding:6px 0}
+  .epilogue-screen-text{width:100%;flex:none;text-align:center}
+  .epilogue-screen-action{width:100%;flex:none;display:flex;flex-direction:column;align-items:center;gap:.75rem}
+  /* ── Mobile < 768px ── */
+  @media(max-width:767px){
+    .act-phases-grid{grid-template-columns:1fr!important}
+    .act-phase-col{max-height:none!important;overflow-y:visible!important}
+    .epilogue-body{grid-template-columns:1fr!important}
+    .epilogue-side{grid-column:1!important;grid-row:4!important;max-height:none!important}
+    #sheet:has(.epilogue-body){max-height:80vh!important;overflow-y:auto!important}
+    #sheet:has(#act-prosegui-btn),#sheet:has(.epilogue-screen){max-height:60vh!important;overflow-y:auto!important;overflow-x:hidden!important;scrollbar-width:thin;scrollbar-color:rgba(201,165,88,.4) transparent}
+  }
 </style>
 </head>
 <body>
@@ -648,6 +691,7 @@
           <h3>Cronologia</h3>
           <div id="log" class="toastlog"></div>
         </div>
+
       </aside>
     </div>
     <div class="footer-space"></div>
@@ -757,13 +801,14 @@ const FX={
   PRESAGE :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536348/Presagio_ppdaom.mp3',
   CURSE   :'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778536347/Maleficio_lbtv1b.mp3'
 };
-function playFX(url){
-  var a=new Audio(url);a.volume=0.25;a.play().catch(function(){});
+function playFX(url,vol){
+  var a=new Audio(url);a.volume=vol!==undefined?vol:0.25;a.play().catch(function(){});
 }
 function showPresagioReveal(nome,descrizione){
   var overlay=document.getElementById('presagio-reveal');
   var backdrop=document.getElementById('presagio-backdrop');
   var appEl=document.querySelector('.app');
+  var hwEl=document.getElementById('handWrap');
   var barEl=document.getElementById('presagio-bar');
   document.getElementById('presagio-nome').textContent=nome;
   document.getElementById('presagio-desc').textContent=descrizione||'';
@@ -772,9 +817,10 @@ function showPresagioReveal(nome,descrizione){
   barEl.style.animation='presagio-drain 5s linear forwards';
   backdrop.style.visibility='visible';backdrop.style.opacity='1';
   if(appEl){appEl.style.pointerEvents='none';}
+  if(hwEl){hwEl.style.pointerEvents='auto';}
   overlay.style.visibility='visible';
   overlay.style.opacity='1';
-  playFX(FX.PRESAGE);
+  playFX(FX.PRESAGE,0.12);
   clearTimeout(window._presagioTimer);
   window._presagioTimer=setTimeout(function(){
     overlay.style.opacity='0';
@@ -783,6 +829,7 @@ function showPresagioReveal(nome,descrizione){
       overlay.style.visibility='hidden';
       backdrop.style.visibility='hidden';
       if(appEl){appEl.style.pointerEvents='';}
+      if(hwEl){hwEl.style.pointerEvents='';}
     },600);
   },5000);
 }
@@ -794,7 +841,7 @@ function _sfxDetect(prev,next){
   if((prev.act||1)!==(next.act||1))playFX(FX.END_ACT);
   if(!prev.ended&&next.ended)
     playFX(next.scale.sun>=next.scale.moon?FX.POS:FX.NEG);
-  if((next.discardMalefici||[]).length>(prev.discardMalefici||[]).length)playFX(FX.CURSE);
+  if((next.discardMalefici||[]).length>(prev.discardMalefici||[]).length)playFX(FX.CURSE,0.12);
   if((next.discard||[]).length>(prev.discard||[]).length)playFX(FX.INDIZIO);
   (next.players||[]).forEach(function(p,i){
     var q=(prev.players||[])[i];if(!q)return;
@@ -807,6 +854,17 @@ function _sfxDetect(prev,next){
 }
 /* ────────────────────────────────────────────────────────────── */
 const shuffle=a=>{const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}return b;};
+function nextPresage(){
+  if(!game.presagiMazzo||game.presagiMazzo.length===0){
+    const pool=game.presagiUsati&&game.presagiUsati.length?[...game.presagiUsati]:Object.keys(DATA.presagi);
+    game.presagiMazzo=shuffle(pool);
+    game.presagiUsati=[];
+  }
+  if(!game.presagiUsati)game.presagiUsati=[];
+  const chosen=game.presagiMazzo.shift();
+  game.presagiUsati.push(chosen);
+  return chosen;
+}
 const uid=()=>Math.random().toString(36).slice(2,9);
 const clientId=localStorage.getItem("dusklore-client")||uid();
 localStorage.setItem("dusklore-client",clientId);
@@ -929,7 +987,7 @@ function startGame(){
   const identities=shuffle([...Array(innocents).fill("Innocente"),...Array(corrupt).fill("Corrotto")]);
   const domainChoices=shuffle([...DATA.domini]).slice(0,3);
   const rid=pendingRoomId||uid();pendingRoomId=null;roomId=rid;
-  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,domainChoices,domainVotes:{},prefatoreVotes:{},heroVotes:{},prefatoreId:null,narratorVotes:{},narratorId:null,presage:null,log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
+  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,domainChoices,domainVotes:{},prefatoreVotes:{},heroVotes:{},prefatoreId:null,narratorVotes:{},narratorId:null,presage:null,presagiMazzo:shuffle(Object.keys(DATA.presagi)),presagiUsati:[],log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
   const aiHeroes=shuffle([...DATA.heroes]);let aiIdx=0;
   const missionPool=shuffle(Object.keys(DATA.missions));
   Array.from({length:count},(_,i)=>{
@@ -968,13 +1026,19 @@ function render(){
   {
     const grps={};
     game.players.forEach((p,i)=>{const k=p.location||"isolato";if(!grps[k])grps[k]=[];grps[k].push({p,i});});
+    const isPremonizione=game.presage==='Premonizione';
+    const mkPremonTiles=p=>{
+      if(!isPremonizione)return'<div style="display:none"></div>';
+      const tiles=p.hand.indizi.map(c=>`<div title="${escape(c.name)}" style="width:22px;height:30px;flex-shrink:0;background:#14101e;border:1px solid rgba(201,165,88,.3);border-radius:3px;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-size:8px;cursor:default">${c.symbols[0]||''}${c.symbols[1]?`<span>${c.symbols[1]}</span>`:''}</div>`).join('');
+      return `<div style="display:flex;flex-wrap:wrap;gap:2px;justify-content:center;margin-top:6px;padding-top:5px;border-top:1px solid rgba(201,165,88,.12)">${tiles||'<span style="font-size:10px;color:var(--muted)">—</span>'}</div>`;
+    };
     const mkCard=({p,i})=>`<div class="player ${i===game.turn?'active':''} ${p.controller===clientId?'human':''}">
       <div class="pname">${escape(p.name)}</div>
       <div class="pmeta" style="font-size:10px">${p.hero} · ${p.controller===clientId?`<b style="color:${p.identity==='Corrotto'?'var(--blood)':'var(--green)'}">${p.identity}</b>`:(p.known?p.identity:(p.controller==="open"?"posto libero":"?"))}</div>
       <div class="badges" style="margin-top:4px"><span class="badge">🌑${p.dark}</span><span class="badge" style="font-size:9px;max-width:70px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.relic}</span></div>
       <div style="margin-top:4px;font-size:11px;color:var(--muted)">📜<b style="color:var(--text)">${p.hand.indizi.length}</b> ✦<b style="color:var(--text)">${p.hand.malefici.length}</b></div>
       <div class="player-stat-mini" aria-hidden="true"><span style="width:${Math.min(92,38+(p.hand.indizi.length+p.hand.malefici.length)*11)}%"></span></div>
-    </div>`;
+      ${p.controller!==clientId?mkPremonTiles(p):''}</div>`;
     let html='<div class="groups-layout">';
     if(grps["isolato"]&&grps["isolato"].length){
       html+=`<div class="group-section isolated-section"><div class="group-section-label">Isolati — ${grps["isolato"].length}</div><div class="group-players-grid">${grps["isolato"].map(mkCard).join("")}</div></div>`;
@@ -1183,11 +1247,55 @@ function selectLocation(choice){
   bg.style.background=choice==="gruppo"?"rgba(201,165,88,.14)":"";
   bi.style.borderColor=choice==="isolato"?"var(--gold)":"";
   bi.style.background=choice==="isolato"?"rgba(201,165,88,.14)":"";
-  bf.disabled=false;bf.style.opacity="1";bf.style.pointerEvents="auto";
-  bf.querySelector("span").textContent="Conferma la scelta.";
-  bf.onclick=choice==="gruppo"?promptGroupWith:chooseIsolato;
+  const prev=document.getElementById('groupPickerWrap');if(prev)prev.remove();
+  if(choice==="gruppo"){
+    bf.style.display="none";
+    renderGroupsInline();
+  } else {
+    bf.style.display="";
+    bf.disabled=false;bf.style.opacity="1";bf.style.pointerEvents="auto";
+    bf.querySelector("span").textContent="Conferma la scelta.";
+    bf.onclick=chooseIsolato;
+  }
 }
 function chooseIsolato(){const h=human();h.location="isolato";closeModal();log(`${h.name} è Isolato.`);render();}
+function renderGroupsInline(){
+  const h=human();
+  const others=game.players.filter(p=>p.id!==h.id);
+  const groupMap=new Map();
+  others.forEach(p=>{
+    const key=p.location==="isolato"?"__iso_"+p.id:p.location;
+    if(!groupMap.has(key))groupMap.set(key,[]);
+    groupMap.get(key).push(p);
+  });
+  let html='<div id="groupPickerWrap" style="margin-top:12px;border-top:1px solid var(--line);padding-top:12px">';
+  html+='<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);text-align:center;margin-bottom:8px">Scegli un gruppo</div>';
+  if(groupMap.size===0){
+    html+='<p class="small" style="color:var(--muted);text-align:center">Nessun altro Protagonista disponibile.</p>';
+  } else {
+    groupMap.forEach((players,key)=>{
+      const repId=players[0].id;
+      const isIso=key.startsWith('__iso_');
+      const locLabel=isIso?'Isolato':'In Gruppo';
+      const portraits=players.map(p=>`<img src="${DATA.heroImages[p.hero]||''}" alt="${escape(p.name)}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;object-position:top;border:1px solid rgba(201,165,88,.4);margin-right:-6px">`).join('');
+      const names=players.map(p=>escape(p.name)).join(', ');
+      const heroes=players.map(p=>p.hero.charAt(0)+p.hero.slice(1).toLowerCase()).join(', ');
+      html+=`<button class="option" style="margin-bottom:0;display:flex;align-items:center;gap:12px" onclick="selectGroupOption('${repId}',this)"><div style="display:flex;flex-shrink:0;padding-right:6px">${portraits}</div><div style="text-align:left;min-width:0"><b style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${names}</b><span style="display:block">${heroes} · ${locLabel}</span></div></button>`;
+    });
+  }
+  html+='<button id="confirmGroupBtn" class="option" disabled style="margin-top:8px;text-align:center;opacity:.38;pointer-events:none"><b>Conferma Gruppo</b><span>Seleziona prima un gruppo.</span></button>';
+  html+='</div>';
+  $("sheet").insertAdjacentHTML('beforeend',html);
+}
+function selectGroupOption(repId,btn){
+  document.querySelectorAll('#groupPickerWrap .option').forEach(b=>{b.style.borderColor='';b.style.background='';});
+  btn.style.borderColor='var(--gold)';
+  btn.style.background='rgba(201,165,88,.14)';
+  const cb=$('confirmGroupBtn');
+  cb.disabled=false;cb.style.opacity='1';cb.style.pointerEvents='auto';
+  cb.querySelector('span').textContent='Conferma la scelta.';
+  cb.onclick=()=>joinPlayerGroup(repId);
+}
 function promptGroupWith(){
   const h=human();
   const others=game.players.filter(p=>p.id!==h.id);
@@ -1279,7 +1387,7 @@ function nextTurn(){
 function endRound(){
   if(game.ended)return;
   game.round++; game.turn=0; game.players.forEach(p=>{p.hasPlayed=false;p.hasDrawn=false;p.abilityUsed=false;});
-  game.presage=game.round>=2?rand(Object.keys(DATA.presagi)):null;
+  game.presage=game.round>=2?nextPresage():null;
   if(game.presage==="Ferimento")game.players.forEach(enforceHandLimit);
   if(game.presage)showPresagioReveal(game.presage,DATA.presagi[game.presage]);
   log(`Inizia il Round ${game.round}. Presagio: ${game.presage||"nessuno"}.`);
@@ -1479,7 +1587,7 @@ function resolveRimozione(keep){
 }
 
 function applyCurse(source,target,curse){
-  playFX(FX.CURSE);
+  playFX(FX.CURSE,0.12);
   if(!game.discardMalefici)game.discardMalefici=[];
   game.discardMalefici.push(curse);
   if(curse.name==="Osservazione"){
@@ -1661,7 +1769,7 @@ function revealCovered(){
   game.resolvingAct=false;
   playFX(FX.END_ACT);
   game.round++; game.turn=0; game.players.forEach(p=>{p.hasPlayed=false;p.hasDrawn=false;p.missionDoneThisAct=0;});
-  game.presage=rand(Object.keys(DATA.presagi));
+  game.presage=nextPresage();
   log(`Fine Atto — Isolamento: ☀️${isoSun} ${isoMoon} (aggiunti diretti). Fine Atto: ☀️${actSun} 🌙${actMoon} → annullati ${cancelled} → +☀️${addSun} +🌙${addMoon}. Round ${game.round}, Presagio: ${game.presage}.`);
   game.actSummaryDisplay={isoCards:isoCards.map(c=>({symbols:c.symbols})),actCards:actCards.map(c=>({symbols:c.symbols})),isoSun,isoMoon,actSun,actMoon,cancelled,addSun,addMoon};
   game.showingActSummary=true;
@@ -1674,26 +1782,30 @@ function renderActSummaryModal(){
   const d=game.actSummaryDisplay;
   const myVoted=(game.proseguiVoti||[]).includes(clientId);
   $("modal").classList.remove("hidden");
-  $("sheet").innerHTML=`<h2>Fine Atto — Simboli Rivelati</h2>
+  $("sheet").innerHTML=`<h2 style="text-align:center;margin-bottom:1rem">Fine Atto</h2>
+<div class="act-phases-grid">
+  <div class="act-phase-col">
   ${d.isoCards.length?`
-  <div style="margin:10px 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--blood)">Fase 1 — Carte Isolamento (${d.isoCards.length})</div>
-  <p class="small" style="margin:0 0 6px">Aggiunte direttamente alla Bilancia, senza annullamento tra loro.</p>
+  <div style="margin:0 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--blood)">Fase 1 — Carte Isolamento (${d.isoCards.length})</div>
   <div style="background:#200d0d;border:1px solid rgba(180,68,68,.3);border-radius:14px;padding:12px 16px;line-height:2">
     ${d.isoCards.map((c,i)=>`<div style="font-size:13px">Carta ${i+1} — ${c.symbols.join("")}</div>`).join("")}
     <div style="border-top:1px solid rgba(180,68,68,.25);margin:6px 0"></div>
     <div>☀️ Sole aggiunti: <b style="color:var(--sun)">+${d.isoSun}</b> &nbsp;·&nbsp; 🌙 Luna aggiunti: <b style="color:var(--moon)">+${d.isoMoon}</b></div>
-  </div>`:""}
-  <div style="margin:14px 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--violet)">Fase 2 — Carte Fine Atto (${d.actCards.length})</div>
-  <p class="small" style="margin:0 0 6px">I simboli opposti si annullano tra loro.</p>
+  </div>
+  `:""}
+  </div>
+  <div class="act-phase-col">
+  <div style="margin:0 0 4px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--violet)">Fase 2 — Carte Fine Atto (${d.actCards.length})</div>
   <div style="background:#1a1520;border:1px solid rgba(142,97,255,.25);border-radius:14px;padding:12px 16px;line-height:2">
     ${d.actCards.map((c,i)=>`<div style="font-size:13px">Carta ${i+1} — ${c.symbols.join("")}</div>`).join("")}
     <div style="border-top:1px solid rgba(142,97,255,.2);margin:6px 0"></div>
     <div style="font-size:13px">Totale ☀️ <b>${d.actSun}</b> · 🌙 <b>${d.actMoon}</b></div>
     <div style="font-size:12px;color:var(--muted)">Annullati: <b>${d.cancelled}</b> ☀️ e <b>${d.cancelled}</b> 🌙</div>
-    <div style="font-size:14px;margin-top:4px">Aggiunti: <span style="color:var(--sun)">☀️ +${d.addSun}</span> &nbsp;·&nbsp; <span style="color:var(--moon)"> +${d.addMoon}</span></div>
+    <div style="font-size:14px;margin-top:4px">Aggiunti: <span style="color:var(--sun)">☀️ +${d.addSun}</span> &nbsp;·&nbsp; <span style="color:var(--moon)">🌙 +${d.addMoon}</span></div>
   </div>
-  <p class="small" style="margin-top:12px">Nuovo Presagio: <b>${game.presage}</b> — ${escape(DATA.presagi[game.presage]||"")}</p>
-  <button id="act-prosegui-btn" onclick="voteActProsegui()" ${myVoted?"disabled":""} style="display:block;width:100%;margin-top:16px;padding:12px;background:var(--gold);color:#1a0d0a;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;cursor:pointer">${myVoted?"In attesa...":"PROSEGUI"}</button>`;
+  </div>
+</div>
+<button id="act-prosegui-btn" onclick="voteActProsegui()" ${myVoted?"disabled":""} style="display:block;margin:1.2rem auto 0;width:fit-content;padding:12px 32px;background:var(--gold);color:#1a0d0a;border:none;border-radius:8px;font-family:'Cinzel',serif;font-size:.85rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;cursor:pointer">${myVoted?"In attesa...":"PROSEGUI"}</button>`;
 }
 var _actProseguiDone=false;
 function voteActProsegui(){
@@ -1732,13 +1844,17 @@ function epilogue(){
   save();render();
   $("modal").classList.remove("hidden");
   $("modal").style.placeItems="center";
+  document.body.classList.add('epilogo-attivo');
   $("sheet").innerHTML=`<h2>️ Epilogo - Fine Partita</h2>
+  <div class="epilogue-body"><div class="epilogue-main">
   <p>Bilancia finale: ️ <b>${game.scale.sun}</b> · 🌙 <b>${game.scale.moon}</b> - Vincono: <b>${winner}</b></p>
   <h3 style="margin:12px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;text-align:center">Identità rivelate</h3>
-  ${game.players.map(p=>`<div style="background:#1e1620;border:1px solid var(--line);border-radius:12px;padding:10px;margin:6px 0;text-align:center"><b>${escape(p.name)}</b> - <span style="color:${p.identity==="Corrotto"?'var(--blood)':'var(--green)'}">${p.identity}</span><div class="small" style="margin-top:4px">${p.hero} · Missione: <i>${escape(p.mission)}</i> (${p.missionDone[1]?"completa":p.missionDone[0]?"fase 1/2":"non completata"})</div></div>`).join("")}
-  <h3 style="margin:14px 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;text-align:center">Chi narra l'Epilogo?</h3>
+  <div class="epilogue-players">${game.players.map(p=>`<div style="background:#1e1620;border:1px solid var(--line);border-radius:12px;padding:10px;margin:6px 0;text-align:center"><b>${escape(p.name)}</b> - <span style="color:${p.identity==="Corrotto"?'var(--blood)':'var(--green)'}">${p.identity}</span><div class="small" style="margin-top:4px">${p.hero} · Missione: <i>${escape(p.mission)}</i> (${p.missionDone[1]?"completa":p.missionDone[0]?"fase 1/2":"non completata"})</div></div>`).join("")}</div>
+  </div><div class="epilogue-side">
+  <h3 style="margin:0 0 6px;font-size:13px;text-transform:uppercase;letter-spacing:.06em;text-align:center">Chi narra l'Epilogo?</h3>
   <p class="small">Vota chi tra i presenti narrerà il finale della storia.</p>
-  <div class="target-grid">${game.players.map(p=>`<button class="target" onclick="voteNarrator('${p.id}')"><b>${escape(p.name)}</b><div class="small">${p.hero} · ${p.identity}</div></button>`).join("")}</div>`;
+  <div class="target-grid">${game.players.map(p=>`<button class="target" onclick="voteNarrator('${p.id}')"><b>${escape(p.name)}</b><div class="small">${p.hero} · ${p.identity}</div></button>`).join("")}</div>
+  </div></div>`;
 }
 function voteNarrator(id){
   const h=human(); if(!h)return;
@@ -1778,18 +1894,22 @@ function showEpilogueScreen(){
   $("modal").classList.remove("hidden");
   $("modal").style.placeItems="center";
   $("sheet").innerHTML=`
-    <div style="text-align:center;padding:10px 0 18px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:${isPositive?"var(--sun)":"var(--blood)"};margin-bottom:14px">Fine della storia</div>
-      <h1 style="font-size:28px;letter-spacing:.1em;margin:0 0 10px;color:${isPositive?"var(--sun)":"var(--blood)"}">
-        ${isPositive?"EPILOGO POSITIVO":"EPILOGO NEGATIVO"}
-      </h1>
-      <p style="color:var(--muted);font-size:14px;margin:0 0 16px;line-height:1.5">
-        ${isPositive?"Gli Innocenti hanno preservato la luce.<br>Il male è sconfitto.":"I Corrotti hanno soggiogato il Dominio.<br>Le tenebre trionfano."}
-      </p>
-      ${narrator?`<p class="small" style="margin:0 0 20px;color:var(--muted)">Narratore: <b style="color:var(--gold)">${escape(narrator.name)}</b></p>`:""}
-      ${isNarrator
-        ?`<button class="btn wide" style="width:100%;margin-top:8px;background:${isPositive?"var(--green)":"var(--blood)"}" onclick="finisciPartita()">Finisci Partita</button>`
-        :`<p class="small" style="color:var(--muted);margin-top:8px">Attendi che il narratore concluda la storia.</p>`}
+    <div class="epilogue-screen">
+      <div class="epilogue-screen-text">
+        <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.14em;color:${isPositive?"var(--sun)":"var(--blood)"};margin-bottom:14px">Fine della storia</div>
+        <h1 style="font-size:28px;letter-spacing:.1em;margin:0 0 10px;color:${isPositive?"var(--sun)":"var(--blood)"}">
+          ${isPositive?"EPILOGO POSITIVO":"EPILOGO NEGATIVO"}
+        </h1>
+        <p style="color:var(--muted);font-size:14px;margin:0;line-height:1.5">
+          ${isPositive?"Gli Innocenti hanno preservato la luce.<br>Il male è sconfitto.":"I Corrotti hanno soggiogato il Dominio.<br>Le tenebre trionfano."}
+        </p>
+      </div>
+      <div class="epilogue-screen-action">
+        ${narrator?`<p class="small" style="margin:0;color:var(--muted)">Narratore: <b style="color:var(--gold)">${escape(narrator.name)}</b></p>`:""}
+        ${isNarrator
+          ?`<button class="btn wide" style="width:100%;background:${isPositive?"var(--green)":"var(--blood)"}" onclick="finisciPartita()">Finisci Partita</button>`
+          :`<p class="small" style="color:var(--muted)">Attendi che il narratore concluda la storia.</p>`}
+      </div>
     </div>`;
 }
 function finisciPartita(){resetGame();}
@@ -1834,7 +1954,7 @@ function openConsigli(){
   `);
 }
 
-function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();const _dbg=$("domain-bg");_dbg.classList.remove("visible");$("domain-bg-img").src="";if(window.duskSwitchTrack)duskSwitchTrack(TRACK_LAND,1.0);}
+function resetGame(){localStorage.removeItem("dusklore-app");roomId=null;pendingRoomId=null;game=null;document.body.classList.remove('epilogo-attivo');$("game").classList.add("hidden");$("handWrap").classList.add("hidden");$("setup").classList.remove("hidden");closeModal();showLanding();const _dbg=$("domain-bg");_dbg.classList.remove("visible");$("domain-bg-img").src="";if(window.duskSwitchTrack)duskSwitchTrack(TRACK_LAND,1.0);}
 function openMsg(title,body){$("modal").classList.remove("hidden");$("sheet").innerHTML=`<h2>${title}</h2><p>${body}</p><button class="option" onclick="closeModal()">Ok</button>`}
 function closeModal(){$("modal").classList.add("hidden");$("modal").style.placeItems="";}
 
