@@ -1761,14 +1761,16 @@ function completeActCards(){
   setTimeout(()=>{revealCovered()},500);
 }
 function revealCovered(){
+  const sovversione=game.presage==='Sovversione';
   const isoCards=game.covered.filter(c=>c.coveredType==="isolation"||(!c.coveredType));
   let isoSun=0,isoMoon=0;
   isoCards.forEach(c=>{
     c.revealed=true;
     const s=c.symbols.filter(x=>x==="☀️").length, m=c.symbols.filter(x=>x==="🌙").length;
     isoSun+=s; isoMoon+=m;
-    game.scale.sun+=s; game.scale.moon+=m;
   });
+  const isoSunEff=sovversione?isoMoon:isoSun, isoMoonEff=sovversione?isoSun:isoMoon;
+  game.scale.sun+=isoSunEff; game.scale.moon+=isoMoonEff;
   const actCards=game.covered.filter(c=>c.coveredType==="act");
   let actSun=0,actMoon=0;
   actCards.forEach(c=>{
@@ -1776,14 +1778,15 @@ function revealCovered(){
     actSun+=c.symbols.filter(x=>x==="☀️").length;
     actMoon+=c.symbols.filter(x=>x==="🌙").length;
   });
-  const cancelled=Math.min(actSun,actMoon),addSun=Math.max(0,actSun-actMoon),addMoon=Math.max(0,actMoon-actSun);
+  const actSunEff=sovversione?actMoon:actSun, actMoonEff=sovversione?actSun:actMoon;
+  const cancelled=Math.min(actSunEff,actMoonEff),addSun=Math.max(0,actSunEff-actMoonEff),addMoon=Math.max(0,actMoonEff-actSunEff);
   game.scale.sun+=addSun; game.scale.moon+=addMoon;
   game.resolvingAct=false;
   playFX(FX.END_ACT);
   game.round++; game.turn=0; game.players.forEach(p=>{p.hasPlayed=false;p.hasDrawn=false;p.missionDoneThisAct=0;});
   game.presage=nextPresage();
-  log(`Fine Atto — Isolamento: ☀️${isoSun} ${isoMoon} (aggiunti diretti). Fine Atto: ☀️${actSun} 🌙${actMoon} → annullati ${cancelled} → +☀️${addSun} +🌙${addMoon}. Round ${game.round}, Presagio: ${game.presage}.`);
-  game.actSummaryDisplay={isoCards:isoCards.map(c=>({symbols:c.symbols})),actCards:actCards.map(c=>({symbols:c.symbols})),isoSun,isoMoon,actSun,actMoon,cancelled,addSun,addMoon};
+  log(`Fine Atto — Isolamento: ☀️${isoSunEff} 🌙${isoMoonEff} (aggiunti diretti). Fine Atto: ☀️${actSunEff} 🌙${actMoonEff} → annullati ${cancelled} → +☀️${addSun} +🌙${addMoon}. Round ${game.round}, Presagio: ${game.presage}.`);
+  game.actSummaryDisplay={isoCards:isoCards.map(c=>({symbols:c.symbols})),actCards:actCards.map(c=>({symbols:c.symbols})),isoSun:isoSunEff,isoMoon:isoMoonEff,actSun:actSunEff,actMoon:actMoonEff,cancelled,addSun,addMoon};
   game.showingActSummary=true;
   game.proseguiVoti=[];
   save();render();
