@@ -231,9 +231,10 @@
   #handWrap{filter:none!important;pointer-events:auto!important;z-index:100000!important}
   .app:has(#modal:not(.hidden) .lobby-players) #handWrap{z-index:1!important;position:relative!important;filter:none!important;pointer-events:auto!important}
   .epilogo-attivo #handWrap{display:none!important}
-  .sheet{position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;max-height:62vh!important;max-width:88vw!important;overflow-y:auto!important;z-index:9000!important;width:min(480px,88vw);background:linear-gradient(180deg,#1e1630,#1a1428);
+  .fine-atto-attivo #handWrap{display:none!important}
+  .sheet{position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;max-height:calc(100vh - 220px)!important;max-width:88vw!important;overflow-y:auto!important;z-index:9000!important;width:min(480px,88vw);background:linear-gradient(180deg,#1e1630,#1a1428);
     border:1px solid rgba(201,165,88,.28);border-radius:14px 14px 8px 8px;padding:14px;box-shadow:var(--shadow),var(--glow-gold)}
-  #sheet{position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;max-height:62vh!important;max-width:88vw!important;overflow-y:auto!important;z-index:9000!important;padding:10px 14px;scrollbar-width:none}
+  #sheet{position:fixed!important;top:50%!important;left:50%!important;transform:translate(-50%,-50%)!important;max-height:calc(100vh - 220px)!important;max-width:88vw!important;overflow-y:auto!important;z-index:9000!important;padding:10px 14px;scrollbar-width:none}
   #sheet::-webkit-scrollbar{display:none}
   .modal:has(.lobby-hero-grid) .sheet{width:min(1100px,94vw);text-align:center}
   .sheet h2{font-family:var(--display);color:var(--gold);letter-spacing:.08em;font-size:1.2rem;font-weight:700;text-align:center}
@@ -241,7 +242,11 @@
   .sheet .option,.sheet .target,.sheet .btn,.sheet button{text-align:center;justify-content:center}
   .option{width:100%;text-align:left;background:#17122a;color:var(--bone);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:12px;margin:5px 0;font-family:var(--ui);font-size:14px;font-weight:400}
   .option:disabled{opacity:.45}.option b{display:block;font-family:var(--display-2);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}.option span{display:block;color:var(--bone-deep);font-size:13px;margin-top:3px;font-style:italic}
-  .target-grid{display:grid;gap:8px}.target{background:#17122a;color:var(--bone);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:12px;text-align:left;font-family:var(--ui);font-size:14px;font-weight:400}
+  .target-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .target{background:#17122a;color:var(--bone);border:1px solid rgba(201,165,88,.18);border-radius:8px;min-width:0;padding:.6rem .5rem;text-align:center;font-family:var(--ui);font-size:14px;font-weight:400}
+  .target b{display:block;font-family:var(--display-2);font-weight:700}
+  .target .small{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:11px}
+  @media(max-width:768px){.target-grid{grid-template-columns:repeat(2,1fr)}}
   .footer-space{height:230px}
   @media (min-width:760px){
     .app{max-width:1180px}
@@ -509,6 +514,11 @@
   .act-phases-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
   .act-phase-col{overflow-y:auto;max-height:38vh}
   .act-phase-col:empty{display:none}
+  .act-phases-grid>.act-phase-col:first-child{scrollbar-width:thin;scrollbar-color:rgba(201,165,88,.5) rgba(12,9,20,.6)}
+  .act-phases-grid>.act-phase-col:first-child::-webkit-scrollbar{width:5px}
+  .act-phases-grid>.act-phase-col:first-child::-webkit-scrollbar-track{background:rgba(12,9,20,.6);border-radius:3px}
+  .act-phases-grid>.act-phase-col:first-child::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e9c97a,#c9a558);border-radius:3px}
+  .act-phases-grid>.act-phase-col:first-child::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#fff0ba,#e9c97a)}
   /* ── Epilogo - Fine Partita: due colonne affiancate ── */
   #sheet:has(.epilogue-body){max-width:820px!important;width:88vw!important;max-height:calc(100vh - 220px)!important;overflow:hidden!important}
   .epilogue-body{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
@@ -529,7 +539,10 @@
   /* ── Narra la Scena: selezione gruppo in riga ── */
   #groupPickerWrap{display:flex;flex-direction:row;flex-wrap:wrap;gap:10px;justify-content:center}
   #groupPickerWrap>div:first-child{flex:0 0 100%}
-  #groupPickerWrap>.option:not(#confirmGroupBtn){width:auto;min-width:160px;max-width:220px;flex:0 0 auto;flex-shrink:0;margin:0}
+  #groupPickerWrap>.option:not(#confirmGroupBtn){width:auto;min-width:160px;max-width:220px;flex:0 0 auto;flex-shrink:0;margin:0;flex-direction:column!important;align-items:center!important;gap:6px!important}
+  #groupPickerWrap>.option:not(#confirmGroupBtn)>div:first-child{padding-right:0!important}
+  #groupPickerWrap>.option:not(#confirmGroupBtn)>div:last-child{text-align:center!important;width:100%!important}
+  .gname-list{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;gap:4px;font-size:10px;white-space:normal;overflow:visible;text-overflow:clip}
   #confirmGroupBtn{flex:0 0 100%}
   .epilogue-screen{display:flex;flex-direction:column;align-items:center;text-align:center;gap:1rem;padding:6px 0}
   .epilogue-screen-text{width:100%;flex:none;text-align:center}
@@ -1118,7 +1131,7 @@ function hintText(){
 
 function renderHand(){
   const h=human(),lim=handLimit(),overLimit=h.hand.indizi.length>lim,list=[...h.hand.indizi,...h.hand.malefici];
-  $("handTitle").textContent=overLimit?`La tua mano — troppi Indizi (${h.hand.indizi.length}/${lim})`:"La tua mano";
+  $("handTitle").textContent=overLimit?`La tua mano - troppi Indizi (${h.hand.indizi.length}/${lim})`:"La tua mano";
   
   // Crea le carte della mano
   let html=list.map(c=>{
@@ -1278,9 +1291,9 @@ function renderGroupsInline(){
       const isIso=key.startsWith('__iso_');
       const locLabel=isIso?'Isolato':'In Gruppo';
       const portraits=players.map(p=>`<img src="${DATA.heroImages[p.hero]||''}" alt="${escape(p.name)}" style="width:28px;height:28px;border-radius:50%;object-fit:cover;object-position:top;border:1px solid rgba(201,165,88,.4);margin-right:-6px">`).join('');
-      const names=players.map(p=>escape(p.name)).join(', ');
+      const names=players.map(p=>`<span>${escape(p.name)}</span>`).join('<span style="opacity:.45;font-weight:400">·</span>');
       const heroes=players.map(p=>p.hero.charAt(0)+p.hero.slice(1).toLowerCase()).join(', ');
-      html+=`<button class="option" style="margin-bottom:0;display:flex;align-items:center;gap:12px" onclick="selectGroupOption('${repId}',this)"><div style="display:flex;flex-shrink:0;padding-right:6px">${portraits}</div><div style="text-align:left;min-width:0"><b style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${names}</b><span style="display:block">${heroes} · ${locLabel}</span></div></button>`;
+      html+=`<button class="option" style="margin-bottom:0;display:flex;align-items:center;gap:12px" onclick="selectGroupOption('${repId}',this)"><div style="display:flex;flex-shrink:0;padding-right:6px">${portraits}</div><div style="text-align:left;min-width:0"><b class="gname-list">${names}</b><span style="display:block">${heroes} · ${locLabel}</span></div></button>`;
     });
   }
   html+='<button id="confirmGroupBtn" class="option" disabled style="margin-top:8px;text-align:center;opacity:.38;pointer-events:none"><b>Conferma Gruppo</b><span>Seleziona prima un gruppo.</span></button>';
@@ -1781,7 +1794,7 @@ function renderActSummaryModal(){
   if(!game||!game.actSummaryDisplay)return;
   const d=game.actSummaryDisplay;
   const myVoted=(game.proseguiVoti||[]).includes(clientId);
-  $("modal").classList.remove("hidden");
+  $("modal").classList.remove("hidden");document.body.classList.add('fine-atto-attivo');
   $("sheet").innerHTML=`<h2 style="text-align:center;margin-bottom:1rem">Fine Atto</h2>
 <div class="act-phases-grid">
   <div class="act-phase-col">
@@ -1826,7 +1839,7 @@ function _checkActProseguiComplete(){
     const pName=game.presage,pDesc=DATA.presagi[game.presage];
     game.showingActSummary=false;game.actSummaryDisplay=null;game.proseguiVoti=[];game.covered=[];
     pendingTurnStart=true;
-    closeModal();
+    document.body.classList.remove('fine-atto-attivo');closeModal();
     setTimeout(()=>{
       showPresagioReveal(pName,pDesc);
       setTimeout(()=>{_actProseguiDone=false;pendingTurnStart=false;save();beginTurn();},5600);
