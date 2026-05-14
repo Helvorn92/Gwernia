@@ -509,6 +509,19 @@
   .presagio-bar-wrap{width:200px;height:3px;background:rgba(201,165,88,.18);margin:0 auto;border-radius:2px;overflow:hidden}
   .presagio-bar{height:100%;background:var(--gold);border-radius:2px;width:100%}
   @keyframes presagio-drain{from{width:100%}to{width:0%}}
+  /* ── Maleficio reveal overlay ── */
+  #maleficio-backdrop{position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:opacity .6s}
+  #maleficio-reveal{position:fixed;inset:0;z-index:99999;pointer-events:none;display:flex;align-items:center;justify-content:center;opacity:0;visibility:hidden;transition:opacity .6s}
+  .maleficio-panel{background:linear-gradient(180deg,#1a0d2e,#0d0820);border:1px solid rgba(159,114,197,.55);clip-path:polygon(14px 0%,calc(100% - 14px) 0%,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0% calc(100% - 14px),0% 14px);padding:3rem 4rem;text-align:center;max-width:min(520px,88vw)}
+  .maleficio-label{font-family:'Cinzel',serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.5em;color:#9f72c5;margin-bottom:.6rem}
+  .maleficio-line{width:100%;height:1px;background:linear-gradient(90deg,transparent,rgba(159,114,197,.7),transparent);margin-bottom:1.2rem}
+  .maleficio-nome{font-family:'Cinzel Decorative',serif;font-weight:700;font-size:clamp(1.6rem,3.5vw,2.4rem);color:#c3b89f;margin-bottom:1rem;line-height:1.15}
+  .maleficio-caster{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(195,184,159,.7);margin-bottom:1.6rem}
+  .maleficio-caster span{color:#9f72c5;font-weight:700;font-style:normal}
+  .maleficio-desc{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:rgba(195,184,159,.8);margin-bottom:1.2rem;line-height:1.5}
+  .maleficio-bar-wrap{width:200px;height:3px;background:rgba(201,165,88,.18);margin:0 auto;border-radius:2px;overflow:hidden}
+  .maleficio-bar{height:100%;background:var(--gold);border-radius:2px;width:100%}
+  @keyframes maleficio-drain{from{width:100%}to{width:0%}}
   /* ── Fine Atto: layout orizzontale ── */
   #sheet:has(#act-prosegui-btn){width:min(680px,85vw)!important}
   .act-phases-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
@@ -582,6 +595,17 @@
     <div class="presagio-nome" id="presagio-nome"></div>
     <div class="presagio-desc" id="presagio-desc"></div>
     <div class="presagio-bar-wrap"><div class="presagio-bar" id="presagio-bar"></div></div>
+  </div>
+</div>
+<div id="maleficio-backdrop"></div>
+<div id="maleficio-reveal">
+  <div class="maleficio-panel">
+    <div class="maleficio-label">MALEFICIO</div>
+    <div class="maleficio-line"></div>
+    <div class="maleficio-nome" id="maleficio-nome"></div>
+    <div class="maleficio-desc" id="maleficio-desc"></div>
+    <div class="maleficio-caster" id="maleficio-caster"></div>
+    <div class="maleficio-bar-wrap"><div class="maleficio-bar" id="maleficio-bar"></div></div>
   </div>
 </div>
 <div class="app">
@@ -846,6 +870,39 @@ function showPresagioReveal(nome,descrizione){
     },600);
   },5000);
 }
+function showMalefficioReveal(nomeMaleficio,nomeLanciatore,descrizione,afterClose){
+  var overlay=document.getElementById('maleficio-reveal');
+  var backdrop=document.getElementById('maleficio-backdrop');
+  var appEl=document.querySelector('.app');
+  var hwEl=document.getElementById('handWrap');
+  var barEl=document.getElementById('maleficio-bar');
+  document.getElementById('maleficio-nome').textContent=nomeMaleficio;
+  document.getElementById('maleficio-desc').textContent=descrizione||'';
+  var cEl=document.getElementById('maleficio-caster');
+  cEl.innerHTML='Lanciato da <span>'+nomeLanciatore+'</span>';
+  barEl.style.animation='none';
+  void barEl.offsetWidth;
+  barEl.style.animation='maleficio-drain 5s linear forwards';
+  backdrop.style.visibility='visible';backdrop.style.opacity='1';
+  if(appEl){appEl.style.pointerEvents='none';}
+  if(hwEl){hwEl.style.pointerEvents='auto';}
+  overlay.style.visibility='visible';
+  overlay.style.opacity='1';
+  playFX(FX.CURSE,0.12);
+  clearTimeout(window._malefficioTimer);
+  clearTimeout(window._malefficioEndTimer);
+  window._malefficioTimer=setTimeout(function(){
+    overlay.style.opacity='0';
+    backdrop.style.opacity='0';
+  },5000);
+  window._malefficioEndTimer=setTimeout(function(){
+    overlay.style.visibility='hidden';
+    backdrop.style.visibility='hidden';
+    if(appEl){appEl.style.pointerEvents='';}
+    if(hwEl){hwEl.style.pointerEvents='';}
+    if(afterClose)afterClose();
+  },5600);
+}
 /* Delta detector: fires sounds on remote clients when snapshot arrives */
 var _sfxPrev=null;
 function _sfxDetect(prev,next){
@@ -854,7 +911,12 @@ function _sfxDetect(prev,next){
   if((prev.act||1)!==(next.act||1))playFX(FX.END_ACT);
   if(!prev.ended&&next.ended)
     playFX(next.scale.sun>=next.scale.moon?FX.POS:FX.NEG);
-  if((next.discardMalefici||[]).length>(prev.discardMalefici||[]).length)playFX(FX.CURSE,0.12);
+  if((next.discardMalefici||[]).length>(prev.discardMalefici||[]).length){
+    var _ncMeta=next._malefficioMeta,_ncMe=human(),_ncCurse=(next.discardMalefici||[]).slice(-1)[0];
+    if(_ncMeta&&_ncMe&&_ncMeta.targetId===_ncMe.id&&_ncCurse&&_ncCurse.name!=='Protezione'){
+      showMalefficioReveal(_ncCurse.name,_ncMeta.casterName,DATA.malefici[_ncCurse.name]||'',null);
+    }else{playFX(FX.CURSE,0.12);}
+  }
   if((next.discard||[]).length>(prev.discard||[]).length)playFX(FX.INDIZIO);
   (next.players||[]).forEach(function(p,i){
     var q=(prev.players||[])[i];if(!q)return;
@@ -1552,7 +1614,15 @@ function maybeAiCurse(ai,done){
   if(!sameGrp.length)return done();
   const curse=rand(curses), target=sameGrp.includes(human())&&Math.random()<.7?human():rand(sameGrp);
   ai.hand.malefici=ai.hand.malefici.filter(c=>c.id!==curse.id);
-  if(target.isHuman && target.hand.malefici.some(c=>c.name==="Protezione")){
+  var _lh=human();
+  if(_lh&&target.id===_lh.id){
+    showMalefficioReveal(curse.name,ai.name,DATA.malefici[curse.name]||'',function(){
+      if(target.hand.malefici.some(c=>c.name==='Protezione')){
+        awaitingReaction={source:ai,curse,target,done};
+        openProtectionPrompt(ai,curse);
+      }else{applyCurse(ai,target,curse);done();}
+    });
+  }else if(target.isHuman&&target.hand.malefici.some(c=>c.name==='Protezione')){
     awaitingReaction={source:ai,curse,target,done};
     openProtectionPrompt(ai,curse);
   }else{applyCurse(ai,target,curse);done();}
@@ -1599,6 +1669,7 @@ function resolveRimozione(keep){
 }
 
 function applyCurse(source,target,curse){
+  game._malefficioMeta={casterName:source.name,targetId:target.id};
   playFX(FX.CURSE,0.12);
   if(!game.discardMalefici)game.discardMalefici=[];
   game.discardMalefici.push(curse);
@@ -2183,15 +2254,16 @@ function turistaSwap(cardId){
 // --- RAMINGO (passivo) ---
 function promptRamingoChoice(){
   $("modal").classList.remove("hidden");
-  const discardOptions=game.discard.slice(-5).reverse();
-  $("sheet").innerHTML=`<h2>⚡ Recupero (Ramingo)</h2><p class="small">Puoi scegliere un Indizio dagli Scarti oppure pescarne uno dal mazzo.</p>
-  <div style="display:grid;gap:6px;margin-bottom:10px">${discardOptions.map(c=>`<button class="option" onclick="ramingoPickDiscard('${c.id}')"><b>${escape(c.name)}</b><span>${c.symbols.join("")} · dagli Scarti</span></button>`).join("")}</div>
-  <button class="option" onclick="ramingoPickDeck()"><b>Pesca dal mazzo</b><span>Indizio casuale dal mazzo.</span></button>
+  const topCard=game.discard.length>0?game.discard[0]:null;
+  const disabledStyle=topCard?'':' style="pointer-events:none;opacity:.4"';
+  $("sheet").innerHTML=`<h2>⚡ Recupero (Ramingo)</h2><p class="small">Puoi prendere la carta in cima agli Scarti oppure pescarne una dal mazzo.</p>
+  <button class="option" onclick="ramingoPickDeck()"><b>Pesca dal Mazzo</b><span>Indizio casuale dal mazzo.</span></button>
+  <button class="option" onclick="ramingoPickDiscard()"${disabledStyle}><b>Prendi dagli Scarti</b><span>${topCard?escape(topCard.name)+' · '+topCard.symbols.join(''):'Nessuno scarto disponibile'}</span></button>
   <button class="option" onclick="closeModal()" style="margin-top:4px">Annulla pesca</button>`;
 }
-function ramingoPickDiscard(id){
-  const h=human(); const card=game.discard.find(c=>c.id===id); if(!card)return;
-  game.discard=game.discard.filter(c=>c.id!==id);
+function ramingoPickDiscard(){
+  const h=human(); if(!game.discard.length)return;
+  const card=game.discard.shift();
   h.hand.indizi.push(card); h.hasDrawn=true; enforceHandLimit(h);
   playFX(FX.DRAW);
   closeModal(); log(`${h.name} usa Recupero e prende ${card.name} dagli Scarti.`); promptLocationChoice();
