@@ -444,7 +444,7 @@
   /* ===== NUOVA LOBBY A 3 SCHERMATE ===== */
   #lobby{position:fixed;inset:0;z-index:22;background:rgba(5,4,7,.82);display:flex;align-items:center;justify-content:center}
   #lobby.hidden{display:none!important}
-  .lby-window{width:90vw;max-width:1100px;height:90vh;background:linear-gradient(180deg,#050407 0%,#0a0710 60%,#050407 100%);border:1px solid rgba(110,70,170,.38);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  .lby-window{width:98vw;max-width:1100px;height:90vh;background:linear-gradient(180deg,#050407 0%,#0a0710 60%,#050407 100%);border:1px solid rgba(110,70,170,.38);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
   /* Progress bar */
   .lby-prog{display:flex;align-items:center;justify-content:center;gap:0;padding:7px 20px 5px;flex-shrink:0;z-index:1}
   .lby-step{display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.38;transition:opacity .3s}
@@ -462,11 +462,11 @@
   .lby-screen.ls-active{opacity:1;transform:translateX(0);pointer-events:auto}
   .lby-screen.ls-exit{opacity:0;transform:translateX(-100%);pointer-events:none}
   /* ── Screen 1 ── */
-  #ls1{display:flex;flex-direction:row;height:fit-content;overflow:hidden;align-items:flex-start}
-  .ls1-panel{background:linear-gradient(165deg,rgba(23,18,42,.98),rgba(14,10,26,.99));border-right:1px solid rgba(201,165,88,.12);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;width:38%;flex-shrink:0;aspect-ratio:2/3;padding:8px 12px 10px}
+  #ls1{display:flex;flex-direction:row;height:100%;overflow:hidden;align-items:flex-start}
+  .ls1-panel{background:linear-gradient(165deg,rgba(23,18,42,.98),rgba(14,10,26,.99));border-right:1px solid rgba(201,165,88,.12);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;width:38%;flex-shrink:0;height:100%;align-self:stretch;padding:0}
   .ls1-empty{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 8px}
   .ls1-empty-text{font-family:var(--display-2);font-size:clamp(9px,1vw,11px);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(201,165,88,.3);text-align:center;line-height:1.8}
-  .ls1-portrait{width:100%;flex:1;min-height:0;object-fit:contain;object-position:center top;border-radius:7px;border:1px solid rgba(201,165,88,.28);box-shadow:0 6px 20px rgba(0,0,0,.6);display:block}
+  .ls1-portrait{width:100%;height:100%;flex:1;min-height:0;object-fit:cover;object-position:top;display:block}
   .ls1-hero-name{font-family:var(--display);font-size:clamp(.82rem,1.3vw,1rem);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-bright);margin:5px 0 2px;text-align:center;line-height:1.2}
   .ls1-hero-desc{font-size:14px;font-style:italic;color:var(--bone-dim);font-family:var(--book);line-height:1.6;text-align:center;padding:0 4px}
   .ls1-ab-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
@@ -484,15 +484,16 @@
   .ls1-confirm-btn{background:linear-gradient(180deg,#e9c97a,#c9a558);color:#0d0b10;border:none;border-radius:6px;padding:8px 14px;font-family:var(--display-2);font-size:clamp(10px,.9vw,12px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:opacity .15s}
   .ls1-confirm-btn:hover{opacity:.88}
   .ls1-cancel-btn{background:transparent;border:1px solid rgba(201,165,88,.25);color:rgba(195,184,159,.6);border-radius:6px;padding:5px 14px;font-family:var(--display-2);font-size:clamp(9px,.85vw,11px);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
-  .ls1-grid-wrap{display:flex;flex-direction:column;height:auto;overflow:hidden;background:rgba(14,10,22,.85);padding:8px 10px 8px}
+  .ls1-info-block{flex-shrink:0;padding:6px 10px 8px}
+  .ls1-grid-wrap{display:flex;flex-direction:column;flex:1;height:100%;overflow:hidden;background:rgba(14,10,22,.85);padding:8px 10px 8px}
   .ls1-grid-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;flex-shrink:0;font-family:var(--display-2);font-size:clamp(9px,.85vw,11px);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(201,165,88,.5)}
-  .ls1-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;overflow:hidden;align-content:start}
+  .ls1-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(2,1fr);gap:8px;overflow:hidden;flex:1;min-height:0}
   .ls1-grid::-webkit-scrollbar{display:none}
-  .ls1-card{background:#17122a;border:1px solid rgba(201,165,88,.15);border-radius:7px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .2s ease;position:relative;aspect-ratio:2/3}
+  .ls1-card{background:#17122a;border:1px solid rgba(201,165,88,.15);border-radius:7px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .2s ease;position:relative;height:100%;min-height:0}
   .ls1-card:hover{border-color:rgba(201,165,88,.42);box-shadow:0 0 12px rgba(201,165,88,.1);transform:scale(1.06)}
   .ls1-card.lc-confirmed{border-color:var(--gold);border-width:2px;box-shadow:0 0 18px rgba(201,165,88,.28)}
   .ls1-card.lc-desaturated{filter:grayscale(1) opacity(.35);pointer-events:none}
-  .ls1-card img{width:100%;flex:1;min-height:0;object-fit:cover;object-position:center top;display:block}
+  .ls1-card img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
   .ls1-card-name{font-family:var(--display-2);font-size:clamp(8px,.85vw,11px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bone);text-align:center;padding:0 2px;flex-shrink:0;background:rgba(15,10,25,.92);min-height:24px;line-height:24px}
   .ls1-card-votes{position:absolute;top:4px;right:4px;background:rgba(201,165,88,.85);color:#0d0b10;font-family:var(--display-2);font-size:8px;font-weight:800;padding:2px 5px;border-radius:999px;z-index:1}
   /* ── Screen 2 ── */
@@ -743,7 +744,6 @@
     <button class="sb-btn" data-sound="Dramma" data-label="Dramma" type="button" onclick="sbPlay('Dramma')">🎭</button>
     <button class="sb-btn" data-sound="Urlo" data-label="Urlo" type="button" onclick="sbPlay('Urlo')">😨</button>
     <button class="sb-btn" data-sound="Risata" data-label="Risata" type="button" onclick="sbPlay('Risata')">😈</button>
-    <button class="sb-btn" data-sound="Oddio" data-label="Oddio" type="button" onclick="sbPlay('Oddio')">🙏</button>
     <button class="sb-btn" data-sound="Sospetto" data-label="Sospetto" type="button" onclick="sbPlay('Sospetto')">🕵️</button>
   </div>
   <div id="dusk-music-widget">
@@ -1029,7 +1029,7 @@ const DATA={
   heroImages:{
     "SOLDATO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094131/Soldato_b6xyxl.jpg",
     "DETECTIVE":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094164/Investigatore_ac2seg.jpg",
-    "RAMINGO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094141/Vagabondo_syv1nn.jpg",
+    "RAMINGO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1779050602/Vagabondo_syv1nn.jpg",
     "MEDIUM":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094113/Indovina_zsq73e.jpg",
     "GIORNALISTA":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094097/Giornalista_x8dfdn.jpg",
     "SACERDOTE":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094105/Sacerdote_swfvfc.jpg",
@@ -2672,7 +2672,7 @@ function _renderLs1Panel(){
   } else if(myConfirmed){
     ctaHtml='<div class="ls1-cta"><button class="ls1-cancel-btn" onclick="cancelHero()">Cambia Scelta</button></div>';
   }
-  panelEl.innerHTML='<img class="ls1-portrait" src="'+DATA.heroImages[displayHero]+'" alt="'+escape(dispName)+'"><div class="ls1-hero-name">'+escape(dispName)+'</div><div class="ls1-ab-row"><span class="ls1-ab-name">'+escape(abName)+'</span><span class="ls1-badge '+abBadgeClass+'">'+abBadgeLabel+'</span></div><div class="ls1-hero-desc">'+escape(abDesc)+'</div>'+ctaHtml;
+  panelEl.innerHTML='<img class="ls1-portrait" src="'+DATA.heroImages[displayHero]+'" alt="'+escape(dispName)+'"><div class="ls1-info-block"><div class="ls1-hero-name">'+escape(dispName)+'</div><div class="ls1-ab-row"><span class="ls1-ab-name">'+escape(abName)+'</span><span class="ls1-badge '+abBadgeClass+'">'+abBadgeLabel+'</span></div><div class="ls1-hero-desc">'+escape(abDesc)+'</div>'+ctaHtml+'</div>';
 }
 
 function _renderLs1Grid(){
@@ -2937,11 +2937,11 @@ function _triggerIdentityReveal(){
   var txt=$('ls3-id-text');
   if(identity==='Innocente'){
     icon.textContent='🛡';role.textContent='INNOCENTE';
-    txt.textContent='Il tuo obiettivo e portare alla luce la corruzione e portare la partita alla vittoria del Sole.';
+    txt.textContent='Il tuo obiettivo e sventare i Corrotti e portare la storia verso un Epilogo Positivo.';
     banner.classList.add('ib-inn');
   } else {
     icon.textContent='🔥';role.textContent='CORROTTO';
-    txt.textContent='Il tuo obiettivo e sabotare la missione degli Innocenti e portare la partita alla vittoria della Luna.';
+    txt.textContent='Il tuo obiettivo e sabotare gli Innocenti e portare la storia verso un Epilogo Negativo.';
     banner.classList.add('ib-cor');
   }
   setTimeout(function(){
@@ -3149,7 +3149,6 @@ var SB_SOUNDS={
   Dramma:  'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778862856/Dramma_wnmami.mp3',
   Urlo:    'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778862855/Urlo_mdqwo8.mp3',
   Risata:  'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778862856/Risata_yacr8i.mp3',
-  Oddio:   'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778862856/Oddio_kjpmrm.mp3',
   Sospetto:'https://res.cloudinary.com/dkvotcvo6/video/upload/v1778862857/Sospetto_o5wpb1.mp3'
 };
 var _sbAudio=null,_lastSbAt=0;
