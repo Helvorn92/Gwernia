@@ -441,7 +441,150 @@
     .card-title{font-size:13px!important}
     .card-text{font-size:12px!important}
   }
-  #lobby{background:var(--bg);display:flex;align-items:center;justify-content:center;padding:20px 14px;min-height:100svh}
+  /* ===== NUOVA LOBBY A 3 SCHERMATE ===== */
+  #lobby{position:fixed;inset:0;z-index:22;background:rgba(5,4,7,.82);display:flex;align-items:center;justify-content:center}
+  #lobby.hidden{display:none!important}
+  .lby-window{width:90vw;max-width:1100px;height:90vh;background:linear-gradient(180deg,#050407 0%,#0a0710 60%,#050407 100%);border:1px solid rgba(110,70,170,.38);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+  /* Progress bar */
+  .lby-prog{display:flex;align-items:center;justify-content:center;gap:0;padding:7px 20px 5px;flex-shrink:0;z-index:1}
+  .lby-step{display:flex;flex-direction:column;align-items:center;gap:5px;opacity:.38;transition:opacity .3s}
+  .lby-step.ls-active{opacity:1}
+  .lby-step.ls-done{opacity:.7}
+  .lby-dot{width:24px;height:24px;border-radius:50%;background:#211a30;border:1px solid rgba(201,165,88,.25);display:grid;place-items:center;font-family:var(--display-2);font-size:11px;font-weight:700;color:var(--bone-deep);transition:background .3s,border-color .3s,color .3s}
+  .lby-step.ls-active .lby-dot{background:linear-gradient(180deg,#2e2448,#1e1630);border-color:var(--gold);color:var(--gold-bright);box-shadow:0 0 12px rgba(201,165,88,.22)}
+  .lby-step.ls-done .lby-dot{background:rgba(201,165,88,.15);border-color:rgba(201,165,88,.45);color:var(--gold)}
+  .lby-step-lbl{font-size:8px;font-family:var(--display-2);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--bone-deep)}
+  .lby-step.ls-active .lby-step-lbl{color:var(--gold-bright)}
+  .lby-line{width:48px;height:1px;background:linear-gradient(90deg,rgba(201,165,88,.18),rgba(201,165,88,.35),rgba(201,165,88,.18));flex-shrink:0;margin-bottom:10px}
+  /* Screens */
+  .lby-screens{flex:1;position:relative;overflow:hidden}
+  .lby-screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;transform:translateX(100%);transition:transform .4s cubic-bezier(.4,0,.2,1),opacity .4s cubic-bezier(.4,0,.2,1);pointer-events:none;overflow:hidden}
+  .lby-screen.ls-active{opacity:1;transform:translateX(0);pointer-events:auto}
+  .lby-screen.ls-exit{opacity:0;transform:translateX(-100%);pointer-events:none}
+  /* ── Screen 1 ── */
+  #ls1{display:flex;flex-direction:row;height:fit-content;overflow:hidden;align-items:flex-start}
+  .ls1-panel{background:linear-gradient(165deg,rgba(23,18,42,.98),rgba(14,10,26,.99));border-right:1px solid rgba(201,165,88,.12);overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;width:38%;flex-shrink:0;aspect-ratio:2/3;padding:8px 12px 10px}
+  .ls1-empty{flex:1;display:flex;align-items:center;justify-content:center;padding:12px 8px}
+  .ls1-empty-text{font-family:var(--display-2);font-size:clamp(9px,1vw,11px);font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(201,165,88,.3);text-align:center;line-height:1.8}
+  .ls1-portrait{width:100%;flex:1;min-height:0;object-fit:contain;object-position:center top;border-radius:7px;border:1px solid rgba(201,165,88,.28);box-shadow:0 6px 20px rgba(0,0,0,.6);display:block}
+  .ls1-hero-name{font-family:var(--display);font-size:clamp(.82rem,1.3vw,1rem);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-bright);margin:5px 0 2px;text-align:center;line-height:1.2}
+  .ls1-hero-desc{font-size:14px;font-style:italic;color:var(--bone-dim);font-family:var(--book);line-height:1.6;text-align:center;padding:0 4px}
+  .ls1-ab-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+  .ls1-ab-name{font-family:var(--display-2);font-size:clamp(9px,.9vw,10px);font-weight:600;letter-spacing:.06em;color:var(--bone)}
+  .ls1-badge{font-size:8px;font-family:var(--display-2);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:999px;flex-shrink:0}
+  .ls1-badge.b-passive{background:rgba(139,90,190,.25);border:1px solid rgba(139,90,190,.5);color:#c9a8f5}
+  .ls1-badge.b-active{background:rgba(195,145,40,.2);border:1px solid rgba(195,145,40,.5);color:#f5c842}
+  .ls1-badge.b-reactive{background:rgba(60,140,100,.2);border:1px solid rgba(60,140,100,.5);color:#7fe0b0}
+  .ls1-stats{display:flex;flex-direction:column;gap:3px;margin-bottom:4px}
+  .ls1-stat-row{display:flex;align-items:center;gap:6px}
+  .ls1-stat-lbl{font-size:8px;font-family:var(--display-2);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-deep);width:44px;flex-shrink:0}
+  .ls1-stat-bg{flex:1;height:3px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+  .ls1-stat-fill{height:100%;background:linear-gradient(90deg,rgba(201,165,88,.5),var(--gold-bright));border-radius:99px;transition:width .55s cubic-bezier(.4,0,.2,1)}
+  .ls1-cta{margin-top:auto;padding-top:7px;flex-shrink:0;display:flex;flex-direction:column;gap:5px;animation:fadeInUp .3s ease}
+  .ls1-confirm-btn{background:linear-gradient(180deg,#e9c97a,#c9a558);color:#0d0b10;border:none;border-radius:6px;padding:8px 14px;font-family:var(--display-2);font-size:clamp(10px,.9vw,12px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:opacity .15s}
+  .ls1-confirm-btn:hover{opacity:.88}
+  .ls1-cancel-btn{background:transparent;border:1px solid rgba(201,165,88,.25);color:rgba(195,184,159,.6);border-radius:6px;padding:5px 14px;font-family:var(--display-2);font-size:clamp(9px,.85vw,11px);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+  .ls1-grid-wrap{display:flex;flex-direction:column;height:auto;overflow:hidden;background:rgba(14,10,22,.85);padding:8px 10px 8px}
+  .ls1-grid-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;flex-shrink:0;font-family:var(--display-2);font-size:clamp(9px,.85vw,11px);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(201,165,88,.5)}
+  .ls1-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;overflow:hidden;align-content:start}
+  .ls1-grid::-webkit-scrollbar{display:none}
+  .ls1-card{background:#17122a;border:1px solid rgba(201,165,88,.15);border-radius:7px;overflow:hidden;display:flex;flex-direction:column;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .2s ease;position:relative;aspect-ratio:2/3}
+  .ls1-card:hover{border-color:rgba(201,165,88,.42);box-shadow:0 0 12px rgba(201,165,88,.1);transform:scale(1.06)}
+  .ls1-card.lc-confirmed{border-color:var(--gold);border-width:2px;box-shadow:0 0 18px rgba(201,165,88,.28)}
+  .ls1-card.lc-desaturated{filter:grayscale(1) opacity(.35);pointer-events:none}
+  .ls1-card img{width:100%;flex:1;min-height:0;object-fit:cover;object-position:center top;display:block}
+  .ls1-card-name{font-family:var(--display-2);font-size:clamp(8px,.85vw,11px);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bone);text-align:center;padding:0 2px;flex-shrink:0;background:rgba(15,10,25,.92);min-height:24px;line-height:24px}
+  .ls1-card-votes{position:absolute;top:4px;right:4px;background:rgba(201,165,88,.85);color:#0d0b10;font-family:var(--display-2);font-size:8px;font-weight:800;padding:2px 5px;border-radius:999px;z-index:1}
+  /* ── Screen 2 ── */
+  #ls2{display:flex;flex-direction:column}
+  .ls2-tabs{display:flex;gap:8px;padding:12px 16px 10px;flex-shrink:0;background:rgba(14,10,22,.9)}
+  .ls2-tab{flex:1;padding:10px 8px;background:rgba(30,22,48,.7);border:1px solid rgba(201,165,88,.18);border-radius:6px;color:var(--bone-deep);font-family:var(--display-2);font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;transition:border-color .2s,background .2s,color .2s;cursor:pointer}
+  .ls2-tab:hover{border-color:rgba(201,165,88,.38);color:var(--bone)}
+  .ls2-tab.lt-active{background:rgba(201,165,88,.12);border-color:var(--gold);color:var(--gold-bright)}
+  .ls2-tab.lt-voted{border-color:rgba(201,165,88,.45);color:var(--gold)}
+  .ls2-view{flex:1;position:relative;overflow:hidden}
+  .ls2-bg{position:absolute;inset:0;transition:opacity .6s}
+  .ls2-bg img{width:100%;height:100%;object-fit:cover;object-position:center;filter:brightness(.45) saturate(.8)}
+  .ls2-no-sel{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--display-2);font-size:14px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(201,165,88,.35)}
+  .ls2-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(180deg,transparent 0%,rgba(5,4,9,.92) 55%,rgba(5,4,9,.98) 100%);padding:32px 24px 20px;display:flex;flex-direction:column;align-items:center}
+  .ls2-dom-name{font-family:var(--display);font-size:clamp(1.2rem,2.5vw,1.8rem);font-weight:700;letter-spacing:.08em;color:var(--gold-bright);margin-bottom:8px;text-align:center}
+  .ls2-dom-desc{font-size:13px;font-style:italic;color:var(--bone-dim);font-family:var(--book);line-height:1.6;max-width:520px;text-align:center;width:100%}
+  .ls2-my-vote-chip{display:inline-flex;align-items:center;gap:5px;margin-top:10px;background:rgba(201,165,88,.15);border:1px solid rgba(201,165,88,.45);border-radius:999px;padding:4px 12px;font-family:var(--display-2);font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--gold)}
+  .ls2-confirm-btn{margin-top:12px;background:linear-gradient(180deg,#e9c97a,#c9a558);color:#0d0b10;border:none;border-radius:6px;padding:9px 22px;font-family:var(--display-2);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:opacity .15s;display:block;margin-left:auto;margin-right:auto;width:fit-content}
+  .ls2-confirm-btn:hover{opacity:.88}
+  .ls2-tie{position:absolute;inset:0;background:rgba(5,4,9,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0;pointer-events:none;transition:opacity .35s}
+  .ls2-tie.tie-on{opacity:1;pointer-events:auto}
+  .ls2-tie-sup{font-family:var(--display);font-size:clamp(1rem,2vw,1.4rem);font-weight:700;letter-spacing:.1em;color:var(--gold-bright);text-transform:uppercase}
+  .ls2-tie-domains{font-size:clamp(1.1rem,2.5vw,1.6rem);font-family:var(--display-em);font-weight:700;color:var(--bone);text-align:center}
+  .ls2-tie-msg{font-size:13px;font-style:italic;color:var(--bone-deep);font-family:var(--book)}
+  .ls2-reveal{position:absolute;inset:0;background:#050407;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .5s}
+  .ls2-reveal.rv-on{opacity:1;pointer-events:auto}
+  .ls2-rv-bg{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
+  .ls2-rv-bg.rv-bg-show{opacity:1}
+  .ls2-rv-bg img{width:100%;height:100%;object-fit:cover;filter:brightness(.45) saturate(.8)}
+  .ls2-rv-content{position:relative;z-index:1;text-align:center;padding:24px;opacity:0;transform:translateY(20px);transition:opacity .8s ease,transform .8s ease}
+  .ls2-rv-content.rv-cnt-show{opacity:1;transform:translateY(0)}
+  .ls2-rv-name{font-family:var(--display);font-size:clamp(1.5rem,4vw,2.8rem);font-weight:700;letter-spacing:.12em;color:var(--gold-bright);text-transform:uppercase;margin-bottom:14px}
+  .ls2-rv-desc{font-size:15px;font-style:italic;color:var(--bone-dim);font-family:var(--book);line-height:1.7;max-width:480px;margin:0 auto}
+  .ls2-players{display:flex;gap:12px;justify-content:center;align-items:center;padding:10px 16px;flex-shrink:0;background:rgba(14,10,22,.9);border-top:1px solid rgba(201,165,88,.1)}
+  .ls2-pdot{display:flex;flex-direction:column;align-items:center;gap:5px}
+  .ls2-pdot-circle{width:10px;height:10px;border-radius:50%;border:1px solid rgba(201,165,88,.4);background:transparent;transition:background .3s,border-color .3s}
+  .ls2-pdot.pv .ls2-pdot-circle{background:var(--gold);border-color:var(--gold)}
+  .ls2-pdot-name{font-size:9px;font-family:var(--display-2);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--bone-deep)}
+  /* ── Screen 3 ── */
+  #ls3{display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:none}
+  #ls3::-webkit-scrollbar{display:none}
+  .ls3-identity{flex:0 0 auto;background:linear-gradient(180deg,#050407,#0d0820);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px 24px;min-height:35vh;position:relative;border-bottom:1px solid rgba(201,165,88,.1)}
+  .ls3-id-label{font-family:var(--display);font-size:12px;font-weight:700;letter-spacing:.3em;text-transform:uppercase;color:rgba(201,165,88,.6);margin-bottom:16px;animation:idFlicker 3s ease-in-out infinite}
+  @keyframes idFlicker{0%,100%{opacity:.6}48%{opacity:.6}50%{opacity:.15}52%{opacity:.7}54%{opacity:.2}56%{opacity:.8}80%{opacity:.6}}
+  .ls3-id-banner{border-radius:10px;padding:18px 28px;display:flex;flex-direction:column;align-items:center;gap:8px;transform:scaleY(.02);opacity:0;transition:transform .55s cubic-bezier(.4,0,.2,1),opacity .55s ease;width:min(360px,90%)}
+  .ls3-id-banner.ib-show{transform:scaleY(1);opacity:1}
+  .ls3-id-banner.ib-inn{background:rgba(20,60,30,.85);border:1px solid rgba(60,160,90,.4)}
+  .ls3-id-banner.ib-cor{background:rgba(60,15,20,.85);border:1px solid rgba(180,45,60,.4)}
+  .ls3-id-icon{font-size:36px;line-height:1}
+  .ls3-id-role{font-family:var(--display);font-size:clamp(1.1rem,3vw,1.5rem);font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .ib-inn .ls3-id-role{color:var(--green)}
+  .ib-cor .ls3-id-role{color:var(--blood)}
+  .ls3-id-text{font-size:12px;font-style:italic;color:var(--bone-dim);font-family:var(--book);line-height:1.6;text-align:center;max-width:340px}
+  .ls3-bottom{flex:1;display:flex;flex-direction:column;gap:0;padding:0 0 24px}
+  .ls3-pref-section{opacity:0;transform:translateY(30px);transition:opacity .5s ease,transform .5s ease;padding:20px 18px 0}
+  .ls3-pref-section.ps-show{opacity:1;transform:translateY(0)}
+  .ls3-pref-title{font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(201,165,88,.55);margin-bottom:14px;text-align:center}
+  .ls3-pref-cards{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .ls3-pcard{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 10px 12px;background:rgba(23,18,42,.7);border:1px solid rgba(201,165,88,.18);border-radius:10px;min-width:110px;cursor:pointer;position:relative;transition:border-color .2s,box-shadow .2s}
+  .ls3-pcard:hover{border-color:rgba(201,165,88,.42)}
+  .ls3-pcard.psel{border:2px solid #7f77dd;box-shadow:0 0 0 2px #7f77dd}
+  .ls3-pcard-avatar{width:80px;height:107px;border-radius:7px;background:#17122a;border:1px solid rgba(201,165,88,.22);display:grid;place-items:center;overflow:hidden;font-family:var(--display-2);font-size:18px;font-weight:700;color:rgba(201,165,88,.5);transition:border-color .2s;flex-shrink:0}
+  .ls3-pcard.psel .ls3-pcard-avatar{border-color:var(--gold)}
+  .ls3-pcard-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top}
+  .ls3-pcard-name{font-family:var(--display-2);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--bone-deep);text-align:center}
+  .ls3-pcard.psel .ls3-pcard-name{color:var(--gold)}
+  .ls3-pcard-hero-name{font-family:var(--display-2);font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:rgba(201,165,88,.55);text-align:center}
+  .ls3-pcard-ability{font-family:var(--book);font-size:9px;font-style:italic;color:var(--bone-deep);text-align:center;line-height:1.3;max-width:100px}
+  .ls3-ai-badge{position:absolute;top:4px;right:4px;background:rgba(30,22,48,.9);border:1px solid rgba(201,165,88,.3);border-radius:3px;font-size:8px;font-family:var(--display-2);font-weight:700;padding:1px 4px;color:rgba(201,165,88,.6);letter-spacing:.06em}
+  .ls3-mic{display:none}
+  .ls3-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px 18px;border-top:1px solid rgba(201,165,88,.1)}
+  .ls3-sum-col{display:flex;flex-direction:column;align-items:center;gap:6px}
+  .ls3-sum-lbl{font-size:9px;font-family:var(--display-2);font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(201,165,88,.4)}
+  .ls3-sum-img{width:44px;height:60px;object-fit:cover;object-position:center top;border-radius:4px;border:1px solid rgba(201,165,88,.22)}
+  .ls3-sum-val{font-family:var(--display-2);font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--bone);text-align:center}
+  .ls3-start{padding:16px 18px 0;display:flex;justify-content:center}
+  .ls3-start-btn{background:rgba(30,22,48,.5);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:12px 36px;font-family:var(--display);font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(201,165,88,.35);cursor:not-allowed;transition:all .3s}
+  .ls3-start-btn.sbt-ready{background:linear-gradient(180deg,#e9c97a,#c9a558);border-color:rgba(233,201,122,.5);color:#0d0b10;cursor:pointer;animation:startPulse 2s ease-in-out infinite}
+  @keyframes startPulse{0%,100%{box-shadow:0 0 0 rgba(201,165,88,0)}50%{box-shadow:0 0 22px rgba(201,165,88,.45)}}
+  @keyframes fadeInUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  /* ── Media query mobile lobby ── */
+  @media(max-width:767px){
+    .lby-window{width:98vw;height:96vh;border-radius:10px}
+    #ls1{flex-direction:column!important;align-items:stretch!important}
+    .ls1-panel{width:100%!important;aspect-ratio:unset!important;max-height:min(38vh,210px)!important;border-right:none!important;border-bottom:1px solid rgba(201,165,88,.12)}
+    .ls1-grid{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+    .ls2-rv-name{font-size:1.3rem!important}
+    #ls3{overflow-y:auto}
+    .ls3-pref-cards{gap:6px}
+    .ls3-summary{grid-template-columns:repeat(3,1fr)}
+  }
+  /* ===== FINE NUOVA LOBBY ===== */
   .lobby-box{background:linear-gradient(165deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.28);border-radius:14px;padding:22px;box-shadow:var(--shadow);width:min(480px,100%)}
   .domain-choices{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin:5px 0}
   .domain-choice{width:100%;background:linear-gradient(145deg,#1e1630,#1a1428);border:1px solid rgba(201,165,88,.18);border-radius:8px;padding:6px;color:var(--bone);cursor:pointer;text-align:center;display:flex;flex-direction:column;gap:3px;transition:border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
@@ -767,6 +910,82 @@
   </div>
 
   <div id="modal" class="modal hidden"><div id="sheet" class="sheet"></div></div>
+
+  <section id="lobby" class="hidden">
+  <div class="lby-window">
+    <!-- Progress bar -->
+    <div class="lby-prog">
+      <div class="lby-step ls-active" id="lby-step-1">
+        <div class="lby-dot">1</div>
+        <div class="lby-step-lbl">Protagonista</div>
+      </div>
+      <div class="lby-line"></div>
+      <div class="lby-step" id="lby-step-2">
+        <div class="lby-dot">2</div>
+        <div class="lby-step-lbl">Dominio</div>
+      </div>
+      <div class="lby-line"></div>
+      <div class="lby-step" id="lby-step-3">
+        <div class="lby-dot">3</div>
+        <div class="lby-step-lbl">Prefatore</div>
+      </div>
+    </div>
+    <!-- Screens wrapper -->
+    <div class="lby-screens">
+      <div class="lby-screen ls-active" id="ls1">
+        <div class="ls1-panel" id="ls1-panel"></div>
+        <div class="ls1-grid-wrap" id="ls1-grid-wrap"></div>
+      </div>
+      <div class="lby-screen" id="ls2">
+        <div class="ls2-tabs" id="ls2-tabs"></div>
+        <div class="ls2-view" id="ls2-view">
+          <div class="ls2-bg" id="ls2-bg"><img id="ls2-bg-img" src="" alt=""></div>
+          <div class="ls2-no-sel" id="ls2-no-sel">Seleziona un Dominio</div>
+          <div class="ls2-overlay" id="ls2-overlay" style="display:none">
+            <div class="ls2-dom-name" id="ls2-dom-name"></div>
+            <div class="ls2-dom-desc" id="ls2-dom-desc"></div>
+            <button class="ls2-confirm-btn" id="ls2-confirm-btn" onclick="confirmDomain()" type="button" style="display:none">Conferma Dominio</button>
+            <div class="ls2-my-vote-chip" id="ls2-vote-chip" style="display:none">&#10003; Voto registrato</div>
+          </div>
+          <!-- Tie overlay -->
+          <div class="ls2-tie" id="ls2-tie">
+            <div class="ls2-tie-sup">Votazione in pareggio</div>
+            <div class="ls2-tie-domains" id="ls2-tie-domains"></div>
+            <div class="ls2-tie-msg">Rivotate tra i domini in pareggio</div>
+          </div>
+          <!-- Winner reveal -->
+          <div class="ls2-reveal" id="ls2-reveal">
+            <div class="ls2-rv-bg" id="ls2-rv-bg"><img id="ls2-rv-img" src="" alt=""></div>
+            <div class="ls2-rv-content" id="ls2-rv-content">
+              <div class="ls2-rv-name" id="ls2-rv-name"></div>
+              <div class="ls2-rv-desc" id="ls2-rv-desc"></div>
+            </div>
+          </div>
+        </div>
+        <div class="ls2-players" id="ls2-players"></div>
+      </div>
+      <div class="lby-screen" id="ls3">
+        <div class="ls3-identity">
+          <div class="ls3-id-label">LA TUA IDENTITA'</div>
+          <div class="ls3-id-banner" id="ls3-id-banner">
+            <div class="ls3-id-icon" id="ls3-id-icon"></div>
+            <div class="ls3-id-role" id="ls3-id-role"></div>
+            <div class="ls3-id-text" id="ls3-id-text"></div>
+          </div>
+        </div>
+        <div class="ls3-bottom">
+          <div class="ls3-pref-section" id="ls3-pref-section">
+            <div class="ls3-pref-title">CHI INIZIERA' LA STORIA?</div>
+            <div class="ls3-pref-cards" id="ls3-pref-cards"></div>
+          </div>
+          <div class="ls3-start">
+            <button class="ls3-start-btn" id="ls3-start-btn" onclick="startFromLobbyFinal()">INIZIA PARTITA</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /.lby-window -->
+  </section>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
@@ -1015,7 +1234,7 @@ function setupRoomListener(code){
     syncing=true;game=data;syncing=false;
     localStorage.setItem("dusklore-app",JSON.stringify(game));
     if(game.players.some(p=>p.controller===clientId)){
-      if(game.lobbyPhase){showGame();showVotingModal();if(game.hostId===clientId)checkLobbyVotes();}
+      if(game.lobbyPhase){showLobby();if(game.hostId===clientId)checkLobbyVotes();}
       else{if(game.showingActSummary&&!_actProseguiDone){showGame();renderActSummaryModal();_checkActProseguiComplete();}else if(!game.showingActSummary){closeModal();showGame();render();beginTurn();}_sfxDetect(_prevSnap,game);if(_prevSnap&&_prevSnap.lobbyPhase&&!game.lobbyPhase&&window.duskSwitchTrack)duskSwitchTrack(TRACK_GAME,0.55);}
     }
   },err=>console.warn("Sync error:",err.message));
@@ -1056,7 +1275,7 @@ async function joinByCode(){
     if(typeof game.domainChoices==="string")game.domainChoices=JSON.parse(game.domainChoices);
     roomId=code;
     localStorage.setItem("dusklore-app",JSON.stringify(game));
-    if(game.players.some(p=>p.controller===clientId)){setupRoomListener(code);if(game.lobbyPhase){showGame();showVotingModal();}else{showGame();render();beginTurn();}return;}
+    if(game.players.some(p=>p.controller===clientId)){setupRoomListener(code);if(game.lobbyPhase){showLobby();}else{showGame();render();beginTurn();}return;}
     const open=game.players.filter(p=>p.controller==="open");
     if(!open.length){fb.style.color="var(--blood)";fb.textContent="Nessun posto libero in questa stanza.";return;}
     const seat=open[0];
@@ -1064,7 +1283,7 @@ async function joinByCode(){
     seat.controller=clientId;seat.isHuman=true;seat.name=nameVal;
     game.roomId=code;
     log(`${nameVal} entra nella partita.`);
-    save();setupRoomListener(code);if(game.lobbyPhase){showGame();showVotingModal();}else{showGame();render();beginTurn();}
+    save();setupRoomListener(code);if(game.lobbyPhase){showLobby();}else{showGame();render();beginTurn();}
   }catch(e){fb.style.color="var(--blood)";fb.textContent=`Errore: ${e.message}`;}
 }
 
@@ -1084,7 +1303,7 @@ function startGame(){
   const identities=shuffle([...Array(innocents).fill("Innocente"),...Array(corrupt).fill("Corrotto")]);
   const domainChoices=shuffle([...DATA.domini]).slice(0,3);
   const rid=pendingRoomId||uid();pendingRoomId=null;roomId=rid;
-  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,domainChoices,domainVotes:{},prefatoreVotes:{},heroVotes:{},prefatoreId:null,narratorVotes:{},narratorId:null,presage:null,presagiMazzo:shuffle(Object.keys(DATA.presagi)),presagiUsati:[],log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
+  game={version:3,roomId:rid,hostId:clientId,round:1,act:1,turn:0,phase:"preface",scale:{sun:0,moon:0},domain:{name:"",text:""},lobbyPhase:true,lobbyStep:1,domainTieInfo:null,resolvedDomain:null,domainChoices,domainVotes:{},prefatoreVotes:{},heroVotes:{},prefatoreId:null,narratorVotes:{},narratorId:null,presage:null,presagiMazzo:shuffle(Object.keys(DATA.presagi)),presagiUsati:[],log:[],covered:[],discard:[],discardMalefici:[],ended:false,decks:{indizi:makeDeck(DATA.indizi),malefici:makeDeck(maleficiPool()),reliquie:makeDeck(DATA.reliquie)},players:[]};
   const aiHeroes=shuffle([...DATA.heroes]);let aiIdx=0;
   const missionPool=shuffle(Object.keys(DATA.missions));
   Array.from({length:count},(_,i)=>{
@@ -1097,10 +1316,10 @@ function startGame(){
   });
   location.hash="room="+game.roomId;
   if(db)setupRoomListener(game.roomId);
-  save();showGame();showVotingModal();
+  save();showLobby();
 }
 
-function showGame(){$("setup").classList.add("hidden");$("game").classList.remove("hidden");$("handWrap").classList.remove("hidden");}
+function showGame(){$("setup").classList.add("hidden");$("lobby").classList.add("hidden");$("game").classList.remove("hidden");$("handWrap").classList.remove("hidden");}
 function human(){return game.players.find(p=>p.controller===clientId)||game.players[0]}
 function current(){return game.players[game.turn]}
 function threshold(){return DATA.thresholds[game.players.length]}
@@ -2334,89 +2553,446 @@ function sacerdotePickRandom(){
   drawTurnCard("maleficio"); closeModal(); promptLocationChoice();
 }
 
-// ===== LOBBY =====
+// ===== LOBBY (nuova a 3 schermate) =====
 const AVATAR_SVG=`<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="13" r="8" fill="currentColor"/><path d="M2 36c0-9.4 7.2-15 16-15s16 5.6 16 15" fill="currentColor"/></svg>`;
 
-function showVotingModal(){
+const HERO_DESCRIPTIONS={
+  "SOLDATO":"Veterano di guerre invisibili, porta il peso di cio che non puo dimenticare.",
+  "DETECTIVE":"Il suo sguardo non lascia nulla all'ombra. Ogni silenzio e una confessione.",
+  "RAMINGO":"Sopravvivere e la sua arte. Sa dove cercare cio che gli altri lasciano andare.",
+  "MEDIUM":"I morti le parlano. Non sa se sia un dono o una condanna.",
+  "GIORNALISTA":"Il suo fiuto per la verita l'ha portato qui. Forse era meglio non cercarla.",
+  "SACERDOTE":"La fede e la sua armatura, ma l'oscurita che ha visto ha incrinato piu di una preghiera.",
+  "FANCIULLO":"Vede cio che gli adulti ignorano. Forse e questo il suo pericolo.",
+  "TURISTA":"Capitato qui per caso, o cosi pensa. C'e sempre una ragione piu profonda."
+};
+const HERO_STATS={
+  "SOLDATO":   [{l:"FORZA",v:90},{l:"INTUITO",v:50},{l:"SPIRITO",v:30},{l:"FORTUNA",v:60}],
+  "DETECTIVE": [{l:"FORZA",v:45},{l:"INTUITO",v:95},{l:"SPIRITO",v:45},{l:"FORTUNA",v:70}],
+  "RAMINGO":   [{l:"FORZA",v:60},{l:"INTUITO",v:70},{l:"SPIRITO",v:50},{l:"FORTUNA",v:80}],
+  "MEDIUM":    [{l:"FORZA",v:30},{l:"INTUITO",v:65},{l:"SPIRITO",v:95},{l:"FORTUNA",v:50}],
+  "GIORNALISTA":[{l:"FORZA",v:40},{l:"INTUITO",v:85},{l:"SPIRITO",v:55},{l:"FORTUNA",v:65}],
+  "SACERDOTE": [{l:"FORZA",v:50},{l:"INTUITO",v:60},{l:"SPIRITO",v:90},{l:"FORTUNA",v:45}],
+  "FANCIULLO": [{l:"FORZA",v:35},{l:"INTUITO",v:60},{l:"SPIRITO",v:70},{l:"FORTUNA",v:95}],
+  "TURISTA":   [{l:"FORZA",v:55},{l:"INTUITO",v:50},{l:"SPIRITO",v:40},{l:"FORTUNA",v:85}]
+};
+
+// Lobby local state
+var _lbyPendingHero=null;
+var _lbyHoveredHero=null;
+var _lbyCurrentStep=1;
+var _ls2ActiveIdx=null;
+var _ls2PendingIdx=null;
+
+// Backward compat
+function showVotingModal(){showLobby();}
+function renderVotingModal(){renderLobby();}
+
+function showLobby(){
   if(!game||!game.lobbyPhase)return;
-  $("modal").style.placeItems="center";
-  $("modal").classList.remove("hidden");
-  renderVotingModal();
+  $('setup').classList.add('hidden');
+  $('game').classList.add('hidden');
+  $('handWrap').classList.add('hidden');
+  $('modal').classList.add('hidden');
+  $('lobby').classList.remove('hidden');
+  _lbyCurrentStep=game.lobbyStep||1;
+  _updateLbyProgress(_lbyCurrentStep);
+  ['ls1','ls2','ls3'].forEach(function(id,i){
+    var el=$(id);
+    el.classList.remove('ls-active','ls-exit');
+    if(i+1===_lbyCurrentStep)el.classList.add('ls-active');
+  });
+  renderLobby();
 }
 
-function renderVotingModal(){
+function _updateLbyProgress(step){
+  [1,2,3].forEach(function(n){
+    var el=$('lby-step-'+n);
+    if(!el)return;
+    el.classList.remove('ls-active','ls-done');
+    if(n<step)el.classList.add('ls-done');
+    else if(n===step)el.classList.add('ls-active');
+  });
+}
+
+function advanceLobbyToStep(newStep){
+  if(newStep<=_lbyCurrentStep)return;
+  var oldId='ls'+(newStep-1);
+  var newId='ls'+newStep;
+  var oldEl=$(oldId);
+  var newEl=$(newId);
+  if(!oldEl||!newEl)return;
+  oldEl.classList.remove('ls-active');
+  oldEl.classList.add('ls-exit');
+  newEl.style.transform='translateX(100%)';
+  newEl.style.opacity='0';
+  newEl.style.transition='none';
+  newEl.classList.remove('ls-exit');
+  void newEl.offsetWidth;
+  newEl.style.transform='';
+  newEl.style.opacity='';
+  newEl.style.transition='';
+  newEl.classList.add('ls-active');
+  _lbyCurrentStep=newStep;
+  _updateLbyProgress(newStep);
+  setTimeout(function(){oldEl.classList.remove('ls-exit');},450);
+  renderLobby();
+  if(newStep===3){setTimeout(function(){_triggerIdentityReveal();},200);}
+}
+
+function renderLobby(){
   if(!game||!game.lobbyPhase)return;
-  const choices=game.domainChoices||[];
-  const domainVotes=game.domainVotes||{};
-  const prefVotes=game.prefatoreVotes||{};
-  const heroVotes=game.heroVotes||{};
-  const myId=human()?.id;
-  const myDomainVote=myId!=null?domainVotes[myId]:undefined;
-  const myPrefVote=myId!=null?prefVotes[myId]:undefined;
-  const myHeroVote=myId!=null?heroVotes[myId]:undefined;
-  const humanPlayers=game.players.filter(p=>p.isHuman);
-  const domainVoted=humanPlayers.filter(p=>domainVotes[p.id]!==undefined).length;
-  const prefVoted=humanPlayers.filter(p=>prefVotes[p.id]!==undefined).length;
-  const heroVoted=humanPlayers.filter(p=>heroVotes[p.id]!==undefined).length;
-  const total=humanPlayers.length;
-  const myLobbyPlayer=human();const myIdentity=myLobbyPlayer?.identity;
-  const aiTakenHeroes=new Set(game.players.filter(p=>p.controller==="ai"&&p.hero).map(p=>p.hero));
-  $("sheet").innerHTML=`
-    <h2 style="text-align:center;margin-bottom:4px">Lobby</h2>
-    <p class="small" style="text-align:center;margin:0 0 10px;color:var(--muted)">Scegli il Protagonista, vota Dominio e Prefatore. La partita inizia quando tutti hanno votato.</p>
-    ${myIdentity?`<div style="background:rgba(${myIdentity==='Corrotto'?'107,31,58':'28,90,45'},.22);border:1px solid ${myIdentity==='Corrotto'?'rgba(180,50,80,.45)':'rgba(50,160,80,.45)'};border-radius:8px;padding:8px 14px;margin-bottom:14px;text-align:center"><div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px">La tua identità</div><div style="font-size:20px;font-weight:800;color:${myIdentity==='Corrotto'?'var(--blood)':'var(--green)'}">${myIdentity}</div></div>`:''}
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Scegli il Protagonista (${heroVoted}/${total})</div>
-    <div class="lobby-hero-grid">
-      ${DATA.heroes.map(h=>{const[abName,...abRest]=DATA.heroAbilities[h].split(": ");const abDesc=abRest.join(": ");const dispName=h.charAt(0)+h.slice(1).toLowerCase();const voteCount=Object.values(heroVotes).filter(v=>v===h).length;const isSelected=myHeroVote===h;const isTaken=aiTakenHeroes.has(h);return `<button type="button" class="hero-card${isSelected?" selected":""}" ${isTaken?'disabled style="opacity:.35;cursor:not-allowed"':''} onclick="voteForHero('${h}')"><div class="hero-card-img">${h.slice(0,3)}<img src="${DATA.heroImages[h]}" alt="${dispName}" class="protagonist-portrait"></div><div class="hero-card-info"><div class="hero-card-name">${dispName}</div><div class="hero-card-ab">${abName}</div><div class="hero-card-desc">${abDesc}</div>${voteCount>0?`<div style="font-size:9px;color:var(--gold);font-weight:800">▲ ${voteCount}</div>`:""}</div></button>`;}).join("")}
-    </div>
-    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 8px;border-top:1px solid var(--line);padding-top:12px">Vota il Dominio (${domainVoted}/${total})</div>
-    <div class="domain-choices">
-      ${choices.map((d,i)=>{
-        const count=Object.values(domainVotes).filter(v=>v===i).length;
-        const isVoted=myDomainVote===i;
-        const _dcBg=DOMAIN_BG_MAP[(d[0]||"").trim().toLowerCase()]||"";
-        return `<button class="domain-choice${isVoted?" voted":""}" onclick="voteForDomain(${i})"${_dcBg?` style="background-image:url(${_dcBg});background-size:cover;background-position:center"`:""}>
-          <div class="domain-choice-overlay"></div>
-          <div class="domain-choice-name">${escape(d[0])}</div>
-          <div class="domain-choice-text">${escape(d[1])}</div>
-          <div class="domain-vote-badge">${count>0?`▲ ${count} vot${count===1?"o":"i"}`:"&nbsp;"}</div>
-        </button>`;
-      }).join("")}
-    </div>
-    <div style="margin:14px 0 6px;border-top:1px solid var(--line);padding-top:12px">
-      <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px">Vota il Prefatore (${prefVoted}/${total})</div>
-      <div style="display:grid;gap:5px">
-        ${game.players.map(p=>{
-          const prefCount=Object.values(prefVotes).filter(v=>v===p.id).length;
-          const isMyPrefVote=myPrefVote===p.id;
-          const isAI=p.controller==="ai";
-          const isOpen=p.controller==="open";
-          const label=isOpen?"In attesa...":isAI?escape(p.hero)+" (AI)":escape(p.name);
-          return `<button class="option" style="margin:0;padding:8px 12px;${isMyPrefVote?"border-color:var(--gold);background:rgba(198,155,84,.1);":""}" onclick="voteForPrefatore('${p.id}')">
-            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-weight:900;font-size:13px">${label}</span>${prefCount>0?`<span style="color:var(--gold);font-size:11px;font-weight:800">▲ ${prefCount}</span>`:""}</div>
-          </button>`;
-        }).join("")}
-      </div>
-    </div>
-    <div class="lobby-players" style="margin-top:10px">
-      ${game.players.map(p=>{
-        const isMe=p.controller===clientId;
-        const isAI=p.controller==="ai";
-        const isOpen=p.controller==="open";
-        const hasDV=domainVotes[p.id]!==undefined;
-        const hasPV=prefVotes[p.id]!==undefined;
-        const domName=hasDV&&choices[domainVotes[p.id]]?choices[domainVotes[p.id]][0]:"";
-        const prefName=hasPV?game.players.find(x=>x.id===prefVotes[p.id])?.name||"":"";
-        const joined=!isAI&&!isOpen;
-        const cls=`lobby-player${isMe?" me":joined?" joined":""}`;
-        return `<div class="${cls}">
-          <div class="lp-avatar">${AVATAR_SVG}</div>
-          <div class="lp-name">${isOpen?"In attesa...":isAI?escape(p.hero)+" (AI)":escape(p.name)}</div>
-          <div class="lp-vote">${isAI?"—":(hasDV&&hasPV)?escape(domName):"..."}</div>
-        </div>`;
-      }).join("")}
-    </div>
-  `;
+  var step=_lbyCurrentStep;
+  if(step===1)_renderLs1();
+  else if(step===2)_renderLs2();
+  else if(step===3)_renderLs3();
+}
+
+// ─── SCREEN 1 ───
+function _renderLs1Panel(){
+  var heroVotes=game.heroVotes||{};
+  var myId=human()?.id;
+  var myConfirmed=myId?heroVotes[myId]:null;
+  var panelEl=$('ls1-panel');
+  var displayHero=_lbyPendingHero||myConfirmed;
+  if(!displayHero){
+    panelEl.innerHTML='<div class="ls1-empty"><div class="ls1-empty-text">CLICCA UN PERSONAGGIO<br>PER SCOPRIRLO</div></div>';
+    return;
+  }
+  var ab=ABILITIES[displayHero];
+  var abType=ab?ab.type:'passive';
+  var abName=ab?ab.name:'';
+  var abDesc=ab?ab.desc:'';
+  var abBadgeClass=abType==='active'?'b-active':abType==='reactive'?'b-reactive':'b-passive';
+  var abBadgeLabel=abType==='active'?'Attiva':abType==='reactive'?'Reattiva':'Passiva';
+  var dispName=displayHero.charAt(0)+displayHero.slice(1).toLowerCase();
+  var ctaHtml='';
+  if(_lbyPendingHero){
+    ctaHtml='<div class="ls1-cta"><button class="ls1-confirm-btn" onclick="confirmHero()">Conferma</button></div>';
+  } else if(myConfirmed){
+    ctaHtml='<div class="ls1-cta"><button class="ls1-cancel-btn" onclick="cancelHero()">Cambia Scelta</button></div>';
+  }
+  panelEl.innerHTML='<img class="ls1-portrait" src="'+DATA.heroImages[displayHero]+'" alt="'+escape(dispName)+'"><div class="ls1-hero-name">'+escape(dispName)+'</div><div class="ls1-ab-row"><span class="ls1-ab-name">'+escape(abName)+'</span><span class="ls1-badge '+abBadgeClass+'">'+abBadgeLabel+'</span></div><div class="ls1-hero-desc">'+escape(abDesc)+'</div>'+ctaHtml;
+}
+
+function _renderLs1Grid(){
+  var heroVotes=game.heroVotes||{};
+  var myId=human()?.id;
+  var myConfirmed=myId?heroVotes[myId]:null;
+  var aiTaken=new Set(game.players.filter(function(p){return p.controller==='ai'&&p.hero;}).map(function(p){return p.hero;}));
+  var humanPlayers=game.players.filter(function(p){return p.isHuman&&p.controller!=='open';});
+  var confirmedCount=humanPlayers.filter(function(p){return heroVotes[p.id];}).length;
+  var voteCountByHero={};
+  Object.values(heroVotes).forEach(function(h){if(h)voteCountByHero[h]=(voteCountByHero[h]||0)+1;});
+  var cardsHtml=DATA.heroes.map(function(h){
+    var isTaken=aiTaken.has(h);
+    var isConfirmed=myConfirmed===h;
+    var isPending=_lbyPendingHero===h&&!myConfirmed;
+    var votes=voteCountByHero[h]||0;
+    var hasSel=!!(myConfirmed||_lbyPendingHero);
+    var isSelected=isConfirmed||isPending;
+    var cls='ls1-card'+((isTaken||(hasSel&&!isSelected))?' lc-desaturated':'')+(isSelected?' lc-confirmed':'');
+    var votesChip=votes>0?'<div class="ls1-card-votes">&#9650; '+votes+'</div>':'';
+    var dispN=h.charAt(0)+h.slice(1).toLowerCase();
+    return '<div class="'+cls+'" onclick="selectHero(\''+h+'\')"><img src="'+DATA.heroImages[h]+'" alt="'+escape(dispN)+'"><div class="ls1-card-name">'+escape(dispN)+'</div>'+votesChip+'</div>';
+  }).join('');
+  var gridWrapEl=$('ls1-grid-wrap');
+  gridWrapEl.innerHTML='<div class="ls1-grid-title"><span>SCEGLI IL TUO PROTAGONISTA</span><span style="color:rgba(201,165,88,.35)">'+confirmedCount+'/'+humanPlayers.length+'</span></div><div class="ls1-grid">'+cardsHtml+'</div>';
+}
+
+function _renderLs1(){_renderLs1Panel();_renderLs1Grid();}
+
+function _attach3D(card){
+  card.addEventListener('mousemove',function(e){
+    var r=card.getBoundingClientRect();
+    var x=(e.clientX-r.left)/r.width-.5;
+    var y=(e.clientY-r.top)/r.height-.5;
+    card.style.transform='perspective(700px) rotateY('+(x*14)+'deg) rotateX('+(-y*12)+'deg) scale(1.04)';
+  });
+  card.addEventListener('mouseleave',function(){card.style.transform='';});
+}
+
+function hoverHero(heroName){_lbyHoveredHero=heroName;_renderLs1Panel();}
+function unhoverHero(){_lbyHoveredHero=null;_renderLs1Panel();}
+
+function selectHero(heroName){
+  if(!game||!game.lobbyPhase)return;
+  var h=human();if(!h||h.controller==='ai')return;
+  var aiTaken=new Set(game.players.filter(function(p){return p.controller==='ai'&&p.hero;}).map(function(p){return p.hero;}));
+  if(aiTaken.has(heroName))return;
+  _lbyPendingHero=heroName;
+  _renderLs1Panel();
+}
+
+function confirmHero(){
+  if(!_lbyPendingHero)return;
+  var h=human();if(!h)return;
+  if(!game.heroVotes)game.heroVotes={};
+  game.heroVotes[h.id]=_lbyPendingHero;
+  _lbyPendingHero=null;
+  save();_renderLs1();
+  if(game.hostId===clientId)_checkHeroStep();
+}
+
+function cancelHero(){
+  var h=human();if(!h)return;
+  if(game.heroVotes)delete game.heroVotes[h.id];
+  _lbyPendingHero=null;
+  save();_renderLs1();
+}
+
+function _checkHeroStep(){
+  if(!game||!game.lobbyPhase||(game.lobbyStep||1)!==1)return;
+  var humanPlayers=game.players.filter(function(p){return p.isHuman&&p.controller!=='open';});
+  var heroVotes=game.heroVotes||{};
+  if(humanPlayers.every(function(p){return heroVotes[p.id];})){
+    game.lobbyStep=2;
+    save();
+    advanceLobbyToStep(2);
+  }
+}
+
+// ─── SCREEN 2 ───
+function _renderLs2(){
+  var choices=game.domainChoices||[];
+  var domainVotes=game.domainVotes||{};
+  var myId=human()?.id;
+  var myVote=myId!=null?domainVotes[myId]:undefined;
+  var humanPlayers=game.players.filter(function(p){return p.isHuman&&p.controller!=='open';});
+  var tieInfo=game.domainTieInfo;
+
+  var tabsEl=$('ls2-tabs');
+  tabsEl.innerHTML=choices.map(function(d,i){
+    var count=Object.values(domainVotes).filter(function(v){return v===i;}).length;
+    var isActive=_ls2ActiveIdx===i;
+    var isVoted=myVote===i;
+    var cls='ls2-tab'+(isActive?' lt-active':'')+(isVoted&&!isActive?' lt-voted':'');
+    var countBadge=count>0?' ('+count+')':'';
+    return '<button class="'+cls+'" onclick="clickDomainTab('+i+')" type="button">'+escape(d[0])+countBadge+'</button>';
+  }).join('');
+
+  if(_ls2ActiveIdx!==null&&choices[_ls2ActiveIdx]){
+    var d=choices[_ls2ActiveIdx];
+    var bgUrl=DOMAIN_BG_MAP[(d[0]||'').trim().toLowerCase()]||'';
+    var bgEl=$('ls2-bg');
+    var bgImg=$('ls2-bg-img');
+    if(bgUrl){bgImg.src=bgUrl;bgEl.style.opacity='1';}else{bgEl.style.opacity='0';}
+    $('ls2-no-sel').style.display='none';
+    var overlay=$('ls2-overlay');
+    overlay.style.display='';
+    $('ls2-dom-name').textContent=d[0];
+    $('ls2-dom-desc').textContent=d[1];
+    var chip=$('ls2-vote-chip');
+    var confirmBtn=$('ls2-confirm-btn');
+    if(myVote===_ls2ActiveIdx){
+      chip.style.display='';
+      if(confirmBtn)confirmBtn.style.display='none';
+    }else{
+      chip.style.display='none';
+      if(confirmBtn)confirmBtn.style.display=(_ls2PendingIdx!==null)?'':'none';
+    }
+    var nameEl=$('ls2-dom-name');
+    nameEl.style.animation='none';void nameEl.offsetWidth;nameEl.style.animation='fadeInUp .35s ease';
+    var descEl=$('ls2-dom-desc');
+    descEl.style.animation='none';void descEl.offsetWidth;descEl.style.animation='fadeInUp .35s ease .08s backwards';
+  } else {
+    $('ls2-bg').style.opacity='0';
+    $('ls2-no-sel').style.display='';
+    $('ls2-overlay').style.display='none';
+  }
+
+  var playersEl=$('ls2-players');
+  playersEl.innerHTML=humanPlayers.map(function(p){
+    var voted=domainVotes[p.id]!==undefined;
+    var isMe=p.controller===clientId;
+    return '<div class="ls2-pdot'+(voted?' pv':'')+'"><div class="ls2-pdot-circle"></div><div class="ls2-pdot-name">'+(isMe?'Tu':escape(p.name.split(' ')[0]))+'</div></div>';
+  }).join('');
+
+  var tieEl=$('ls2-tie');
+  if(tieInfo&&tieInfo.tiedIndexes&&tieInfo.tiedIndexes.length){
+    var tiedNames=tieInfo.tiedIndexes.map(function(i){return choices[i]?choices[i][0]:'?';}).join(' vs ');
+    $('ls2-tie-domains').textContent=tiedNames+' — Rivotate';
+    tieEl.classList.add('tie-on');
+  } else {
+    tieEl.classList.remove('tie-on');
+  }
+
+  if(game.resolvedDomain!==null&&game.resolvedDomain!==undefined){
+    _triggerDomainReveal(game.resolvedDomain);
+  }
+}
+
+function clickDomainTab(idx){
+  _ls2ActiveIdx=idx;
+  _ls2PendingIdx=idx;
+  _renderLs2();
+}
+
+function confirmDomain(){
+  if(_ls2PendingIdx===null)return;
+  voteForDomain(_ls2PendingIdx);
+}
+
+function voteForDomain(domainIndex){
+  var h=human();if(!h||h.controller==='ai')return;
+  var tieInfo=game.domainTieInfo;
+  if(tieInfo&&tieInfo.revotePlayers&&!tieInfo.revotePlayers.includes(h.id))return;
+  if(!game.domainVotes)game.domainVotes={};
+  game.domainVotes[h.id]=domainIndex;
+  var chosenName=((game.domainChoices||[])[domainIndex]||[])[0];
+  if(chosenName)setDomainBackground(chosenName);
+  save();_renderLs2();
+  if(game.hostId===clientId)_checkDomainStep();
+}
+
+function _checkDomainStep(){
+  if(!game||!game.lobbyPhase||(game.lobbyStep||1)!==2)return;
+  var humanPlayers=game.players.filter(function(p){return p.isHuman&&p.controller!=='open';});
+  var domainVotes=game.domainVotes||{};
+  var choices=game.domainChoices||[];
+  var tieInfo=game.domainTieInfo;
+  var playersToCheck=tieInfo&&tieInfo.revotePlayers&&tieInfo.revotePlayers.length?
+    humanPlayers.filter(function(p){return tieInfo.revotePlayers.includes(p.id);}):
+    humanPlayers;
+  if(!playersToCheck.every(function(p){return domainVotes[p.id]!==undefined;}))return;
+  var tally=Array(choices.length).fill(0);
+  humanPlayers.forEach(function(p){var v=domainVotes[p.id];if(v!==undefined&&v>=0&&v<choices.length)tally[v]++;});
+  var maxV=Math.max.apply(null,tally);
+  var winners=tally.map(function(v,i){return v===maxV?i:-1;}).filter(function(i){return i>=0;});
+  if(winners.length>1){
+    var revotePlayers=humanPlayers.filter(function(p){return winners.includes(domainVotes[p.id]);}).map(function(p){return p.id;});
+    revotePlayers.forEach(function(id){delete game.domainVotes[id];});
+    game.domainTieInfo={tiedIndexes:winners,revotePlayers:revotePlayers};
+    save();_renderLs2();
+  } else {
+    game.domainTieInfo=null;
+    game.resolvedDomain=winners[0];
+    save();
+    _triggerDomainReveal(winners[0]);
+    setTimeout(function(){
+      game.lobbyStep=3;
+      save();
+      advanceLobbyToStep(3);
+    },2800);
+  }
+}
+
+function _triggerDomainReveal(idx){
+  var choices=game.domainChoices||[];
+  var d=choices[idx];
+  if(!d)return;
+  var revealEl=$('ls2-reveal');
+  var bgEl=$('ls2-rv-bg');
+  var bgImg=$('ls2-rv-img');
+  var cntEl=$('ls2-rv-content');
+  $('ls2-rv-name').textContent=d[0];
+  $('ls2-rv-desc').textContent=d[1];
+  var url=DOMAIN_BG_MAP[(d[0]||'').trim().toLowerCase()]||'';
+  if(url)bgImg.src=url;
+  revealEl.classList.add('rv-on');
+  setTimeout(function(){bgEl.classList.add('rv-bg-show');},100);
+  setTimeout(function(){cntEl.classList.add('rv-cnt-show');},800);
+}
+
+// ─── SCREEN 3 ───
+function _renderLs3(){
+  var prefVotes=game.prefatoreVotes||{};
+  var myId=human()?.id;
+  var myPrefVote=myId?prefVotes[myId]:undefined;
+  var humanPlayers=game.players.filter(function(p){return p.isHuman&&p.controller!=='open';});
+  var prefVoted=humanPlayers.filter(function(p){return prefVotes[p.id];}).length;
+  var allPrefVoted=prefVoted>=humanPlayers.length;
+
+  var heroVotes=game.heroVotes||{};
+  var cardsEl=$('ls3-pref-cards');
+  cardsEl.innerHTML=game.players.map(function(p){
+    var isAI=p.controller==='ai';
+    var isOpen=p.controller==='open';
+    var isSel=myPrefVote===p.id;
+    var heroKey=heroVotes[p.id]||p.hero||null;
+    var playerName=isOpen?'In attesa':isAI?'AI':(p.name||'?');
+    var heroName=heroKey?(heroKey.charAt(0)+heroKey.slice(1).toLowerCase()):'—';
+    var heroImgSrc=heroKey&&DATA.heroImages[heroKey]?DATA.heroImages[heroKey]:'';
+    var abName=(heroKey&&ABILITIES[heroKey])?ABILITIES[heroKey].name:'';
+    var initials=(playerName||'?').slice(0,2).toUpperCase();
+    var avatarInner=heroImgSrc?'<img src="'+heroImgSrc+'" alt="">':initials;
+    var aiBadge=isAI?'<div class="ls3-ai-badge">AI</div>':'';
+    var micHtml=isSel?'<div class="ls3-mic">&#127908;</div>':'';
+    return '<div class="ls3-pcard'+(isSel?' psel':'')+'" onclick="voteForPrefatore(\''+p.id+'\')"><div class="ls3-pcard-avatar">'+avatarInner+'</div><div class="ls3-pcard-name">'+escape(playerName)+'</div><div class="ls3-pcard-hero-name">'+escape(heroName)+'</div>'+(abName?'<div class="ls3-pcard-ability">'+escape(abName)+'</div>':'')+aiBadge+micHtml+'</div>';
+  }).join('');
+
+  var startBtn=$('ls3-start-btn');
+  if(allPrefVoted){startBtn.classList.add('sbt-ready');}else{startBtn.classList.remove('sbt-ready');}
+}
+
+function _triggerIdentityReveal(){
+  var h=human();
+  if(!h)return;
+  var identity=h.identity;
+  var banner=$('ls3-id-banner');
+  if(!banner)return;
+  banner.classList.remove('ib-show','ib-inn','ib-cor');
+  var icon=$('ls3-id-icon');
+  var role=$('ls3-id-role');
+  var txt=$('ls3-id-text');
+  if(identity==='Innocente'){
+    icon.textContent='🛡';role.textContent='INNOCENTE';
+    txt.textContent='Il tuo obiettivo e portare alla luce la corruzione e portare la partita alla vittoria del Sole.';
+    banner.classList.add('ib-inn');
+  } else {
+    icon.textContent='🔥';role.textContent='CORROTTO';
+    txt.textContent='Il tuo obiettivo e sabotare la missione degli Innocenti e portare la partita alla vittoria della Luna.';
+    banner.classList.add('ib-cor');
+  }
+  setTimeout(function(){
+    banner.classList.add('ib-show');
+    setTimeout(function(){
+      var prefSec=$('ls3-pref-section');
+      if(prefSec)prefSec.classList.add('ps-show');
+    },600);
+  },1500);
+}
+
+function voteForPrefatore(playerId){
+  var h=human();if(!h||h.controller==='ai')return;
+  if(!game.prefatoreVotes)game.prefatoreVotes={};
+  game.prefatoreVotes[h.id]=playerId;
+  save();_renderLs3();
+  if(game.hostId===clientId)_checkPrefStep();
+}
+
+function _checkPrefStep(){
+  if(!game||!game.lobbyPhase||(game.lobbyStep||1)!==3)return;
+  var humanPlayers=game.players.filter(function(p){return p.isHuman&&p.controller!=='open';});
+  var prefVotes=game.prefatoreVotes||{};
+  if(!humanPlayers.every(function(p){return prefVotes[p.id];}))return;
+  var startBtn=$('ls3-start-btn');
+  if(startBtn)startBtn.classList.add('sbt-ready');
+}
+
+function startFromLobbyFinal(){
+  var choices=game.domainChoices||[];
+  var resolvedIdx=game.resolvedDomain!=null?game.resolvedDomain:0;
+  var domain=choices[resolvedIdx];
+  var prefVotes=game.prefatoreVotes||{};
+  var humanPlayers=game.players.filter(function(p){return p.isHuman&&p.controller!=='open';});
+  var prefTally={};
+  humanPlayers.forEach(function(p){var v=prefVotes[p.id];if(v)prefTally[v]=(prefTally[v]||0)+1;});
+  var maxP=Math.max.apply(null,Object.values(prefTally).concat([0]));
+  var prefCandidates=Object.keys(prefTally).filter(function(id){return prefTally[id]===maxP;});
+  var prefWinner=prefCandidates[0]||null;
+  $('lobby').classList.add('hidden');
+  startFromLobby(domain,prefWinner);
+}
+
+function voteForHero(heroId){selectHero(heroId);}
+
+function checkLobbyVotes(){
+  if(!game||!game.lobbyPhase)return;
+  var step=game.lobbyStep||1;
+  if(step===1)_checkHeroStep();
+  else if(step===2)_checkDomainStep();
+  else if(step===3)_checkPrefStep();
 }
 
 const DOMAIN_BG_MAP={
@@ -2439,63 +3015,6 @@ function setDomainBackground(domainName){
   if(url){img.src=url;bg.classList.add("visible");}
   else{bg.classList.remove("visible");}
 }
-function voteForDomain(domainIndex){
-  const h=human(); if(!h||h.controller==="ai")return;
-  if(!game.domainVotes)game.domainVotes={};
-  game.domainVotes[h.id]=domainIndex;
-  const _chosenName=((game.domainChoices||[])[domainIndex]||[])[0];
-  if(_chosenName)setDomainBackground(_chosenName);
-  save();renderVotingModal();
-  if(game.hostId===clientId)checkLobbyVotes();
-}
-
-function voteForPrefatore(playerId){
-  const h=human(); if(!h||h.controller==="ai")return;
-  if(!game.prefatoreVotes)game.prefatoreVotes={};
-  game.prefatoreVotes[h.id]=playerId;
-  save();renderVotingModal();
-  if(game.hostId===clientId)checkLobbyVotes();
-}
-
-function voteForHero(heroId){
-  const h=human();if(!h||h.controller==="ai")return;
-  if(!game.heroVotes)game.heroVotes={};
-  game.heroVotes[h.id]=heroId;
-  save();renderVotingModal();
-  if(game.hostId===clientId)checkLobbyVotes();
-}
-
-function checkLobbyVotes(){
-  if(!game||!game.lobbyPhase)return;
-  const humanPlayers=game.players.filter(p=>p.isHuman);
-  if(!humanPlayers.length)return;
-  const domainVotes=game.domainVotes||{};
-  const prefVotes=game.prefatoreVotes||{};
-  const heroVotes=game.heroVotes||{};
-  const humanDomainVotes=humanPlayers.map(p=>domainVotes[p.id]).filter(v=>v!==undefined);
-  const humanPrefVotes=humanPlayers.map(p=>prefVotes[p.id]).filter(v=>v!==undefined);
-  const humanHeroVotes=humanPlayers.map(p=>heroVotes[p.id]).filter(v=>v!==undefined);
-  if(humanDomainVotes.length<humanPlayers.length)return;
-  if(humanPrefVotes.length<humanPlayers.length)return;
-  if(humanHeroVotes.length<humanPlayers.length)return;
-  const choices=game.domainChoices||[];
-  const tally=Array(choices.length).fill(0);
-  humanDomainVotes.forEach(v=>{if(v>=0&&v<choices.length)tally[v]++;});
-  const maxD=Math.max(...tally);
-  const hostPlayer=game.players.find(p=>p.id===game.hostId);
-  const hostDV=hostPlayer&&domainVotes[hostPlayer.id]!==undefined?domainVotes[hostPlayer.id]:null;
-  let domainWinner=tally.indexOf(maxD);
-  if(hostDV!==null&&tally[hostDV]===maxD)domainWinner=hostDV;
-  const prefTally={};
-  humanPrefVotes.forEach(v=>{prefTally[v]=(prefTally[v]||0)+1;});
-  const maxP=Math.max(...Object.values(prefTally));
-  const hostPV=hostPlayer&&prefVotes[hostPlayer.id]?prefVotes[hostPlayer.id]:null;
-  const prefCandidates=Object.keys(prefTally).filter(id=>prefTally[id]===maxP);
-  let prefWinner=prefCandidates[0];
-  if(hostPV&&prefCandidates.includes(hostPV))prefWinner=hostPV;
-  startFromLobby(choices[domainWinner],prefWinner);
-}
-
 function startFromLobby(domain,prefatoreId){
   const heroVotes=game.heroVotes||{};
   const takenAI=new Set(game.players.filter(p=>!p.isHuman).map(p=>p.hero).filter(Boolean));
@@ -2518,8 +3037,10 @@ function startFromLobby(domain,prefatoreId){
   const prefIdx=game.players.findIndex(p=>p.id===prefatoreId);
   if(prefIdx>=0)game.turn=prefIdx;
   log(`Dominio: ${game.domain.name}. Prefatore: ${game.players[game.turn]?.name||"?"}. Round 1 — niente carte, pesca o isolamento.`);
+  $('lobby').classList.add('hidden');
   save();
   closeModal();
+  showGame();
   render();beginTurn();
 }
 
