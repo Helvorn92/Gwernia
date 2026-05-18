@@ -1031,7 +1031,7 @@ const DATA={
     "DETECTIVE":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094164/Investigatore_ac2seg.jpg",
     "RAMINGO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1779050602/Vagabondo_syv1nn.jpg",
     "MEDIUM":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094113/Indovina_zsq73e.jpg",
-    "GIORNALISTA":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094097/Giornalista_x8dfdn.jpg",
+    "GIORNALISTA":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1779138198/Giornalista_x8dfdn.jpg",
     "SACERDOTE":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094105/Sacerdote_swfvfc.jpg",
     "FANCIULLO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094148/Bambino_mcex1v.jpg",
     "TURISTA":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094155/Forestiero_shpzsp.jpg"
@@ -2736,6 +2736,7 @@ function selectHero(heroName){
     if(_heroCurrentAudio){_heroCurrentAudio.pause();_heroCurrentAudio.currentTime=0;}
     _heroCurrentAudio=new Audio(audioUrl);
     _heroCurrentAudio.play();
+    if(heroName==='SOLDATO') _heroCurrentAudio.volume=0.5;
   }
   _lbyPendingHero=heroName;
   _renderLs1Panel();
