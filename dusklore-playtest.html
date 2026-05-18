@@ -1036,6 +1036,16 @@ const DATA={
     "FANCIULLO":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094148/Bambino_mcex1v.jpg",
     "TURISTA":"https://res.cloudinary.com/dkvotcvo6/image/upload/v1778094155/Forestiero_shpzsp.jpg"
   },
+  heroAudios:{
+    "SOLDATO":"https://res.cloudinary.com/dkvotcvo6/video/upload/v1779126760/Soldato_pyiidx.mp3",
+    "DETECTIVE":"https://res.cloudinary.com/dkvotcvo6/video/upload/v1779126760/Detective_puyrqh.mp3",
+    "RAMINGO":"https://res.cloudinary.com/dkvotcvo6/video/upload/v1779126760/Ramingo_dsei73.mp3",
+    "MEDIUM":"https://res.cloudinary.com/dkvotcvo6/video/upload/v1779126760/Medium_r7btzp.mp3",
+    "GIORNALISTA":"https://res.cloudinary.com/dkvotcvo6/video/upload/v1779126761/Giornalista_ohg3ku.mp3",
+    "SACERDOTE":"https://res.cloudinary.com/dkvotcvo6/video/upload/v1779126761/Sacerdote_ufuike.mp3",
+    "FANCIULLO":"https://res.cloudinary.com/dkvotcvo6/video/upload/v1779126760/Fanciullo_vzkzfw.mp3",
+    "TURISTA":"https://res.cloudinary.com/dkvotcvo6/video/upload/v1779126760/Turista_hk18yj.mp3"
+  },
   missions:{
     "Il Lutto":["Introduci una Comparsa e legala emotivamente a un Protagonista.","Usa la Reliquia per causare la morte della Comparsa in presenza di quel Protagonista."],
     "Il Tradimento":["Crea narrativamente un legame di complicità con un altro Protagonista (fare gruppo, non «maledirsi»).","Usa la Reliquia per spezzare narrativamente quel legame (lo lasci solo, gli lanci un Maleficio)."],
@@ -2715,11 +2725,18 @@ function _attach3D(card){
 function hoverHero(heroName){_lbyHoveredHero=heroName;_renderLs1Panel();}
 function unhoverHero(){_lbyHoveredHero=null;_renderLs1Panel();}
 
+var _heroCurrentAudio=null;
 function selectHero(heroName){
   if(!game||!game.lobbyPhase)return;
   var h=human();if(!h||h.controller==='ai')return;
   var aiTaken=new Set(game.players.filter(function(p){return p.controller==='ai'&&p.hero;}).map(function(p){return p.hero;}));
   if(aiTaken.has(heroName))return;
+  var audioUrl=DATA.heroAudios&&DATA.heroAudios[heroName];
+  if(audioUrl){
+    if(_heroCurrentAudio){_heroCurrentAudio.pause();_heroCurrentAudio.currentTime=0;}
+    _heroCurrentAudio=new Audio(audioUrl);
+    _heroCurrentAudio.play();
+  }
   _lbyPendingHero=heroName;
   _renderLs1Panel();
 }
