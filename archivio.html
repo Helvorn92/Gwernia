@@ -325,6 +325,12 @@ const ARCHIVE_BOOKS = {
 function buildShelf(){
   var shelf=document.getElementById('bookshelf');
   var keys=Object.keys(ARCHIVE_BOOKS);
+  // Sbloccati in cima, bloccati in fondo (stabile: conserva l'ordine originale dentro ogni gruppo)
+  keys.sort(function(a,b){
+    var la=LOCKED[ARCHIVE_BOOKS[a].title]===true?1:0;
+    var lb=LOCKED[ARCHIVE_BOOKS[b].title]===true?1:0;
+    return la-lb;
+  });
   var perRow=3;
   var html='';
   for(var r=0;r<keys.length;r+=perRow){
