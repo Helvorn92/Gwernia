@@ -745,7 +745,6 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
       </div>
     </li>
     <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/archivio">Archivio</a></li>
-    <li class="nav-item"><a class="nav-link" onclick="showPage(&#39;personaggi&#39;,this)">Personaggi</a></li>
   </ul>
   <button id="search-btn" onclick="openSearch()" title="Cerca">⚲</button></div>
 </nav>
@@ -2440,41 +2439,6 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
   <footer><span class="footer-logo">✦ Le Cronache di Gwernia ✦</span><p class="footer-text">«Ogni mito cela una verità. Ogni leggenda, un frammento di storia perduta.»</p></footer>
 </div>
 
-<!-- ═══════════ PAGE: PERSONAGGI ═══════════ -->
-<div class="page" id="page-personaggi" style="">
-  <div class="page-header">
-    <h1 class="page-header-title">Personaggi</h1>
-    <div class="page-header-divider"><div class="ph-line"></div><div class="ph-gem"></div><div class="ph-line"></div></div>
-  </div>
-  <p class="personaggi-intro reveal visible">Gli Avventurieri che hanno lasciato il segno in questa avventura.</p>
-  <div class="personaggi-grid">
-
-    <div class="zodiac-card reveal visible" style="transition-delay:.05s">
-      <div class="zodiac-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1773844715/Jin_ifpfcp.jpg" style="width:100%;height:100%;object-fit:cover;object-position:center top;position:absolute;inset:0"></div>
-      <div class="zodiac-body">
-        <span class="zodiac-race">Aasimar - Paladino</span>
-        <div class="zodiac-name">Jin Stonwin - 'Azrael'</div>
-        <div class="zodiac-text">
-          <p>Cresciuto tra le mura di un orfanotrofio, porta nel sangue il tocco di Pelor e nel cuore una fede capace di muovere eserciti. Diventato Paladino, una visione oscura e profetica lo ha strappato dalla sua città natale, spingendolo verso qualcosa di più grande di qualsiasi guerra abbia mai conosciuto. Sulle sue spalle pesa un presagio che parla di cavalieri, di fiamme che si spengono e di un'oscurità pronta a inghiottire il mondo. Qualcuno, o qualcosa, lo sta guidando verso una verità che cambierà tutto.</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="zodiac-card reveal visible" style="transition-delay:.1s">
-      <div class="zodiac-img"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1773844793/Thalrik_r9hicf.png" style="width:100%;height:100%;object-fit:cover;object-position:center top;position:absolute;inset:0"></div>
-      <div class="zodiac-body">
-        <span class="zodiac-race">Duergar - Mago</span>
-        <div class="zodiac-name">Thalrik 'Raggiato' Thragmorr</div>
-        <div class="zodiac-text">
-          <p>Nato sotto la luce del sole, porta con sé un peso che nessun Duergar dovrebbe conoscere, quello di non aver mai conosciuto le profondità da cui proviene il suo sangue. Cresciuto tra roccia e magia, ha affinato mente e mani fino a diventare qualcosa di raro nel suo clan. Una voce su un mago misterioso e una miniera proibita lo ha trascinato fuori da Grimhold, verso una capitale umana che non lo conosce ancora. Ma il suo obiettivo rimane quello di permettere al suo Clan di ritornare nel luogo in cui ha sempre dominato, ora inaccessibile a causa di un'Anomalia Magica.</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <footer><span class="footer-logo">✦ Le Cronache di Gwernia ✦</span><p class="footer-text">«Ogni mito cela una verità. Ogni leggenda, un frammento di storia perduta.»</p></footer>
-</div>
-
 <!-- ═══════════ JAVASCRIPT ═══════════ -->
 <script>
 /* CURSOR */
@@ -2678,7 +2642,6 @@ function buildSearchIndex(){
     else if(['eldoria','arinthel','nocthuril','northgul','grunduir','erengad','draconia','murondir','vraithgar','omgar','underdark','crevasse','ravenholm'].includes(pid)) cat = 'Gwernia';
     else if(['zodiaco-bianco','zodiaco-nero'].includes(pid)) cat = 'Costellazioni';
     else if(['divinita-celesti','divinita-occulte','guardiane'].includes(pid)) cat = 'Cosmologia';
-    else if(pid === 'personaggi') cat = 'Personaggi';
     else if(pid === 'home') cat = '';
     else cat = 'Cosmologia';
     // Testo indicizzabile
