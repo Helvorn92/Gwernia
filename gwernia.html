@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <!-- saved from url=(0036)https://helvorn92.github.io/Gwernia/ -->
 <html lang="it"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -317,6 +318,17 @@ footer{position:relative;z-index:1;background:var(--bg);border-top:2px solid var
 /* ═══ SEARCH ═══ */
 #search-btn{background:none;border:none;cursor:none;padding:.5rem .7rem;color:var(--gold-dim);font-size:1.1rem;transition:color .2s,text-shadow .2s;flex-shrink:0}
 #search-btn:hover{color:var(--gold-light);text-shadow:0 0 18px var(--glow)}
+#admin-login-btn{background:none;border:none;cursor:none;padding:.5rem .7rem;color:var(--gold-dim);font-size:1.1rem;transition:color .2s,text-shadow .2s;flex-shrink:0;opacity:.55}
+#admin-login-btn:hover{color:var(--gold-light);text-shadow:0 0 18px var(--glow);opacity:1}
+#admin-login-btn.is-admin{color:#7fd87f;opacity:1}
+#admin-login-popup{max-width:380px}
+.admin-only{display:none}
+body.is-admin .map-btn.admin-only{display:flex}
+body.is-admin .map-btn-separator.admin-only{display:block}
+body.is-admin .map-popup-save.admin-only{display:block}
+body.is-admin .map-pin-delete.admin-only{display:block}
+.admin-only-inline{display:none}
+body.is-admin .admin-only-inline{display:inline}
 #search-overlay{position:fixed;inset:0;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:14vh;background:rgba(4,3,12,.92);backdrop-filter:blur(18px);opacity:0;pointer-events:none;transition:opacity .28s ease}
 #search-overlay.open{opacity:1;pointer-events:all}
 .search-box{width:min(680px,90vw);position:relative}
@@ -419,6 +431,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
   .nav-link{font-size:.78rem;padding:1rem 1.5rem;width:100%}
   .nav-link::after{display:none}
   #search-btn{padding:.8rem 1.5rem;width:100%;text-align:left;font-size:1.1rem;border-top:1px solid rgba(201,168,76,.1);margin-top:.5rem}
+  #admin-login-btn{padding:.8rem 1.5rem;width:100%;text-align:left;font-size:1.1rem}
 
   /* Dropdown mobile: inline, non assoluto */
   .dropdown{position:static;transform:none;opacity:1;pointer-events:all;background:rgba(0,0,0,.3);border:none;border-top:1px solid rgba(201,168,76,.1);border-left:3px solid var(--gold-dim);box-shadow:none;backdrop-filter:none;max-height:none;padding:.5rem 0;display:none;width:100%}
@@ -609,6 +622,48 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
 <body>
 
 
+<!-- ═══ FIREBASE ═══ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCCfucSV5KmGd4M9Bg7mD4UPhbBK4ce0-k",
+    authDomain: "gwernia.firebaseapp.com",
+    projectId: "gwernia",
+    storageBucket: "gwernia.firebasestorage.app",
+    messagingSenderId: "442880358118",
+    appId: "1:442880358118:web:71b180258d8dc98d786d27",
+    measurementId: "G-4TEN29F7HG"
+  };
+
+  const fbApp = initializeApp(firebaseConfig);
+  const fbAuth = getAuth(fbApp);
+  const fbDb = getFirestore(fbApp);
+
+  window.fbIsAdmin = false;
+
+  setPersistence(fbAuth, browserLocalPersistence).catch(()=>{});
+
+  onAuthStateChanged(fbAuth, user => {
+    window.fbIsAdmin = !!user;
+    document.body.classList.toggle('is-admin', !!user);
+    window.dispatchEvent(new CustomEvent('admin-state-changed', { detail: { isAdmin: !!user, email: user ? user.email : null } }));
+  });
+
+  window.fbAdminLogin = (email, password) => signInWithEmailAndPassword(fbAuth, email, password);
+  window.fbAdminLogout = () => signOut(fbAuth);
+
+  window.fbSavePin = (mapName, id, data) => setDoc(doc(fbDb, 'maps', mapName, 'pins', id), data, { merge: true });
+
+  window.fbSubscribePins = (mapName, cb) => onSnapshot(collection(fbDb, 'maps', mapName, 'pins'), snap => {
+    const out = {};
+    snap.forEach(d => { out[d.id] = d.data(); });
+    cb(out);
+  }, err => console.error('Firestore pins error:', err));
+</script>
+
 <!-- ═══ SEARCH OVERLAY ═══ -->
 <div id="search-overlay" class="">
   <div class="search-box">
@@ -704,7 +759,12 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <a class="dd-link" onclick="showPage(&#39;omgar&#39;)">Omgar</a>
           <a class="dd-link" onclick="showPage(&#39;underdark&#39;)">Underdark</a>
         </div>
-        <div class="dd-divider"></div>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" onclick="showPage(&#39;metropoli&#39;,this)">Metropoli</a>
+      <div class="dropdown">
         <span class="dd-title">Metropoli</span>
         <div class="dd-sub">
           <a class="dd-link" onclick="showPage(&#39;ravenholm&#39;)">Ravenholm</a>
@@ -746,8 +806,28 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     </li>
     <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/archivio">Archivio</a></li>
   </ul>
-  <button id="search-btn" onclick="openSearch()" title="Cerca">⚲</button></div>
+  <button id="search-btn" onclick="openSearch()" title="Cerca">⚲</button><button id="admin-login-btn" onclick="openAdminLogin()" title="Accedi">⚿</button></div>
 </nav>
+
+<!-- ═══ ADMIN LOGIN OVERLAY ═══ -->
+<div id="admin-login-overlay" class="map-overlay" onclick="if(event.target===this)closeAdminLogin()"></div>
+<div class="map-popup" id="admin-login-popup">
+  <button class="map-popup-close" onclick="closeAdminLogin()">✕</button>
+  <div class="map-popup-title" id="admin-login-title">Accesso Amministratore</div>
+  <div class="map-popup-divider"></div>
+  <div class="map-popup-edit" id="admin-login-form">
+    <label>Email</label>
+    <input type="email" id="admin-login-email" placeholder="email@esempio.com" autocomplete="username">
+    <label>Password</label>
+    <input type="password" id="admin-login-password" placeholder="••••••••" autocomplete="current-password">
+    <p id="admin-login-error" style="color:#ff6464;font-size:.8rem;display:none;margin:.4rem 0 0"></p>
+    <button class="map-popup-save" onclick="adminLogin()">✦ &nbsp; Accedi</button>
+  </div>
+  <div id="admin-logged-in" style="display:none">
+    <p class="map-popup-desc" id="admin-logged-email"></p>
+    <button class="map-popup-save" onclick="adminLogout()">⎋ &nbsp; Esci</button>
+  </div>
+</div>
 
 <!-- ═══════════ PAGE: HOME ═══════════ -->
 <div class="page active" id="page-home" style="opacity: 1;">
@@ -884,7 +964,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
   <div class="magia-page">
     <p class="magia-intro reveal visible">La <em>Trama</em> è un campo di energia invisibile che avvolge ogni cosa. È ovunque, costante, e da essa la Magia prende forma. Nel mondo di Gwernia, gran parte della Fauna e della Flora hanno attinto nei secoli alla Trama in modo naturale, sviluppando proprietà magiche di vario tipo. Per un mortale invece, l'abilità di manipolare la Trama nasce o da un talento innato o si coltiva attraverso anni di studio e disciplina. </p>
 
-<p class="magia-intro reveal visible">L'interazione con la Trama genera vibrazioni che si propagano come onde di energia, ciascuna con la propria frequenza. Questa è la ragione per cui si fa largo uso dei <em>Cristalli</em>, la loro struttura naturale è sensibile a queste onge magiche, e permettono loro di propagarla, amplificarla o conservarla nel tempo. Esistono due tipologie di Onde Magiche:</p>
+<p class="magia-intro reveal visible">L'interazione con la Trama genera vibrazioni che si propagano come onde di energia, ciascuna con la propria frequenza. Questa è la ragione per cui si fa largo uso dei <em>Cristalli</em>, la loro struttura naturale è sensibile a queste onge magiche, e permettono loro di propagarla, amplificarla o conservarla nel tempo. Esistono due tipologie di Onde Magiche:</p>
     <ul class="magia-list reveal visible">
       <li>Onde ad <em>alta frequenza</em> si propagano rapidamente e producono effetti nell'immediato.</li>
       <li>Onde a <em>bassa frequenza</em> si propagano lentamente e producono effetti nel lungo periodo.</li>
@@ -1611,7 +1691,18 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
         <div class="cat-nav-card" onclick="showPage(&#39;underdark&#39;)"><span class="cat-nav-name">Underdark</span><span class="cat-nav-arrow">›</span></div>
       </div>
     </div>
-    <div class="cat-section reveal visible" style="transition-delay:.16s">
+  </div>
+  <footer><span class="footer-logo">✦ Le Cronache di Gwernia ✦</span><p class="footer-text">«Ogni mito cela una verità. Ogni leggenda, un frammento di storia perduta.»</p></footer>
+</div>
+
+<!-- ═══════════ PAGE: METROPOLI INDEX ═══════════ -->
+<div class="page" id="page-metropoli" style="">
+  <div class="cat-index">
+    <div class="cat-index-header reveal visible">
+      <h1 class="cat-index-title">Metropoli</h1>
+      <div class="cat-index-divider"><div class="cid-line"></div><div class="cid-gem"></div><div class="cid-line"></div></div>
+    </div>
+    <div class="cat-section reveal visible" style="transition-delay:.02s">
       <span class="cat-section-label">Metropoli</span>
       <div class="cat-cards">
         <div class="cat-nav-card" onclick="showPage(&#39;ravenholm&#39;)"><span class="cat-nav-name">Ravenholm</span><span class="cat-nav-arrow">›</span></div>
@@ -2089,25 +2180,25 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
       <div class="map-legend-row"><span>Comandanti di Divisione</span><span>12</span></div>
     </div>Clicca sulla mappa per posizionare il segnaposto</div>
     <div class="map-controls" style="bottom:3rem">
-      <button class="map-btn" id="map-btn-pin-ravenholm" onclick="togglePlaceMode(&#39;ravenholm&#39;,&#39;pin&#39;)" title="Inserisci Pin">📍</button>
-      <button class="map-btn" id="map-btn-star-ravenholm" onclick="togglePlaceMode(&#39;ravenholm&#39;,&#39;star&#39;)" title="Inserisci Stella">⭐</button>
-      <div class="map-btn-separator"></div>
+      <button class="map-btn admin-only" id="map-btn-pin-ravenholm" onclick="togglePlaceMode(&#39;ravenholm&#39;,&#39;pin&#39;)" title="Inserisci Pin">📍</button>
+      <button class="map-btn admin-only" id="map-btn-star-ravenholm" onclick="togglePlaceMode(&#39;ravenholm&#39;,&#39;star&#39;)" title="Inserisci Stella">⭐</button>
+      <div class="map-btn-separator admin-only"></div>
       <button class="map-btn" onclick="mapZoom(&#39;ravenholm&#39;, 1.25)" title="Zoom in">+</button>
       <button class="map-btn" onclick="mapZoom(&#39;ravenholm&#39;, 0.8)" title="Zoom out">−</button>
       <button class="map-btn" onclick="mapReset(&#39;ravenholm&#39;)" title="Reset" style="font-size:.7rem">↺</button>
     </div>
-    <div class="map-hint">Scorri per zoomare · Trascina · 📍⭐ per aggiungere pin</div>
+    <div class="map-hint">Scorri per zoomare · Trascina <span class="admin-only-inline">· 📍⭐ per aggiungere pin</span></div>
   </div>
   <div class="map-overlay" id="map-overlay-ravenholm" onclick="closeMapPopup(&#39;ravenholm&#39;)"></div>
   <div class="map-popup" id="map-popup-ravenholm">
     <button class="map-popup-close" onclick="closeMapPopup(&#39;ravenholm&#39;)">✕</button>
-    <button class="map-pin-delete" id="map-popup-delete-ravenholm" onclick="deleteCurrentPin(&#39;ravenholm&#39;)" title="Elimina pin">🗑</button>
+    <button class="map-pin-delete admin-only" id="map-popup-delete-ravenholm" onclick="deleteCurrentPin(&#39;ravenholm&#39;)" title="Elimina pin">🗑</button>
     <div id="map-popup-view-ravenholm">
       <div class="map-popup-title" id="map-popup-title-ravenholm"></div>
       <div class="map-popup-divider"></div>
       <div class="map-popup-desc" id="map-popup-desc-ravenholm"></div>
       <div class="map-popup-divider"></div>
-      <button class="map-popup-save" onclick="switchToEdit(&#39;ravenholm&#39;)">✎ &nbsp; Modifica</button>
+      <button class="map-popup-save admin-only" onclick="switchToEdit(&#39;ravenholm&#39;)">✎ &nbsp; Modifica</button>
     </div>
     <div id="map-popup-edit-ravenholm" style="display:none" class="map-popup-edit">
       <label>Titolo</label>
@@ -2824,6 +2915,55 @@ window.addEventListener('DOMContentLoaded', ()=>{ buildSearchIndex(); });
 
 
 <script>
+/* ═══ ADMIN LOGIN UI ═══ */
+function openAdminLogin(){
+  document.getElementById('admin-login-overlay').classList.add('open');
+  document.getElementById('admin-login-popup').classList.add('open');
+  document.getElementById('admin-login-error').style.display='none';
+}
+function closeAdminLogin(){
+  document.getElementById('admin-login-overlay').classList.remove('open');
+  document.getElementById('admin-login-popup').classList.remove('open');
+}
+function adminLogin(){
+  const email = document.getElementById('admin-login-email').value.trim();
+  const password = document.getElementById('admin-login-password').value;
+  const errEl = document.getElementById('admin-login-error');
+  errEl.style.display='none';
+  if(!email || !password) return;
+  window.fbAdminLogin(email, password).then(()=>{
+    document.getElementById('admin-login-password').value='';
+    closeAdminLogin();
+  }).catch(()=>{
+    errEl.textContent = 'Credenziali non valide.';
+    errEl.style.display='block';
+  });
+}
+function adminLogout(){
+  window.fbAdminLogout();
+  closeAdminLogin();
+}
+window.addEventListener('admin-state-changed', e => {
+  const btn = document.getElementById('admin-login-btn');
+  const form = document.getElementById('admin-login-form');
+  const loggedIn = document.getElementById('admin-logged-in');
+  const title = document.getElementById('admin-login-title');
+  if(e.detail.isAdmin){
+    btn.classList.add('is-admin');
+    form.style.display='none';
+    loggedIn.style.display='block';
+    title.textContent='Amministratore';
+    document.getElementById('admin-logged-email').textContent = e.detail.email;
+  } else {
+    btn.classList.remove('is-admin');
+    form.style.display='block';
+    loggedIn.style.display='none';
+    title.textContent='Accesso Amministratore';
+  }
+});
+</script>
+
+<script>
 /* ═══ MAPPA INTERATTIVA ═══ */
 (function(){
   const NAME = 'ravenholm';
@@ -2889,7 +3029,6 @@ window.addEventListener('DOMContentLoaded', ()=>{ buildSearchIndex(); });
     div.addEventListener('click', e => { e.stopPropagation(); openPin(id); });
     canvas().appendChild(div);
     div.style.transform = `translate(-50%,-100%) scale(${1/scale})`;
-    savePins();
   }
 
   /* ── OPEN / CLOSE PIN ── */
@@ -2916,23 +3055,9 @@ window.addEventListener('DOMContentLoaded', ()=>{ buildSearchIndex(); });
     setTimeout(() => $('map-popup-input-title-' + NAME).focus(), 80);
   }
 
-  /* ── SAVE / DELETE ── */
-  function savePins() {
-    try { localStorage.setItem('map_pins_' + NAME, JSON.stringify(window.MAP_PINS || {})); } catch(e){}
-  }
-  function loadPins() {
-    try {
-      const saved = JSON.parse(localStorage.getItem('map_pins_' + NAME) || 'null');
-      if (!saved) return;
-      window.MAP_PINS = saved;
-      Object.entries(saved).forEach(([id, d]) => {
-        placePin(id, d.x, d.y, d.type || 'pin', d.title, d.desc);
-      });
-    } catch(e){}
-  }
-
   /* ── PLACE MODE ── */
   function setPlaceMode(type) {
+    if (!window.fbIsAdmin) return;
     const pg = page();
     const btnPin  = $('map-btn-pin-'  + NAME);
     const btnStar = $('map-btn-star-' + NAME);
@@ -2961,8 +3086,7 @@ window.addEventListener('DOMContentLoaded', ()=>{ buildSearchIndex(); });
       minScale = pg.offsetWidth / (im.naturalWidth || 800);
       scale = minScale;
       applyTransform();
-      loadStaticPins();
-      loadPins();
+      subscribeFirestorePins();
 
       /* wheel zoom */
       pg.addEventListener('wheel', e => {
@@ -2994,7 +3118,7 @@ window.addEventListener('DOMContentLoaded', ()=>{ buildSearchIndex(); });
         applyTransform();
       });
       window.addEventListener('mouseup', e => {
-        if (dragging && !moved && placeMode) {
+        if (dragging && !moved && placeMode && window.fbIsAdmin) {
           /* click su mappa in modalità inserimento */
           const r   = im.getBoundingClientRect();
           const x   = ((e.clientX-r.left)/r.width*100).toFixed(2);
@@ -3003,6 +3127,7 @@ window.addEventListener('DOMContentLoaded', ()=>{ buildSearchIndex(); });
           const typ = placeMode;
           setPlaceMode(typ); /* esci dalla modalità */
           placePin(id, x, y, typ, '', '');
+          window.fbSavePin(NAME, id, {x, y, type: typ, title: '', desc: ''});
           openPinEdit(id);
         }
         dragging = false;
@@ -3034,13 +3159,27 @@ window.addEventListener('DOMContentLoaded', ()=>{ buildSearchIndex(); });
     }
 
 
-  // Carica pin statici
-  function loadStaticPins() {
-    if (!window.MAP_PINS) window.MAP_PINS = {};
+  // Pin statici di base (sovrascrivibili/eliminabili dall'amministratore tramite Firestore)
+  function getStaticPins() {
     const STATIC = {"p_2004": {"x": "29.55", "y": "22.66", "type": "star", "title": "Locanda - Lanterna Rossa", "desc": ""}, "p_2006": {"x": "25.24", "y": "40.61", "type": "pin", "title": "Guarnigione Imperiale", "desc": "La guarnigione di Ravenholm si trova in un'imponente struttura fortificata, costruita in pietra scura e ornata con stendardi del Regno che sventolano al vento. Le mura sono pattugliate da soldati in armature lucenti, e il suono ritmico dei loro passi riecheggia nei cortili interni. All'interno, le sale sono austere ma ordinate, illuminate da torce che proiettano ombre nette sulle pareti. L'aria porta con sé l'odore pungente del metallo delle armi appena affilate e il leggero sentore del cuoio delle armature."}, "p_2007": {"x": "32.24", "y": "41.79", "type": "pin", "title": "Hospes", "desc": "L'Hospes si presenta come un imponente edificio di pietra grigia, con rifiniture in marmo che aggiungono un tocco di eleganza. Le sue alte vetrate lasciano entrare abbondante luce solare. L'aria intorno all'Hospes è fresca, con un lieve sentore di erbe medicinali che sfugge dai giardini curati posti ai lati dell'edificio. Per chi può permetterselo, l'Hospes offre trattamenti magici straordinari, con l'aiuto dei sacerdoti del Sancta Unitas."}, "p_2010": {"x": "40.57", "y": "47.22", "type": "pin", "title": "Banca di Aldebrant", "desc": "La banca si rivela un luogo di ordine e maestosità. Pavimenti di marmo lucidato riflettono la luce dei grandi lampadari di ferro battuto, e sulle pareti pendono arazzi riccamente lavorati con l'emblema di Ravenholm. L'aria sa di pergamena, cera e inchiostro. Ogni dettaglio è pensato per ispirare fiducia, tanto al mercante quanto al nobile, ricordando a chiunque che qui i propri averi saranno custoditi e rispettati."}, "p_2011": {"x": "34.32", "y": "74.54", "type": "pin", "title": "Biblioteca Imperiale", "desc": "La biblioteca si erge maestosa con mura fatte di pietra grezza e robuste travi di quercia annerite dal tempo. L'atmosfera è coinvolgente: la luce soffusa di torce e candele illumina file interminabili di scaffali traboccanti di tomi rilegati in pelle. L'odore di carta antica e cera fusa pervade l'aria, mentre un silenzio reverente regna sovrano. Questa è tra le biblioteche più fornite al Mondo dopo Arcadia, ed è aperta 12 ore su 24, dalle 8:00."}, "p_2012": {"x": "57.00", "y": "67.40", "type": "pin", "title": "Voliera Postale", "desc": "<p>La Voliera Postale è un antico sistema di comunicazione che collega i principali capoluoghi di Eldoria tramite piccioni viaggiatori addestrati. I messaggi possono impiegare giorni o settimane a seconda della distanza e delle condizioni atmosferiche.</p><h3>Tariffe</h3><ul><li>Invio Lettera - <em>2 Ma</em> per ogni giorno di distanza</li><li>Messaggero Magico Non Sicuro - <em>50 Mo</em> per foglio</li><li>Messaggero Magico Sicuro - <em>100 Mo</em> per foglio</li><li>Fattorino - <em>5 Ma</em> al giorno per ricerca persona</li></ul>"}, "p_2013": {"x": "66.43", "y": "57.98", "type": "pin", "title": "Porto Imperiale", "desc": "Navi maestose attraccano accanto a velieri mercantili e pescherecci, mentre marinai, mercanti e viaggiatori si mescolano in un caotico concerto di lingue e accenti esotici. Bazar traboccano di merci fresche provenienti da terre lontane. I maestri portuali garantiscono ordine in questo crocevia vibrante, dove ogni conversazione potrebbe celare un'opportunità o un segreto."}, "p_2014": {"x": "65.89", "y": "39.91", "type": "pin", "title": "Colosseo Imperiale", "desc": "<p>Il Colosseo Imperiale di Ravenholm è il simbolo della forza e dell'orgoglio di Eldoria. Una struttura colossale che attira spettatori da ogni angolo del mondo, capace di ospitare fino a 20.000 persone. Al suo interno si svolgono tornei, sfide tra eroi e spettacoli di ogni genere, governati da regole precise e da un codice d'onore che persino i guerrieri più feroci rispettano.</p><h3>Luoghi Principali</h3><ul><li><em>Ufficio Iscrizioni</em> - Punto di registrazione per i partecipanti</li><li><em>Hypogeum</em> - Area dedicata agli addestratori di bestie</li><li><em>Spoliarium</em> - Sala in cui si preparano i Combattenti</li><li><em>Tribune</em> - Area dedicata agli Spettatori</li><li><em>Loggia</em> - Zona riservata alla Famiglia Reale o Ospiti di Lustro</li></ul><h3>Distribuzione Tribune</h3><ul><li>Gallerie Economiche (50–60% dei posti) - <em>5–10 Ma</em></li><li>Settori Medi (20–30% dei posti) - <em>2–5 Mo</em></li><li>Posti Premium (10–15% dei posti) - <em>10–20 Mo</em></li><li>Posti di Lusso (5% dei posti) - <em>50 Mo</em></li></ul><h3>Capienza</h3><ul><li>Arena - da <em>1.000</em> a <em>10.000</em> persone</li><li>Colosseo - da <em>10.000</em> a <em>20.000</em> persone</li></ul><h3>Incassi per Spettacolo</h3><ul><li>Arena - da <em>4.150</em> a <em>76.000 Mo</em></li><li>Colosseo - da <em>41.500</em> a <em>152.000 Mo</em></li></ul><h3>Coppa Tre Campioni</h3><p>Torneo annuale a Settembre diviso in tre categorie: <em>Arti Magiche</em>, <em>Arti Marziali</em> e <em>Arti Ibride</em>. Dopo una fase preliminare e una qualificazione che riduce i partecipanti a 8, si passa all'eliminazione diretta. Non è all'ultimo sangue. I vincitori ricevono il titolo di <em>Campione Imperiale</em>, un Sigillo d'Onore e <em>30.000 Mo</em>. I tre Campioni possono poi affrontare una bestia leggendaria, conquistando il titolo di <em>Aurion</em> e un Oggetto Magico ciascuno.</p><h3>Sfida degli Eroi</h3><p>Gruppi di avventurieri affrontano sfide consecutive contro bestie. Dopo ogni prova si può ritirare con la ricompensa accumulata o continuare, rischiando di perdere tutto. In <em>Modalità Letale</em> la capienza è piena e i premi aumentano del 30%.</p><h3>Sfida Individuale</h3><p>Incontri 1 contro 1 tra partecipanti di livello simile. Il vincitore incassa la quota dell'avversario, il rimborso della propria e il 5% degli incassi del Colosseo diviso tra tutti i vincitori.</p><ul><li>Novizi (lv 1–5) - <em>20 Mo</em></li><li>Avventurieri (lv 6–10) - <em>50 Mo</em></li><li>Veterani (lv 11–15) - <em>100 Mo</em></li><li>Leggende (lv 16+) - <em>200 Mo</em></li></ul><h3>Esperienze per il Pubblico</h3><ul><li>Scommesse Legali - gestite da funzionari ufficiali</li><li>Mercato Tematico - cibo, bevande e oggetti commemorativi</li><li>Intrattenimenti Pre-Evento - artisti e ammaestratori di bestie</li></ul>"}, "p_2015": {"x": "73.60", "y": "29.43", "type": "pin", "title": "Accademia di Vaelorian", "desc": "L'Accademia di Magia di Ravenholm è un complesso di edifici in pietra bianca circondati da giardini curati. All'interno, le aule sono arredate con panche e scrivanie di legno scuro. L'atmosfera è animata dalle voci dei giovani studenti che discutono, provano incantesimi o reagiscono con sorpresa e risate quando qualcosa non va come previsto. I maestri guidano le lezioni con voci calme e autoritarie, fornendo istruzioni e correzioni."}, "p_2016": {"x": "69.12", "y": "20.98", "type": "pin", "title": "Scuderie di Valdorin", "desc": "Le Scuderie di Valdorin sono famose in tutta Eldoria. Centinaia di cavalli di razze pregiate vengono allevati e addestrati con cura meticolosa. Un'officina adiacente produce carri robusti e personalizzati per ogni esigenza, dal commercio al viaggio. Mercanti, nobili e avventurieri giungono da ogni angolo per un servizio di qualità."}, "p_2017": {"x": "53.08", "y": "11.54", "type": "pin", "title": "Giardino di Eros", "desc": "L'edificio ha l'aspetto di una grande villa privata circondata da un giardino rigoglioso. L'interno ha un'atmosfera seducente: stanze decorate con arazzi ricamati e candelabri di cristallo. Un luogo dove passione ed eleganza si intrecciano, senza confini di sessualità o razza, purché si disponga delle ricchezze necessarie per accedere ai suoi raffinati servizi."}, "p_2018": {"x": "47.11", "y": "30.91", "type": "pin", "title": "Gilda Aquila Dorata", "desc": "La sede della Gilda dell'Aquila Dorata si erge nel cuore di Ravenholm come un edificio che non ha bisogno di presentazioni. La facciata in pietra chiara è decorata da stendardi rosso porpora con l'aquila dorata, visibili da ogni angolo della piazza. Al centro campeggia un rosone in vetro colorato che ritrae l'aquila a ali spiegate, e quando la luce del sole lo attraversa, proietta riflessi dorati sull'ampia scalinata."}, "p_2019": {"x": "48.75", "y": "44.85", "type": "pin", "title": "Castello di Alabastro", "desc": "Il Castello di Ravenholm domina il paesaggio con le sue imponenti mura di Alabastro, una pietra bianca leggermente azzurrina che brilla sotto il sole e sembra quasi luminescente al chiaro di luna. Costruito con maestria, presenta torri slanciate coronate da guglie eleganti. Questa meraviglia architettonica, ristrutturata nel 980° Arco Ciclico, è un baluardo di potere e bellezza che impressiona chiunque."}, "p_2020": {"x": "39.64", "y": "36.95", "type": "pin", "title": "Sancta Unitas", "desc": "La Cattedrale di Ravenholm si erge imponente con le sue guglie slanciate e le torri di pietra bianca venata d'oro. Grandi vetrate istoriate narrano storie divine. La Cattedrale è un faro di spiritualità e riflessione, perché accoglie con braccia aperte i fedeli di ogni credo. Sebbene Pelor sia la Divinità principale venerata, il tempio è suddiviso in quattro grandi aree, ognuna dedicata ai diversi pantheon in cui il popolo ripone la propria fede. Le statue delle varie Divinità presenti non sono lì per essere venerate, ma fungono piuttosto da strumento didattico, offrendo al popolo una panoramica sulle Divinità esistenti e il loro ruolo. L'aria è intrisa di incenso e cera d'api, accompagnata da un silenzio reverenziale."}, "p_2022": {"x": "35.24", "y": "28.64", "type": "star", "title": "Alchimista - La Perla", "desc": ""}, "p_2023": {"x": "32.69", "y": "54.02", "type": "star", "title": "Cartomante - Madame Leota", "desc": ""}, "p_2024": {"x": "29.95", "y": "70.38", "type": "star", "title": "Locanda - Da Murkof", "desc": ""}, "p_2026": {"x": "66.12", "y": "63.19", "type": "star", "title": "Locanda - Il Porto Sicuro", "desc": ""}, "p_2027": {"x": "69.70", "y": "28.03", "type": "star", "title": "Fornitore - Veylor e Figli", "desc": ""}, "p_2029": {"x": "64.41", "y": "16.38", "type": "star", "title": "Locanda - Coppa d'Alabastro", "desc": ""}, "p_2030": {"x": "56.63", "y": "33.80", "type": "star", "title": "Cimitero Cittadino", "desc": ""}, "p_2032": {"x": "60.20", "y": "41.69", "type": "star", "title": "Magione di Lord Rathgaron", "desc": ""}, "p_2033": {"x": "36.41", "y": "15.50", "type": "star", "title": "Locanda - Lo Scoiattolo", "desc": ""}};
-    Object.entries(STATIC).forEach(([id, d]) => {
-      if (!window.MAP_PINS[id]) window.MAP_PINS[id] = d;
-      placePin(id, d.x, d.y, d.type || 'pin', d.title, d.desc);
+    return STATIC;
+  }
+
+  let firestoreUnsub = null;
+  function subscribeFirestorePins() {
+    if (firestoreUnsub) return;
+    const STATIC = getStaticPins();
+    firestoreUnsub = window.fbSubscribePins(NAME, fsPins => {
+      canvas().querySelectorAll('.map-pin').forEach(p => p.remove());
+      window.MAP_PINS = {};
+      const merged = { ...STATIC };
+      Object.entries(fsPins).forEach(([id, d]) => {
+        if (d.deleted) delete merged[id];
+        else merged[id] = d;
+      });
+      Object.entries(merged).forEach(([id, d]) => {
+        placePin(id, d.x, d.y, d.type || 'pin', d.title, d.desc);
+      });
     });
   }
     im.complete && im.naturalWidth ? ready() : (im.onload = ready);
@@ -3054,27 +3193,28 @@ window.addEventListener('DOMContentLoaded', ()=>{ buildSearchIndex(); });
   };
   window.switchToEdit    = name => openPinEdit(currentPinId);
   window.savePopupEdit   = name => {
-    if (!currentPinId) return;
+    if (!currentPinId || !window.fbIsAdmin) return;
     const title = $('map-popup-input-title-'+name).value.trim() || 'Luogo senza nome';
     const desc  = $('map-popup-input-desc-' +name).value.trim();
     if (!window.MAP_PINS) window.MAP_PINS = {};
     if (!window.MAP_PINS[currentPinId]) window.MAP_PINS[currentPinId] = {};
-    window.MAP_PINS[currentPinId].title = title;
-    window.MAP_PINS[currentPinId].desc  = desc;
+    const pin = window.MAP_PINS[currentPinId];
+    pin.title = title;
+    pin.desc  = desc;
     const el = canvas().querySelector(`[data-id="${currentPinId}"]`);
     if (el) { const tt=el.querySelector('.map-pin-tooltip'); if(tt) tt.textContent=title; }
     $('map-popup-title-'+name).textContent = title;
     $('map-popup-desc-' +name).innerHTML = desc;
     $('map-popup-view-' +name).style.display = 'block';
     $('map-popup-edit-' +name).style.display = 'none';
-    savePins();
+    window.fbSavePin(name, currentPinId, {x: pin.x, y: pin.y, type: pin.type || 'pin', title, desc});
   };
   window.deleteCurrentPin = name => {
-    if (!currentPinId || !confirm('Eliminare questo segnaposto?')) return;
+    if (!currentPinId || !window.fbIsAdmin || !confirm('Eliminare questo segnaposto?')) return;
     canvas().querySelector(`[data-id="${currentPinId}"]`)?.remove();
     delete (window.MAP_PINS||{})[currentPinId];
     window.closeMapPopup(name);
-    savePins();
+    window.fbSavePin(name, currentPinId, {deleted: true});
   };
   window.mapZoom = (name, f) => {
     const im2=img(), pg2=page(), cv2=canvas(); if(!cv2) return;
