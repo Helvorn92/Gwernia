@@ -27,8 +27,9 @@ body{background:var(--bg);color:var(--cream);font-family:Georgia, 'Times New Rom
 /* ═══════════ NAV ═══════════ */
 nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:70px;padding:0 3.5rem;display:flex;align-items:center;justify-content:flex-start;overflow:visible;background:rgba(6,6,15,.97);border-bottom:2px solid var(--border);backdrop-filter:blur(10px);transition:box-shadow .4s}
 nav.scrolled{box-shadow:0 4px 40px rgba(0,0,0,.8)}
-.nav-logo{font-family:'Palatino Linotype',serif;font-size:.82rem;letter-spacing:.14em;color:var(--gold);text-decoration:none;text-shadow:0 0 22px var(--glow);white-space:nowrap;flex-shrink:0;cursor:pointer;transition:text-shadow .3s}
-.nav-logo:hover{text-shadow:0 0 35px var(--glow),0 0 60px rgba(201,168,76,.3)}
+.nav-logo{font-family:'Palatino Linotype',serif;font-size:.8rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);text-decoration:none;white-space:nowrap;flex-shrink:0;cursor:pointer;transition:text-shadow .3s,color .3s}
+.nav-logo:hover{color:var(--gold-light);text-shadow:0 0 18px var(--glow)}
+.hero-title-img{display:block;margin:0 auto;width:min(88vw,720px);height:auto}
 .nav-menu{display:flex;list-style:none;gap:.1rem}
 .nav-item{position:relative;display:flex;align-items:center;align-self:stretch;height:70px}
 /* invisible bridge to prevent gap-triggered close */
@@ -689,12 +690,12 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
 
 <!-- ═══════════════════ NAV ═══════════════════ -->
 <nav id="navbar" class="">
-  <a class="nav-logo" onclick="showPage(&#39;home&#39;)">✦ Le Cronache di Gwernia</a>
+  <a class="nav-logo" onclick="showPage(&#39;home&#39;)">Home</a>
   <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   <div class="nav-right" id="nav-right"><ul class="nav-menu">
 
     <li class="nav-item">
-      <a class="nav-link" onclick="showPage(&#39;universo&#39;,this)">Cosmologia</a>
+      <a class="nav-link">Cosmologia</a>
       <div class="dropdown">
         <span class="dd-title">Entità Maggiori</span>
         <div class="dd-sub">
@@ -747,7 +748,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     </li>
 
     <li class="nav-item">
-      <a class="nav-link" onclick="showPage(&#39;gwernia&#39;,this)">Gwernia</a>
+      <a class="nav-link">Gwernia</a>
       <div class="dropdown">
         <span class="dd-title">Cronologia</span>
         <div class="dd-sub">
@@ -772,7 +773,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     </li>
 
     <li class="nav-item">
-      <a class="nav-link" onclick="showPage(&#39;metropoli&#39;,this)">Metropoli</a>
+      <a class="nav-link">Metropoli</a>
       <div class="dropdown">
         <span class="dd-title">Metropoli</span>
         <div class="dd-sub">
@@ -783,7 +784,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     </li>
 
     <li class="nav-item">
-      <a class="nav-link" onclick="showPage(&#39;organizzazioni&#39;,this)">Organizzazioni</a>
+      <a class="nav-link">Organizzazioni</a>
       <div class="dropdown">
         <span class="dd-title">Associazioni Positive</span>
         <div class="dd-sub">
@@ -845,9 +846,9 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     <div class="hero-runes" id="heroRunes"><div class="rune" style="left: 96.8341%; bottom: -3rem; animation-duration: 19.8697s; font-size: 1.5511rem; animation-delay: 0s;">ᚐ</div><div class="rune" style="left: 85.2995%; bottom: -3rem; animation-duration: 19.396s; font-size: 2.46445rem; animation-delay: 0s;">ᚇ</div><div class="rune" style="left: 30.3885%; bottom: -3rem; animation-duration: 30.5877s; font-size: 1.00207rem; animation-delay: 0s;">ᚊ</div><div class="rune" style="left: 91.0303%; bottom: -3rem; animation-duration: 21.4091s; font-size: 1.71201rem; animation-delay: 0s;">ᚏ</div><div class="rune" style="left: 22.012%; bottom: -3rem; animation-duration: 27.564s; font-size: 2.12001rem; animation-delay: 0s;">ᚇ</div><div class="rune" style="left: 54.0866%; bottom: -3rem; animation-duration: 24.8131s; font-size: 2.16081rem; animation-delay: 0s;">ᚏ</div><div class="rune" style="left: 49.2579%; bottom: -3rem; animation-duration: 26.3112s; font-size: 1.08964rem; animation-delay: 0s;">ᚃ</div><div class="rune" style="left: 31.2336%; bottom: -3rem; animation-duration: 29.1087s; font-size: 1.35134rem; animation-delay: 0s;">ᚄ</div><div class="rune" style="left: 90.6532%; bottom: -3rem; animation-duration: 17.9388s; font-size: 1.07748rem; animation-delay: 0s;">ᚇ</div><div class="rune" style="left: 55.9761%; bottom: -3rem; animation-duration: 24.4704s; font-size: 2.14085rem; animation-delay: 0s;">ᚏ</div><div class="rune" style="left: 45.6028%; bottom: -3rem; animation-duration: 27.3129s; font-size: 2.47014rem; animation-delay: 0s;">ᚈ</div><div class="rune" style="left: 94.8044%; bottom: -3rem; animation-duration: 21.8711s; font-size: 2.91056rem; animation-delay: 0s;">ᚌ</div><div class="rune" style="left: 16.6932%; bottom: -3rem; animation-duration: 14.535s; font-size: 2.11996rem; animation-delay: 0s;">ᚃ</div><div class="rune" style="left: 63.5736%; bottom: -3rem; animation-duration: 17.4639s; font-size: 1.04839rem; animation-delay: 0s;">ᚐ</div></div>
     <div class="hero-content" style="transform: translateY(0px);">
       <p class="hero-eyebrow">✦ &nbsp; Benvenuto nel mondo di &nbsp; ✦</p>
-      <h1 class="hero-title">Gwernia</h1>
+      <h1 class="hero-title"><img class="hero-title-img" src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1783190450/Gwernia_daz0i4.png" alt="Gwernia"></h1>
       <div class="hero-divider"><div class="hero-divider-line"></div><div class="hero-divider-gem"></div><div class="hero-divider-line"></div></div>
-      <p class="hero-tagline">Il mondo ricorda solo ciò che gli è stato permesso di ricordare,<br>Tutto il resto è semplicemente OVVIO!</p>
+      <p class="hero-tagline">Il mondo ricorda solo ciò che gli è stato permesso di ricordare.</p>
     </div>
     <div class="hero-scroll" style=""><span>Scorri</span><div class="scroll-arrow"></div></div>
   </div>
