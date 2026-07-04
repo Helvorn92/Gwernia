@@ -26,12 +26,20 @@ body{background:#06060f;color:var(--cream);font-family:Georgia,'Times New Roman'
 /* FINESTRE */
 #win-left{position:absolute;top:0;left:3vw;width:14vw;z-index:3;pointer-events:none;overflow:hidden}
 #win-right{position:absolute;top:0;right:3vw;width:14vw;z-index:3;pointer-events:none;overflow:hidden}
-.win-inner{position:absolute;top:0;left:-10px;right:-10px;border:10px solid #5a3210;border-bottom:none;border-radius:50% 50% 0 0 / 7vw 7vw 0 0;overflow:hidden;box-shadow:inset 0 0 0 5px #3a1e08,inset 0 0 0 12px #7a4820,0 0 40px rgba(0,0,0,.8)}
+.win-inner{position:absolute;top:0;left:-10px;right:-10px;border:10px solid #63380f;border-bottom:none;border-radius:50% 50% 0 0 / 7vw 7vw 0 0;overflow:hidden;
+  box-shadow:
+    inset 0 0 0 3px #2e1706,
+    inset 0 0 0 6px #7d4b1e,
+    inset 0 0 0 7px rgba(240,200,120,.22),
+    inset 0 0 0 13px #452709,
+    inset 0 0 70px rgba(0,0,0,.7),
+    0 0 46px rgba(0,0,0,.85)}
 .win-sky{position:absolute;inset:0;background:rgba(3,2,10,.06)}
-.win-bar-h1{position:absolute;top:35%;left:0;right:0;height:13px;background:linear-gradient(180deg,#7a4818,#4a2a0c 50%,#7a4818);box-shadow:0 3px 10px rgba(0,0,0,.8)}
-.win-bar-h2{position:absolute;top:65%;left:0;right:0;height:13px;background:linear-gradient(180deg,#7a4818,#4a2a0c 50%,#7a4818);box-shadow:0 3px 10px rgba(0,0,0,.8)}
-.win-bar-v{position:absolute;top:0;bottom:0;left:50%;width:13px;transform:translateX(-50%);background:linear-gradient(90deg,#7a4818,#4a2a0c 50%,#7a4818);box-shadow:3px 0 10px rgba(0,0,0,.8)}
-.win-frame{position:absolute;inset:0;border:7px solid #4a2a0c;border-bottom:none;border-radius:50% 50% 0 0 / 7vw 7vw 0 0;pointer-events:none}
+.win-bar-h1,.win-bar-h2{position:absolute;left:0;right:0;height:12px;background:linear-gradient(180deg,#8a5522 0%,#5a3414 45%,#331c07 100%);box-shadow:inset 0 1px 0 rgba(240,200,120,.3),0 4px 10px rgba(0,0,0,.8)}
+.win-bar-h1{top:35%}
+.win-bar-h2{top:65%}
+.win-bar-v{position:absolute;top:0;bottom:0;left:50%;width:12px;transform:translateX(-50%);background:linear-gradient(90deg,#8a5522 0%,#5a3414 45%,#331c07 100%);box-shadow:inset 1px 0 0 rgba(240,200,120,.26),4px 0 10px rgba(0,0,0,.8)}
+.win-frame{position:absolute;inset:0;border:6px solid #331c07;border-bottom:none;border-radius:50% 50% 0 0 / 7vw 7vw 0 0;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(240,200,120,.1)}
 
 /* BACK BTN */
 .back-btn{position:absolute;top:1.2rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(6,4,16,.92);border:1px solid rgba(201,168,76,.35);color:var(--gold-dim);font-family:'Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:.5rem 1.4rem;cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap}
@@ -55,21 +63,27 @@ body{background:#06060f;color:var(--cream);font-family:Georgia,'Times New Roman'
   position:relative;
   display:grid;
   grid-template-columns:repeat(3,1fr);
-  gap:14px;
-  padding:16px 18px 22px;
-  /* legno */
-  background:
-    repeating-linear-gradient(91deg,rgba(255,210,120,.045) 0px,transparent 3px,transparent 46px,rgba(0,0,0,.16) 46px,rgba(0,0,0,.16) 49px),
-    linear-gradient(180deg,#5a3414 0%,#46280f 50%,#3a200b 100%);
-  border-top:3px solid rgba(255,200,90,.28);
-  border-bottom:3px solid rgba(0,0,0,.7);
-  box-shadow:inset 0 14px 40px rgba(0,0,0,.6),inset 0 -14px 40px rgba(0,0,0,.7),0 10px 40px rgba(0,0,0,.85);
+  gap:clamp(10px,1.5vw,18px);
+  padding:clamp(14px,1.8vw,22px);
+  /* legno pulito, senza venature */
+  background:linear-gradient(180deg,#4f2f12 0%,#452a0f 55%,#3a230c 100%);
+  border-left:12px solid #241304;
+  border-right:12px solid #241304;
+  box-shadow:inset 0 12px 34px rgba(0,0,0,.5),inset 0 -12px 34px rgba(0,0,0,.6),0 10px 40px rgba(0,0,0,.85);
 }
-/* riflesso superiore sul legno */
+/* ripiano orizzontale: una tavola dritta che copre la giuntura tra le file */
 .shelf-row::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:8px;
-  background:linear-gradient(90deg,transparent,rgba(255,230,140,.32) 30%,rgba(255,240,160,.4) 50%,rgba(255,230,140,.32) 70%,transparent);
-  pointer-events:none
+  content:'';position:absolute;left:-12px;right:-12px;top:-8px;height:16px;
+  background:linear-gradient(180deg,#7c4e1f 0%,#5a3414 45%,#261405 100%);
+  box-shadow:0 6px 14px rgba(0,0,0,.6);
+  pointer-events:none;z-index:4;
+}
+/* base inferiore della libreria */
+.shelf-row:last-child::after{
+  content:'';position:absolute;left:-16px;right:-16px;bottom:-10px;height:18px;
+  background:linear-gradient(180deg,#7c4e1f 0%,#5a3414 45%,#261405 100%);
+  box-shadow:0 10px 24px rgba(0,0,0,.8);
+  pointer-events:none;z-index:4;
 }
 
 /* La nicchia: incavo scuro nel legno con leggera profondità */
@@ -210,8 +224,38 @@ body{background:#06060f;color:var(--cream);font-family:Georgia,'Times New Roman'
 .book-flip-front::after{content:'';position:absolute;inset:0;background:linear-gradient(to left,rgba(0,0,0,.16) 0%,transparent 26%);pointer-events:none;z-index:4}
 .book-flip-back::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.14) 0%,transparent 26%);pointer-events:none;z-index:4}
 
-@media(max-width:1100px){.bookshelf{padding:0 8vw}.shelf-row{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:760px){.bookshelf{padding:0 6vw}.shelf-row{grid-template-columns:repeat(2,1fr);gap:10px;padding:12px 12px 16px}.book-open{grid-template-columns:1fr}.book-page:first-child{display:none}}
+@media(max-width:1100px){
+  #win-left,#win-right{display:none}
+  #wall-center{left:0;right:0}
+  .bookshelf{padding:0 6vw}
+}
+/* 2 libri per ripiano */
+@media(max-width:900px){
+  .shelf-row{grid-template-columns:repeat(2,1fr)}
+  .bookshelf{padding:0 10vw}
+}
+@media(max-width:760px){
+  .bookshelf{padding:0 7vw}
+  .shelf-row{gap:10px;padding:12px;border-left-width:8px;border-right-width:8px}
+  .shelf-row::before{left:-8px;right:-8px;top:-6px;height:12px}
+  .shelf-row:last-child::after{left:-11px;right:-11px;bottom:-8px;height:14px}
+  .niche{padding:10px}
+  .cover-book.locked::before{font-size:3.2rem}
+  .book-open{grid-template-columns:1fr}
+  .book-page:first-child{display:none}
+  .book-page{padding:1.6rem 1.3rem 1.2rem}
+  .book-reader-controls{gap:.8rem}
+}
+/* 1 libro per ripiano, centrato */
+@media(max-width:520px){
+  .shelf-row{grid-template-columns:1fr}
+  .bookshelf{padding:0 12vw}
+  .niche{width:min(100%,240px);margin:0 auto}
+}
+/* schermi molto piccoli: il libro si rimpicciolisce */
+@media(max-width:380px){
+  .niche{width:min(100%,195px)}
+}
 
 /* ═══ ADMIN LOGIN ═══ */
 .admin-login-btn{position:fixed;top:1.2rem;right:2rem;z-index:200;background:rgba(6,4,16,.92);border:1px solid rgba(201,168,76,.35);color:var(--gold-dim);font-size:1.05rem;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;opacity:.7}
@@ -479,6 +523,8 @@ const ARCHIVE_BOOKS = {
 
 /* ═══ COSTRUZIONE SCAFFALE (con merge Firestore) ═══ */
 let BOOKS = {};
+/* libri per ripiano in base alla larghezza: 3 → 2 → 1 (come i breakpoint CSS) */
+function shelfPerRow(){var w=window.innerWidth;return w<=520?1:(w<=900?2:3);}
 function buildStaticBooks(){
   const out = {};
   Object.entries(ARCHIVE_BOOKS).forEach(([id, b]) => {
@@ -497,7 +543,7 @@ function buildShelf(){
     if(la!==lb) return la-lb;
     return (a[1].order||999)-(b[1].order||999);
   });
-  var perRow=3;
+  var perRow=shelfPerRow();
   var html='';
   for(var r=0;r<entries.length;r+=perRow){
     html+='<div class="shelf-row">';
@@ -529,6 +575,12 @@ function buildShelf(){
 window.renderShelf = buildShelf;
 BOOKS = buildStaticBooks();
 buildShelf();
+/* ricostruisce le file quando cambia il numero di libri per ripiano */
+var _shelfCols = shelfPerRow();
+window.addEventListener('resize', function(){
+  var c = shelfPerRow();
+  if(c !== _shelfCols){ _shelfCols = c; buildShelf(); }
+});
 (function waitForFirebase(){
   if(!window.fbSubscribeBooks){ setTimeout(waitForFirebase, 30); return; }
   window.fbSubscribeBooks(function(fsBooks){
