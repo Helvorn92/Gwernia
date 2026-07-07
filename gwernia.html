@@ -610,6 +610,12 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
 .map-btn:hover{background:rgba(201,168,76,.12);border-color:var(--gold)}
 .map-hint{position:absolute;bottom:0;left:0;right:0;background:rgba(4,3,12,.92);padding:.55rem 1rem;font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(201,168,76,.7);pointer-events:none;text-align:center;border-top:1px solid rgba(201,168,76,.2);z-index:20}
 
+/* ═══ MAPPA DEL MONDO (pagina) ═══ */
+.worldmap{position:relative;flex:1;width:100%;height:100%;background:#03020a;overflow:hidden;cursor:grab;user-select:none;touch-action:none}
+.worldmap:active{cursor:grabbing}
+.worldmap img{position:absolute;left:0;top:0;max-width:none;transform-origin:0 0;will-change:transform;pointer-events:none;-webkit-user-drag:none}
+.worldmap-loading{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold-dim);pointer-events:none}
+
 .map-legend{position:absolute;top:1rem;right:1rem;background:rgba(4,3,12,.92);border:1px solid rgba(201,168,76,.35);border-top:2px solid var(--gold-dim);padding:.9rem 1.1rem;z-index:20;min-width:200px;backdrop-filter:blur(10px)}
 .map-legend-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:.75rem;color:var(--gold-light);margin-bottom:.7rem;letter-spacing:.08em}
 .map-legend-section{font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin:.7rem 0 .35rem;border-bottom:1px solid rgba(201,168,76,.2);padding-bottom:.25rem}
@@ -635,7 +641,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
 .map-popup-save:hover{background:rgba(201,168,76,.28);border-color:var(--gold)}
 .map-pin-delete{position:absolute;top:.8rem;right:2.5rem;background:none;border:none;color:rgba(255,80,80,.5);font-size:1rem;cursor:pointer;transition:color .2s;line-height:1}
 .map-pin-delete:hover{color:rgba(255,80,80,.9)}
-#page-ravenholm{min-height:0!important;height:93vh;overflow:hidden}
+#page-ravenholm,#page-mappa{min-height:0!important;height:93vh;overflow:hidden}
 </style>
 <style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style><style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style><style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style><style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style></head>
 <body>
@@ -759,6 +765,11 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     <li class="nav-item">
       <a class="nav-link">Gwernia</a>
       <div class="dropdown">
+        <span class="dd-title">Geografia</span>
+        <div class="dd-sub">
+          <a class="dd-link" onclick="showPage(&#39;mappa&#39;)">Mappa</a>
+        </div>
+        <div class="dd-divider"></div>
         <span class="dd-title">Cronologia</span>
         <div class="dd-sub">
           <a class="dd-link" onclick="showPage(&#39;linea-del-tempo&#39;)">Linea del Tempo</a>
@@ -824,6 +835,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
       </div>
     </li>
     <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/archivio">Archivio</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/Avventure">Avventure</a></li>
   </ul>
   <button id="search-btn" onclick="openSearch()" title="Cerca">⚲</button><button id="admin-login-btn" onclick="openAdminLogin()" title="Accedi">⚿</button></div>
 </nav>
@@ -2461,7 +2473,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     </div>
     <hr class="org-divider">
     <div class="org-landscape reveal visible" style="transition-delay:.1s"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1773844721/mani-d-ombra_azudvb.webp"></div>
-    <p class="org-desc">In origine, le <em>Mani d’Ombra</em> nacquero con intenti ben diversi, sottrarre risorse ai ricchi e ai tiranni per ridistribuirle ai più deboli. Tuttavia, la brama di potere e ricchezza corrose la maggior parte dei suoi membri. Oggi, la Fratellanza risponde agli ordini e ai decreti dell’<em>Alto Conclave</em>, un’assemblea segreta che governa il sottobosco criminale di interi reami. Questa struttura è una rete intricata di domini occulti, dove la <em>Grande Corte</em> negozia alleanze, divide territori e stabilisce punizioni per chi infrange il Codice. Si dice che la sede dell'Alto Conclave sia la <em>Fortezza delle Ombre</em>, un’enorme fortezza situata nella Coltre Oscura. L’adesione avviene per cooptazione o tramite presentazione da parte di un membro interno. Gli aspiranti devono siglare un <em>Vincolo di Sangue</em> con un boss influente. La prova di ammissione prevede la dimostrazione di abilità in settori come assassinio, spionaggio o risoluzione di problemi complessi. Chi possiede legami con le Alleanze Esterne gode di una corsia preferenziale.
+    <p class="org-desc">In origine, le <em>Mani d’Ombra</em> nacquero con intenti ben diversi, sottrarre risorse ai ricchi e ai tiranni per ridistribuirle ai più deboli. Tuttavia, la brama di potere e ricchezza corrose la maggior parte dei suoi membri. Oggi, la Fratellanza risponde agli ordini e ai decreti dell’<em>Alto Conclave</em>, un’assemblea segreta che governa il sottobosco criminale di interi reami. Questa struttura è una rete intricata di domini occulti, dove la <em>Grande Corte</em> negozia alleanze, divide territori e stabilisce punizioni per chi infrange il Codice. Si dice che la sede dell'Alto Conclave sia la <em>Rocca delle Ombre</em>, un’enorme fortezza situata nella Coltre Oscura. L’adesione avviene per cooptazione o tramite presentazione da parte di un membro interno. Gli aspiranti devono siglare un <em>Vincolo di Sangue</em> con un boss influente. La prova di ammissione prevede la dimostrazione di abilità in settori come assassinio, spionaggio o risoluzione di problemi complessi. Chi possiede legami con le Alleanze Esterne gode di una corsia preferenziale.
 </p>
   </div>
   <footer><span class="footer-logo">✦ Le Cronache di Gwernia ✦</span><p class="footer-text">«Ogni mito cela una verità. Ogni leggenda, un frammento di storia perduta.»</p></footer>
@@ -2660,7 +2672,7 @@ window.addEventListener('scroll',()=>{
 
 /* PAGE SYSTEM */
 function showPage(id, linkEl){
-  document.body.style.overflow = (id === 'ravenholm') ? 'hidden' : '';
+  document.body.style.overflow = (id === 'ravenholm' || id === 'mappa') ? 'hidden' : '';
   const pages=document.querySelectorAll('.page');
   const activeEl=document.querySelector('.page.active');
   if(activeEl===document.getElementById('page-'+id))return;
@@ -3268,5 +3280,83 @@ window.addEventListener('admin-state-changed', e => {
 })();
 </script>
 
+<!-- ═══ PAGE: MAPPA DEL MONDO ═══ -->
+<div class="page" id="page-mappa">
+  <div class="worldmap" id="worldmap">
+    <div class="worldmap-loading" id="worldmap-loading">✦ &nbsp; La mappa si dispiega… &nbsp; ✦</div>
+    <img id="worldmap-img" data-src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1783366723/05---Gwernia-con-Nuvole_ino2nm.jpg" alt="Mappa di Gwernia" draggable="false">
+    <div class="map-hint">Scorri per zoomare · Trascina per spostarti</div>
+  </div>
+</div>
+
+<script>
+/* ═══ MAPPA DEL MONDO: zoom e pan ═══ */
+(function(){
+  const pageEl=document.getElementById('page-mappa');
+  const ov=document.getElementById('worldmap');
+  const img=document.getElementById('worldmap-img');
+  let s=1,minS=.05,maxS=6,tx=0,ty=0;
+  let dragging=false,sx,sy,stx,sty,lastDist=0,loaded=false;
+
+  function isActive(){return pageEl.classList.contains('active');}
+  function apply(){img.style.transform='translate('+tx+'px,'+ty+'px) scale('+s+')';}
+  function clampPan(){
+    const vw=ov.clientWidth,vh=ov.clientHeight,iw=(img.naturalWidth||1)*s,ih=(img.naturalHeight||1)*s;
+    if(iw<=vw)tx=(vw-iw)/2;else tx=Math.min(0,Math.max(vw-iw,tx));
+    if(ih<=vh)ty=(vh-ih)/2;else ty=Math.min(0,Math.max(vh-ih,ty));
+  }
+  function fit(){
+    const vw=ov.clientWidth,vh=ov.clientHeight;
+    if(vw<2||vh<2){if(isActive())requestAnimationFrame(fit);return;}
+    document.getElementById('worldmap-loading').style.display='none';
+    const iw=img.naturalWidth||2000,ih=img.naturalHeight||1500;
+    /* la mappa copre sempre tutta la larghezza: mai bande nere ai lati */
+    minS=vw/iw;
+    s=minS;tx=0;ty=(vh-ih*s)/2;
+    clampPan();apply();
+  }
+  function zoomAt(cx,cy,f){
+    const r=ov.getBoundingClientRect();
+    cx-=r.left;cy-=r.top;
+    const ns=Math.min(maxS,Math.max(minS,s*f));
+    if(ns===s)return;
+    tx=cx-(cx-tx)*(ns/s);ty=cy-(cy-ty)*(ns/s);s=ns;
+    clampPan();apply();
+  }
+
+  /* al primo ingresso nella pagina: carica l'immagine e adatta */
+  function activate(){
+    if(!loaded){
+      loaded=true;
+      img.src=img.dataset.src;
+      if(img.complete&&img.naturalWidth)fit();else img.onload=fit;
+    } else fit();
+  }
+  const obs=new MutationObserver(()=>{if(isActive())activate();});
+  obs.observe(pageEl,{attributes:true,attributeFilter:['class']});
+  if(isActive())activate();
+
+  ov.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.clientX,e.clientY,e.deltaY<0?1.15:0.87);},{passive:false});
+  ov.addEventListener('mousedown',e=>{if(e.target.closest('.map-btn'))return;dragging=true;sx=e.clientX;sy=e.clientY;stx=tx;sty=ty;});
+  window.addEventListener('mousemove',e=>{if(!dragging)return;tx=stx+e.clientX-sx;ty=sty+e.clientY-sy;clampPan();apply();});
+  window.addEventListener('mouseup',()=>{dragging=false;});
+  ov.addEventListener('dblclick',e=>{if(e.target.closest('.map-btn'))return;zoomAt(e.clientX,e.clientY,1.8);});
+  ov.addEventListener('touchstart',e=>{
+    const t=e.touches;
+    if(t.length===2)lastDist=Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+    else{sx=t[0].clientX;sy=t[0].clientY;stx=tx;sty=ty;}
+  },{passive:true});
+  ov.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    const t=e.touches;
+    if(t.length===2){
+      const d=Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+      zoomAt((t[0].clientX+t[1].clientX)/2,(t[0].clientY+t[1].clientY)/2,d/lastDist);
+      lastDist=d;
+    } else {tx=stx+(t[0].clientX-sx);ty=sty+(t[0].clientY-sy);clampPan();apply();}
+  },{passive:false});
+  window.addEventListener('resize',()=>{if(isActive()&&img.naturalWidth)fit();});
+})();
+</script>
 
 </body></html>
