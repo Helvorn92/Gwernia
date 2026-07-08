@@ -1,4 +1,6 @@
 
+
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -64,7 +66,7 @@ button{font-family:inherit}
 .poster:hover{transform:translateY(-8px) scale(1.025);border-color:var(--gold);box-shadow:0 0 0 4px rgba(4,3,12,.9),0 0 0 5px rgba(201,168,76,.5),0 24px 54px rgba(0,0,0,.85),0 0 40px rgba(201,168,76,.16)}
 /* la cornice segue il formato dell'immagine: niente tagli, niente bande */
 .poster img{display:block;height:100%;width:auto;transition:transform .5s ease}
-.poster:hover img{transform:scale(1.05)}
+.poster:hover img{transform:scale(1.1)}
 .poster::after{content:'';position:absolute;top:0;bottom:0;left:-80%;width:50%;background:linear-gradient(105deg,transparent,rgba(255,240,190,.13),transparent);transform:skewX(-18deg);transition:left .55s ease;z-index:3}
 .poster:hover::after{left:135%}
 /* slot vuoto */
@@ -136,7 +138,8 @@ body.is-admin .detail-edit{display:inline-block}
 @media(max-width:900px){
   #board-view{position:static;display:block;padding:4.6rem 1.2rem 2.5rem}
   .board{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto;gap:1rem}
-  .poster{height:auto}
+  .poster{height:auto;width:100%}
+  .poster img{width:100%;height:auto}
   .detail{grid-template-columns:1fr}
   .detail-poster{max-width:380px;margin:0 auto}
 }
@@ -297,7 +300,16 @@ function fitBoard(){
   if(availW<10||availH<10){requestAnimationFrame(fitBoard);return;}
   const byHeight=(availH-gap)/2;
   const byWidth=((availW-4*gap)/5)*1.5;
-  board.style.setProperty('--ph',Math.floor(Math.min(byHeight,byWidth))+'px');
+  let ph=Math.min(byHeight,byWidth);
+  board.style.setProperty('--ph',Math.floor(ph)+'px');
+  /* le locandine seguono il formato delle immagini: se la fila sfora in larghezza, riduci in proporzione */
+  requestAnimationFrame(function(){
+    const over=board.scrollWidth-board.clientWidth;
+    if(over>2){
+      ph=ph*board.clientWidth/board.scrollWidth;
+      board.style.setProperty('--ph',Math.floor(ph)+'px');
+    }
+  });
 }
 window.addEventListener('resize',fitBoard);
 window.addEventListener('load',fitBoard);
@@ -316,6 +328,9 @@ function renderBoard(){
     return '<div class="poster" '+delay+' onclick="showAdv(\''+id+'\')">'+img+
       '<button class="poster-edit" title="Modifica" onclick="event.stopPropagation();openEdit(\''+id+'\')">✎</button></div>';
   }).join('');
+  el.querySelectorAll('.poster img').forEach(function(im){
+    if(!im.complete) im.addEventListener('load',fitBoard,{once:true});
+  });
   fitBoard();
 }
 
