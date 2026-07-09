@@ -322,14 +322,21 @@ function skulls(n){
 /* calcola l'altezza delle locandine perché 5×2 riempiano esattamente lo spazio, senza scroll */
 function fitBoard(){
   const board=document.getElementById('board');
-  if(window.innerWidth<=900){board.style.removeProperty('--ph');return;}
+  if(window.innerWidth<=900){board.style.removeProperty('--ph');board.style.removeProperty('grid-template-columns');return;}
   const gap=19;
   const availW=board.clientWidth, availH=board.clientHeight;
   if(availW<10||availH<10){requestAnimationFrame(fitBoard);return;}
-  const rows=Math.max(2,Math.ceil(board.children.length/5));
-  const byHeight=(availH-(rows-1)*gap)/rows;
-  const byWidth=((availW-4*gap)/5)*1.5;
-  let ph=Math.min(byHeight,byWidth);
+  const n=Math.max(1,board.children.length);
+  /* sceglie la combinazione file/colonne con le locandine più grandi:
+     a parità, vince quella con meno file → si riempie prima l'orizzontale */
+  let best={ph:0,cols:5};
+  for(let rows=1;rows<=Math.min(n,5);rows++){
+    const cols=Math.ceil(n/rows);
+    const cand=Math.min((availH-(rows-1)*gap)/rows,((availW-(cols-1)*gap)/cols)*1.5);
+    if(cand>best.ph)best={ph:cand,cols:cols};
+  }
+  board.style.gridTemplateColumns='repeat('+best.cols+',auto)';
+  let ph=best.ph;
   board.style.setProperty('--ph',Math.floor(ph)+'px');
   /* le locandine seguono il formato delle immagini: se la fila sfora in larghezza, riduci in proporzione */
   requestAnimationFrame(function(){
