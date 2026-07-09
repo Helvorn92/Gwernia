@@ -104,8 +104,8 @@ body.is-admin .poster:hover .poster-edit{display:flex}
 .detail-edit{background:rgba(201,168,76,.13);border:1px solid rgba(201,168,76,.5);color:var(--gold);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;padding:.55rem 1.2rem;cursor:pointer;transition:background .2s;display:none}
 body.is-admin .detail-edit{display:inline-block}
 .detail-edit:hover{background:rgba(201,168,76,.26)}
-.detail-desc{margin-top:1.5rem;background:var(--panel);border:1px solid rgba(201,168,76,.22);border-left:3px solid var(--gold-dim);padding:1.5rem 1.7rem;line-height:1.9;font-size:1.12rem;font-weight:500;color:var(--cream)}
-.detail-desc p{margin:.7rem 0;text-align:justify}
+.detail-desc{margin-top:1.5rem;background:var(--panel);border:1px solid rgba(201,168,76,.22);border-left:3px solid var(--gold-dim);padding:1.5rem 1.7rem;line-height:1.8;font-size:.95rem;font-weight:500;color:var(--cream)}
+.detail-desc p{margin:.7rem 0}
 .detail-desc p:first-child{margin-top:0}
 .detail-desc p:last-child{margin-bottom:0}
 .detail-desc .empty{font-style:italic;color:rgba(187,169,140,.45)}
@@ -133,6 +133,11 @@ body.is-admin .detail-edit{display:inline-block}
 .btn-danger:hover{background:rgba(255,80,80,.15);border-color:#ff8080}
 #login-error{color:#ff8080;font-size:.8rem;display:none;margin:.4rem 0 0}
 .save-msg{font-size:.8rem;color:#7fd87f;display:none;margin-top:.5rem;text-align:center}
+
+/* pulsante admin: aggiungi locandina */
+.add-adv-btn{position:fixed;bottom:1.6rem;right:1.6rem;z-index:150;width:52px;height:52px;border-radius:50%;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.55);color:var(--gold-light);font-size:1.5rem;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.7);transition:background .2s}
+body.is-admin .add-adv-btn{display:flex}
+.add-adv-btn:hover{background:rgba(201,168,76,.32)}
 
 /* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){
@@ -190,6 +195,8 @@ body.is-admin .detail-edit{display:inline-block}
 
 </div>
 
+<button class="add-adv-btn" onclick="addAdv()" title="Aggiungi locandina">+</button>
+
 <!-- ═══ LOGIN ═══ -->
 <div class="ov" id="login-ov" onclick="if(event.target===this)closeLogin()"></div>
 <div class="modal" id="login-modal">
@@ -218,15 +225,25 @@ body.is-admin .detail-edit{display:inline-block}
     <div class="field"><label>Tipo di campagna</label><input type="text" id="f-type" placeholder="Esplorazione, Investigazione…"></div>
     <div class="field"><label>Mood</label><input type="text" id="f-mood" placeholder="Horror, Comico, Epico…"></div>
   </div>
-  <div class="field"><label>Letalità (0 = non mostrata)</label>
-    <select id="f-lethal">
-      <option value="0">— nessuna —</option>
-      <option value="1">★ (1) Passeggiata</option>
-      <option value="2">★★ (2) Impegnativa</option>
-      <option value="3">★★★ (3) Pericolosa</option>
-      <option value="4">★★★★ (4) Spietata</option>
-      <option value="5">★★★★★ (5) Mortale</option>
-    </select>
+  <div class="field-row">
+    <div class="field"><label>Durata</label>
+      <select id="f-dur">
+        <option value="">— non indicata —</option>
+        <option value="breve">Breve</option>
+        <option value="media">Media</option>
+        <option value="lunga">Lunga</option>
+      </select>
+    </div>
+    <div class="field"><label>Letalità (0 = non mostrata)</label>
+      <select id="f-lethal">
+        <option value="0">— nessuna —</option>
+        <option value="1">★ (1) Passeggiata</option>
+        <option value="2">★★ (2) Impegnativa</option>
+        <option value="3">★★★ (3) Pericolosa</option>
+        <option value="4">★★★★ (4) Spietata</option>
+        <option value="5">★★★★★ (5) Mortale</option>
+      </select>
+    </div>
   </div>
   <div class="field"><label>Descrizione</label><textarea id="f-desc" rows="7" placeholder="Le informazioni sull'avventura. Lascia una riga vuota tra un paragrafo e l'altro."></textarea></div>
   <div class="modal-actions">
@@ -280,7 +297,18 @@ window.addEventListener('resize',resizeStars);resizeStars();drawStars();
 
 /* ═══ DATI ═══ */
 const SLOTS=['adv1','adv2','adv3','adv4','adv5','adv6','adv7','adv8','adv9','adv10'];
+const DUR_LABEL={breve:'Breve',media:'Media',lunga:'Lunga'};
 let ADVS={}, currentId=null, isAdmin=false;
+
+/* i 10 slot base + quelli extra (adv11, adv12…) che hanno contenuto */
+function allSlots(){
+  const ids=new Set(SLOTS);
+  Object.keys(ADVS).forEach(id=>{
+    const m=id.match(/^adv(\d+)$/);
+    if(m&&ADVS[id]&&ADVS[id].title)ids.add(id);
+  });
+  return [...ids].sort((a,b)=>parseInt(a.slice(3),10)-parseInt(b.slice(3),10));
+}
 
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function skulls(n){
@@ -298,7 +326,8 @@ function fitBoard(){
   const gap=19;
   const availW=board.clientWidth, availH=board.clientHeight;
   if(availW<10||availH<10){requestAnimationFrame(fitBoard);return;}
-  const byHeight=(availH-gap)/2;
+  const rows=Math.max(2,Math.ceil(board.children.length/5));
+  const byHeight=(availH-(rows-1)*gap)/rows;
   const byWidth=((availW-4*gap)/5)*1.5;
   let ph=Math.min(byHeight,byWidth);
   board.style.setProperty('--ph',Math.floor(ph)+'px');
@@ -317,7 +346,7 @@ window.addEventListener('load',fitBoard);
 /* ═══ BACHECA ═══ */
 function renderBoard(){
   const el=document.getElementById('board');
-  el.innerHTML=SLOTS.map((id,i)=>{
+  el.innerHTML=allSlots().map((id,i)=>{
     const a=ADVS[id];
     const delay='style="animation-delay:'+(i*70)+'ms"';
     if(!a||!a.title){
@@ -348,6 +377,7 @@ function showAdv(id){
   let chips='';
   if(a.type) chips+='<span class="dchip"><span class="dchip-l">Campagna</span><span class="dchip-v">'+esc(a.type)+'</span></span>';
   if(a.mood) chips+='<span class="dchip"><span class="dchip-l">Mood</span><span class="dchip-v">'+esc(a.mood)+'</span></span>';
+  if(a.dur&&DUR_LABEL[a.dur]) chips+='<span class="dchip"><span class="dchip-l">Durata</span><span class="dchip-v">'+DUR_LABEL[a.dur]+'</span></span>';
   if(a.lethal>0) chips+='<span class="dchip"><span class="dchip-l">Letalità</span><span class="dchip-v">'+skulls(a.lethal)+'</span></span>';
   document.getElementById('d-chips').innerHTML=chips;
   const d=document.getElementById('d-desc');
@@ -384,15 +414,23 @@ window.addEventListener('auth-changed',ev=>{
 
 /* ═══ EDIT ═══ */
 let editingId=null;
+/* nuova locandina: primo numero libero dopo l'ultimo slot occupato */
+function addAdv(){
+  if(!isAdmin)return;
+  let max=10;
+  allSlots().forEach(id=>{max=Math.max(max,parseInt(id.slice(3),10));});
+  openEdit('adv'+(max+1));
+}
 function openEdit(id){
   if(!isAdmin)return;
   editingId=id;
   const a=ADVS[id]||{};
-  document.getElementById('edit-title').textContent='Locandina '+(SLOTS.indexOf(id)+1)+' di 10';
+  document.getElementById('edit-title').textContent='Locandina '+id.replace('adv','');
   document.getElementById('f-title').value=a.title||'';
   document.getElementById('f-img').value=a.img||'';
   document.getElementById('f-type').value=a.type||'';
   document.getElementById('f-mood').value=a.mood||'';
+  document.getElementById('f-dur').value=a.dur||'';
   document.getElementById('f-lethal').value=a.lethal||'0';
   document.getElementById('f-desc').value=a.desc||'';
   document.getElementById('save-msg').style.display='none';
@@ -407,6 +445,7 @@ function saveAdv(){
     img:document.getElementById('f-img').value.trim(),
     type:document.getElementById('f-type').value.trim(),
     mood:document.getElementById('f-mood').value.trim(),
+    dur:document.getElementById('f-dur').value,
     lethal:parseInt(document.getElementById('f-lethal').value,10)||0,
     desc:document.getElementById('f-desc').value.trim()
   };
