@@ -8,7 +8,7 @@
 <title>Le Cronache di Gwernia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&amp;family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;display=swap" rel="stylesheet">
 <style>
 /* ═══════════ TOKENS ═══════════ */
 :root{
@@ -256,7 +256,16 @@ footer{position:relative;z-index:1;background:var(--bg);border-top:2px solid var
 .al-nm{background:rgba(180,60,160,.12);border:1.5px solid rgba(180,60,160,.35);color:#d090c8}
 .al-cm{background:rgba(220,40,40,.15);border:1.5px solid rgba(220,40,40,.42);color:#f09090}
 .deity-type{font-size:.84rem;color:rgba(187,169,140,.72)}
-.deity-subgroup td{font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);padding:.9rem 1rem .4rem;background:rgba(201,168,76,.04);border-bottom:1px solid rgba(201,168,76,.18)}
+.deity-table .deity-subgroup td{
+  font-family:'Cinzel','Palatino Linotype','Book Antiqua',Palatino,serif;
+  font-size:.8rem;font-weight:700;letter-spacing:.3em;text-transform:uppercase;
+  color:var(--gold-light);text-shadow:0 0 12px rgba(201,168,76,.35);
+  padding:1.15rem 1rem .6rem;
+  background:linear-gradient(90deg,rgba(201,168,76,.16),rgba(201,168,76,.04) 55%,transparent);
+  border-top:2px solid rgba(201,168,76,.45);
+  border-bottom:1px solid rgba(201,168,76,.25);
+}
+.deity-table .deity-subgroup td::before{content:'✦';color:var(--gold);margin-right:.7rem;text-shadow:0 0 10px var(--glow)}
 
 
 /* ═══════════ PERSONAGGI (same layout as zodiac) ═══════════ */
@@ -642,6 +651,20 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
 .map-pin-delete{position:absolute;top:.8rem;right:2.5rem;background:none;border:none;color:rgba(255,80,80,.5);font-size:1rem;cursor:pointer;transition:color .2s;line-height:1}
 .map-pin-delete:hover{color:rgba(255,80,80,.9)}
 #page-ravenholm,#page-mappa{min-height:0!important;height:93vh;overflow:hidden}
+
+/* ═══ LEGGIBILITÀ ETICHETTE: Cinzel (tratti solidi) al posto del Cormorant sottile ═══ */
+.page-header-tag,.pantheon-subtitle,.hero-eyebrow,.dd-title,.nav-link,.nav-logo,
+.deity-table th,.al,
+.cat-index-tag,.cat-nav-wip,.cat-section-label,.hero-scroll span,.img-label,
+.map-hint,.map-legend-section,.map-mode-hint,.map-pin-tooltip,.map-popup-desc h3,.map-popup-edit label,.map-popup-save,
+.mystery-badge-text,.mystery-page-tag,.mystery-subtitle,.mystery-tag,.narr-title,
+.occulte-title,.org-desc-unknown,.org-discover span,.org-meta-key,
+.piano-section-title,.piano-trait,.search-hint,.search-no-results,.search-result-cat,
+.terr-leader-name,.terr-section-label,.timeline-era-label,.worldmap-loading,
+.z-badge,.zodiac-img-label,.zodiac-race{
+  font-family:'Cinzel','Palatino Linotype','Book Antiqua',Palatino,serif;
+  font-weight:600;
+}
 </style>
 <style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style><style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style><style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style><style>:is([id*='google_ads_iframe'],[id*='taboola-'],.taboolaHeight,.taboola-placeholder,#top-ad,#credential_picker_container,#credentials-picker-container,#credential_picker_iframe,[id*='google-one-tap-iframe'],#google-one-tap-popup-container,.google-one-tap__module,.google-one-tap-modal-div,#amp_floatingAdDiv,#ez-content-blocker-container) {display:none!important;min-height:0!important;height:0!important;}</style></head>
 <body>
@@ -806,7 +829,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     <li class="nav-item">
       <a class="nav-link">Organizzazioni</a>
       <div class="dropdown">
-        <span class="dd-title">Considerate Positive</span>
+        <span class="dd-title">Associazioni Positive</span>
         <div class="dd-sub">
           <a class="dd-link" onclick="showPage(&#39;org-evergreen&#39;)">Alleanza degli Evergreen</a>
           <a class="dd-link" onclick="showPage(&#39;org-brema&#39;)">Accademia di Brema</a>
@@ -817,12 +840,12 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <a class="dd-link" onclick="showPage(&#39;org-sancta&#39;)">Sancta Fides</a>
         </div>
         <div class="dd-divider"></div>
-        <span class="dd-title">Considerate Neutrali</span>
+        <span class="dd-title">Associazioni Neutrali</span>
         <div class="dd-sub">
           <a class="dd-link" onclick="showPage(&#39;org-rodhrass&#39;)">Enclave di Rodhrass</a>
         </div>
         <div class="dd-divider"></div>
-        <span class="dd-title">Considerate Negative</span>
+        <span class="dd-title">Associazioni Negative</span>
         <div class="dd-sub">
           <a class="dd-link" onclick="showPage(&#39;org-karak&#39;)">Legione di Karak-Dûm</a>
           <a class="dd-link" onclick="showPage(&#39;org-rosa&#39;)">Ordine della Rosa</a>
@@ -835,7 +858,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
       </div>
     </li>
     <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/archivio">Archivio</a></li>
-    <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/avventure">Avventure</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/Avventure">Avventure</a></li>
   </ul>
   <button id="search-btn" onclick="openSearch()" title="Cerca">⚲</button><button id="admin-login-btn" onclick="openAdminLogin()" title="Accedi">⚿</button></div>
 </nav>
@@ -1588,6 +1611,27 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Deep Duerra</td><td class="sym">Cranio di illithid</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Psionici, Conquista, Duergar</td></tr>
           <tr><td>Laduguer</td><td class="sym">Freccia spezzata</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Artigianato, Protezione, Duergar</td></tr>
 
+          <tr class="deity-subgroup"><td colspan="5">Giganti</td></tr>
+          <tr><td>Annam il Padre di Tutti</td><td class="sym">Due mani incrociate a palmi uniti</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Magia, Fertilità, Sapere, Creatore dei Giganti</td></tr>
+          <tr><td>Stronmaus</td><td class="sym">Fulmine biforcuto sotto nube e sole</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Sole, Cielo, Tempeste, Giganti delle Tempeste e delle Nuvole</td></tr>
+          <tr><td>Hiatea</td><td class="sym">Lancia fiammeggiante</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Natura, Caccia, Agricoltura, Maternità</td></tr>
+          <tr><td>Grolantor</td><td class="sym">Clava di legno</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Combattimento, Fame, Giganti delle Colline</td></tr>
+          <tr><td>Memnor</td><td class="sym">Obelisco nero sottile</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Orgoglio, Inganno, Giganti delle Nuvole Malvagi</td></tr>
+          <tr><td>Skoraeus Stonebones</td><td class="sym">Stalattite</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Pietra, Arte, Giganti di Pietra</td></tr>
+          <tr><td>Surtur</td><td class="sym">Spada fiammeggiante</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Fuoco, Fabbri, Giganti del Fuoco</td></tr>
+          <tr><td>Thrym</td><td class="sym">Ascia bipenne bianca</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Gelo, Forza, Giganti del Gelo</td></tr>
+          <tr><td>Iallanis</td><td class="sym">Ghirlanda di fiori</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Amore, Misericordia, Perdono</td></tr>
+
+          <tr class="deity-subgroup"><td colspan="5">Goblinoidi e Coboldi</td></tr>
+          <tr><td>Maglubiyet</td><td class="sym">Ascia insanguinata</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Guerra, Dominio, Goblinoidi</td></tr>
+          <tr><td>Hruggek</td><td class="sym">Mazza chiodata</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Violenza, Imboscate, Bugbear</td></tr>
+          <tr><td>Kurtulmak</td><td class="sym">Teschio di gnomo</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Guerra, Miniere, Coboldi</td></tr>
+
+          <tr class="deity-subgroup"><td colspan="5">Popoli Acquatici</td></tr>
+          <tr><td>Sekolah</td><td class="sym">Squalo</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Caccia, Squali, Sahuagin</td></tr>
+          <tr><td>Eadro</td><td class="sym">Spirale d'acqua</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Mare, Correnti, Merfolk</td></tr>
+          <tr><td>Blibdoolpoolp</td><td class="sym">Testa d'aragosta o perla nera</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Follia, Abissi, Kuo-toa</td></tr>
+
           <tr class="deity-subgroup"><td colspan="5">Draghi</td></tr>
           <tr><td>Bahamut</td><td class="sym">Drago d'oro su sfondo azzurro</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Draghi Buoni, Vento, Giustizia</td></tr>
           <tr><td>Tiamat</td><td class="sym">Draco a cinque teste</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Draghi Malvagi, Avidità, Tirannide</td></tr>
@@ -1597,7 +1641,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
 
     <!-- GRECO -->
     <div class="pantheon-section reveal" style="margin-top:4rem;padding-bottom:1rem">
-      <h2 class="pantheon-title">Pantheon Greco</h2>
+      <h2 class="pantheon-title">Culto dell'Occidente</h2>
       <p class="pantheon-subtitle">✦ &nbsp; Divinità Umane &nbsp; ✦</p>
       <div class="pantheon-divider"></div>
       <table class="deity-table">
@@ -1627,7 +1671,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
 
     <!-- EGIZIO -->
     <div class="pantheon-section reveal" style="margin-top:4rem;padding-bottom:1rem">
-      <h2 class="pantheon-title">Pantheon Egizio</h2>
+      <h2 class="pantheon-title">Culto del Deserto</h2>
       <p class="pantheon-subtitle">✦ &nbsp; Divinità Umane &nbsp; ✦</p>
       <div class="pantheon-divider"></div>
       <table class="deity-table">
@@ -1657,7 +1701,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
 
     <!-- NORRENO -->
     <div class="pantheon-section reveal" style="margin-top:4rem;padding-bottom:3rem">
-      <h2 class="pantheon-title">Pantheon Norreno</h2>
+      <h2 class="pantheon-title">Culto del Nord</h2>
       <p class="pantheon-subtitle">✦ &nbsp; Divinità Umane &nbsp; ✦</p>
       <div class="pantheon-divider"></div>
       <table class="deity-table">
@@ -1683,7 +1727,6 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Skadi</td><td class="sym">Cima montuosa</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Inverno, Caccia, Montagne</td></tr>
           <tr><td>Odur</td><td class="sym">Disco solare</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Semidivinità</td><td class="deity-type">Sole, Luce Estiva</td></tr>
           <tr class="deity-subgroup"><td colspan="5">Jotunn e Altre Entità</td></tr>
-          <tr><td>Surtur</td><td class="sym">Spada fiammeggiante</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Fuoco, Ragnarok, Distruzione</td></tr>
           <tr><td>Aegir</td><td class="sym">Onda tempestosa</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Mare, Tempeste, Banchetti</td></tr>
           <tr><td>Uller</td><td class="sym">Arco lungo</td><td><span class="al al-cn">CN</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Caccia, Inverno, Duelli</td></tr>
         </tbody>
@@ -2455,7 +2498,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     </div>
     <hr class="org-divider">
     <div class="org-landscape reveal visible" style="transition-delay:.1s"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1773844766/tenuta-rose_oqyyps.webp"></div>
-	  <p class="org-desc">Nessuno sa con certezza se l'<em>Ordine della Rosa</em> esista davvero come organizzazione, o se sia soltanto il nome che la gente ha dato a una serie di coincidenze troppo precise per essere casuali. Il poco che si crede di sapere è sempre di seconda mano, ma basta a seminare timore ovunque: una <em>Rosa Rossa</em> recisa di fresco, lasciata dove non dovrebbe poter comparire.
+	  <p class="org-desc">Nessuno sa con certezza se l'<em>Ordine della Rosa</em> esista davvero come organizzazione, o se sia semplicemente il nome che la gente ha dato a una serie di coincidenze troppo precise per essere casuali. Quello che si sa, o che si crede di sapere, è poco e sempre di seconda mano. Qualcuno scompare. Una figura influente, un mercante ricco, un nobile con troppi segreti, un religioso con troppo potere. Non c'è violenza apparente, solo sparizione. La camera è in ordine, i documenti sono al loro posto, la cena è ancora sul tavolo. L'unica cosa fuori posto è una <em>Rosa Rossa</em>, recisa di fresco, posata con cura in un punto che non può essere casuale. Chi trova la rosa capisce che non si tratta di una comune scomparsa. Le voci che circolano nei bassifondi e nelle corti, spesso le stesse, descrivono figure eleganti, per lo più femminili, che entrano dove non dovrebbero poter entrare e che non lasciano mai nulla di sé se non quel fiore. Nessuno sa chi le mandi, nessuno sa i loro obiettivi.
 </p>
  
   </div>
