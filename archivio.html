@@ -559,8 +559,10 @@ function buildShelf(){
         '<button class="book-admin-btn" title="'+(isLocked?'Sblocca':'Blocca')+'" onclick="event.stopPropagation();toggleBookLocked(\''+id+'\')">'+(isLocked?'🔓':'🔒')+'</button>'+
         '<button class="book-admin-btn" title="Elimina" onclick="event.stopPropagation();deleteBook(\''+id+'\')">🗑</button>'+
       '</div>';
-      if(isLocked){
-        if(window.fbIsAdmin){
+      // Finché non conosciamo lo stato reale (Firestore), NESSUNA copertina viene emessa:
+      // così al reload non si vede mai il lampo di una copertina che poi sparisce.
+      if(isLocked || !window.__booksReady){
+        if(isLocked && window.__booksReady && window.fbIsAdmin){
           html+='<div class="cover-book locked admin-peek"><img src="'+escAttr(b.cover)+'" alt="" loading="lazy"><div class="locked-deco"></div></div>';
         } else {
           html+='<div class="cover-book locked"><div class="locked-deco"></div></div>';
@@ -577,6 +579,9 @@ function buildShelf(){
 }
 window.renderShelf = buildShelf;
 BOOKS = buildStaticBooks();
+// Le copertine restano celate finché non arriva lo stato autorevole da Firestore:
+// evita lo spoiler del reload (copertina mostrata e poi nascosta).
+window.__booksReady = false;
 buildShelf();
 /* ricostruisce le file quando cambia il numero di libri per ripiano */
 var _shelfCols = shelfPerRow();
@@ -595,9 +600,17 @@ window.addEventListener('resize', function(){
       else merged[id] = Object.assign({}, merged[id]||{}, d);
     });
     BOOKS = merged;
+    window.__booksReady = true;   // stato reale ricevuto: ora è sicuro rivelare le copertine
     buildShelf();
   });
 })();
+/* Rete assente o Firestore irraggiungibile (es. file aperto offline): dopo l'attesa
+   si rivela comunque usando lo stato statico, unica fonte disponibile. È il PRIMO
+   svelamento, quindi non produce mai il lampo — nessuna copertina viene prima
+   mostrata e poi nascosta. */
+setTimeout(function(){
+  if(!window.__booksReady){ window.__booksReady = true; buildShelf(); }
+}, 6000);
 
 /* ═══ ADMIN: CRUD LIBRI ═══ */
 let _editingBookId = null;
