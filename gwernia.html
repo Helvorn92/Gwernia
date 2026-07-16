@@ -858,7 +858,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
       </div>
     </li>
     <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/archivio">Archivio</a></li>
-    <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/avventure">Avventure</a></li>
+    <li class="nav-item"><a class="nav-link" href="https://helvorn92.github.io/World/Avventure">Avventure</a></li>
   </ul>
   <button id="search-btn" onclick="openSearch()" title="Cerca">⚲</button><button id="admin-login-btn" onclick="openAdminLogin()" title="Accedi">⚿</button></div>
 </nav>
@@ -1545,15 +1545,39 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
   </div>
   <div class="celesti-page">
 
-    <!-- NON UMANO -->
+    <!-- UMANI -->
     <div class="pantheon-section reveal visible">
-      <h2 class="pantheon-title">Pantheon Esotico</h2>
-      <p class="pantheon-subtitle">✦ &nbsp; Divinità Non Umane &nbsp; ✦</p>
+      <h2 class="pantheon-title">Umani</h2>
       <div class="pantheon-divider"></div>
       <table class="deity-table">
-        <thead><tr><th>Nome</th><th>Simbolo</th><th>Allineamento</th><th>Tipo</th><th>Popolo / Dominio</th></tr></thead>
         <tbody>
-          <tr class="deity-subgroup"><td colspan="5">Elfi</td></tr>
+          <tr><td>Lathander</td><td class="sym">Disco rosato dell'alba</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Alba, Rinascita, Primavera</td></tr>
+          <tr><td>Tyr</td><td class="sym">Bilancia su martello da guerra</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Giustizia, Legge</td></tr>
+          <tr><td>Tempus</td><td class="sym">Fiamma d'argento su scudo</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Guerra, Battaglia, Onore</td></tr>
+          <tr><td>Waukeen</td><td class="sym">Moneta con testa di donna</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Commercio, Ricchezza, Patti</td></tr>
+          <tr><td>Bane</td><td class="sym">Mano nera con dita rosse</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Tirannia, Odio, Paura</td></tr>
+          <tr><td>Shar</td><td class="sym">Disco nero orlato di viola</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Oscurità, Perdita, Oblio</td></tr>
+          <tr><td>Cyric</td><td class="sym">Teschio su sole nero</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Menzogna, Follia, Omicidio</td></tr>
+          <tr><td>Mystra</td><td class="sym">Cerchio di sette stelle</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Magia, Trama</td></tr>
+          <tr><td>Chauntea</td><td class="sym">Rosa su covone</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Agricoltura, Terra, Vita</td></tr>
+          <tr><td>Ilmater</td><td class="sym">Mani legate con corda rossa</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Sofferenza, Resistenza, Martirio</td></tr>
+          <tr><td>Silvanus</td><td class="sym">Foglia di quercia</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Natura Selvaggia, Equilibrio</td></tr>
+          <tr><td>Selûne</td><td class="sym">Occhi in cerchio di luna</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Luna, Navigazione, Erranti</td></tr>
+          <tr><td>Kelemvor</td><td class="sym">Bilancia su teschio</td><td><span class="al al-ln">LN</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Morte, Giudizio</td></tr>
+          <tr><td>Talos</td><td class="sym">Tre fulmini da un occhio</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Tempeste, Distruzione</td></tr>
+          <tr><td>Umberlee</td><td class="sym">Onda azzurra con creste bianche</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Mare, Tempeste, Annegamento</td></tr>
+          <tr><td>Loviatar</td><td class="sym">Frusta a nove code</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Dolore, Tortura</td></tr>
+          <tr><td>Mask</td><td class="sym">Maschera di velluto nero</td><td><span class="al al-cn">CN</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Ladri, Ombre, Furto</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ELFI -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Elfi</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Corellon Larethian</td><td class="sym">Quarto di luna crescente</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Magia, Musica, Arti, Elfi</td></tr>
           <tr><td>Sehanine Moonbow</td><td class="sym">Luna piena velata</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Illusione, Viaggi, Luna, Elfi Alti</td></tr>
           <tr><td>Deep Sashelas</td><td class="sym">Delfino</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Oceani, Bellezza, Elfi Acquatici</td></tr>
@@ -1563,7 +1587,16 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Rillifane Rallathil</td><td class="sym">Grande albero da combattimento</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Boschi, Natura, Elfi Silvani</td></tr>
           <tr><td>Solonor Thelandira</td><td class="sym">Freccia d'argento con penne verdi</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Caccia, Frecce, Foreste</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Nani</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- NANI -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Nani</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Moradin</td><td class="sym">Martello da guerra su incudine</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Creazione, Nani, Fabbricazione</td></tr>
           <tr><td>Berronar Truesilver</td><td class="sym">Due anelli d'argento intrecciati</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Casa, Onore, Guarigione</td></tr>
           <tr><td>Clangeddin Silverbeard</td><td class="sym">Due asce da battaglia incrociate</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Battaglia, Coraggio, Guerra Nanica</td></tr>
@@ -1573,7 +1606,16 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Thard Harr</td><td class="sym">Due asce da mano incrociate</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Natura Selvaggia, Nani della Jungla</td></tr>
           <tr><td>Vergadain</td><td class="sym">Faccia di nano su moneta d'oro</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Ricchezza, Commercio, Fortuna</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Halfling</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- HALFLING -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Halfling</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Yondalla</td><td class="sym">Scudo cornuto</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Protezione, Fertilità, Halfling</td></tr>
           <tr><td>Arvoreen</td><td class="sym">Due spade corte incrociate</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Difesa, Vigilanza, Guerra</td></tr>
           <tr><td>Brandobaris</td><td class="sym">Piede di halfling su moneta</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Furtività, Avventura, Ladri</td></tr>
@@ -1581,7 +1623,16 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Sheela Peryroyl</td><td class="sym">Fiore verde</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Natura, Agricoltura, Vento</td></tr>
           <tr><td>Urogalan</td><td class="sym">Sagoma nera di cane</td><td><span class="al al-ln">LN</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Terra, Morte, Lutto</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Gnomi</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- GNOMI -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Gnomi</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Garl Glittergold</td><td class="sym">Nugget d'oro</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Ingegno, Protezione, Umorismo, Gnomi</td></tr>
           <tr><td>Baervan Wildwanderer</td><td class="sym">Volto di procione</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Foreste, Viaggi, Gnomi dei Boschi</td></tr>
           <tr><td>Baravar Cloakshadow</td><td class="sym">Mantello e pugnale</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Illusione, Inganno, Protezione</td></tr>
@@ -1590,7 +1641,16 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Segojan Earthcaller</td><td class="sym">Topo illuminate</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Terra, Comunità, Animali Sotterranei</td></tr>
           <tr><td>Urdlen</td><td class="sym">Talpa bianca con artigli</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Avidità, Crudeltà, Omicidio</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Orchi</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ORCHI -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Orchi</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Gruumsh</td><td class="sym">Occhio fiammante</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Tempeste, Distruzione, Orchi</td></tr>
           <tr><td>Bahgtru</td><td class="sym">Ossa spezzate</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Forza Bruta, Stupidità</td></tr>
           <tr><td>Ilneval</td><td class="sym">Spada insanguinata</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Strategia di Guerra, Mezzorchi</td></tr>
@@ -1598,7 +1658,16 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Shargaas</td><td class="sym">Teschio rosso su luna nera</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Oscurità, Furtività, Ladri Orchi</td></tr>
           <tr><td>Yurtrus</td><td class="sym">Mano bianca</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Morte, Malattia, Pestilenza</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Drow</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DROW -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Drow</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Lolth</td><td class="sym">Ragno nero</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Ragni, Oscurità, Tradimento, Drow</td></tr>
           <tr><td>Eilistraee</td><td class="sym">Drow danzante con spada argentata</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Amore, Bellezza, Danza, Drow Buoni</td></tr>
           <tr><td>Ghaunadaur</td><td class="sym">Occhio viola</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Ooze, Aberrazioni, Reietti</td></tr>
@@ -1607,11 +1676,29 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Vhaeraun</td><td class="sym">Maschera nera</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Furto, Scorrerie, Mezzorchi Drow</td></tr>
 
 
-          <tr class="deity-subgroup"><td colspan="5">Duergar</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DUERGAR -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Duergar</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Deep Duerra</td><td class="sym">Cranio di illithid</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Psionici, Conquista, Duergar</td></tr>
           <tr><td>Laduguer</td><td class="sym">Freccia spezzata</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Artigianato, Protezione, Duergar</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Giganti</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- GIGANTI -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Giganti</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Annam il Padre di Tutti</td><td class="sym">Due mani incrociate a palmi uniti</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Magia, Fertilità, Sapere, Creatore dei Giganti</td></tr>
           <tr><td>Stronmaus</td><td class="sym">Fulmine biforcuto sotto nube e sole</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Sole, Cielo, Tempeste, Giganti delle Tempeste e delle Nuvole</td></tr>
           <tr><td>Hiatea</td><td class="sym">Lancia fiammeggiante</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Natura, Caccia, Agricoltura, Maternità</td></tr>
@@ -1622,113 +1709,46 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
           <tr><td>Thrym</td><td class="sym">Ascia bipenne bianca</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Gelo, Forza, Giganti del Gelo</td></tr>
           <tr><td>Iallanis</td><td class="sym">Ghirlanda di fiori</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Amore, Misericordia, Perdono</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Goblinoidi e Coboldi</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- GOBLINOIDI E COBOLDI -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Goblinoidi e Coboldi</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Maglubiyet</td><td class="sym">Ascia insanguinata</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Guerra, Dominio, Goblinoidi</td></tr>
           <tr><td>Hruggek</td><td class="sym">Mazza chiodata</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Violenza, Imboscate, Bugbear</td></tr>
           <tr><td>Kurtulmak</td><td class="sym">Teschio di gnomo</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Guerra, Miniere, Coboldi</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Popoli Acquatici</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- POPOLI ACQUATICI -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem">
+      <h2 class="pantheon-title">Popoli Acquatici</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Sekolah</td><td class="sym">Squalo</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Caccia, Squali, Sahuagin</td></tr>
           <tr><td>Eadro</td><td class="sym">Spirale d'acqua</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Mare, Correnti, Merfolk</td></tr>
           <tr><td>Blibdoolpoolp</td><td class="sym">Testa d'aragosta o perla nera</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Follia, Abissi, Kuo-toa</td></tr>
 
-          <tr class="deity-subgroup"><td colspan="5">Draghi</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- DRAGHI -->
+    <div class="pantheon-section reveal visible" style="margin-top:1rem;padding-bottom:3rem">
+      <h2 class="pantheon-title">Draghi</h2>
+      <div class="pantheon-divider"></div>
+      <table class="deity-table">
+        <tbody>
           <tr><td>Bahamut</td><td class="sym">Drago d'oro su sfondo azzurro</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Draghi Buoni, Vento, Giustizia</td></tr>
           <tr><td>Tiamat</td><td class="sym">Draco a cinque teste</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Draghi Malvagi, Avidità, Tirannide</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- GRECO -->
-    <div class="pantheon-section reveal" style="margin-top:4rem;padding-bottom:1rem">
-      <h2 class="pantheon-title">Culto dell'Occidente</h2>
-      <p class="pantheon-subtitle">✦ &nbsp; Divinità Umane &nbsp; ✦</p>
-      <div class="pantheon-divider"></div>
-      <table class="deity-table">
-        <thead><tr><th>Nome</th><th>Simbolo</th><th>Allineamento</th><th>Tipo</th><th>Dominio</th></tr></thead>
-        <tbody>
-          <tr><td>Zeus</td><td class="sym">Fulmine</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Cielo, Tuono, Re degli Dèi</td></tr>
-          <tr><td>Era</td><td class="sym">Corona e scettro</td><td><span class="al al-ln">LN</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Matrimonio, Donne, Fedeltà</td></tr>
-          <tr><td>Poseidone</td><td class="sym">Tridente</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Mare, Terremoti, Cavalli</td></tr>
-          <tr><td>Demetra</td><td class="sym">Spiga di grano</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Agricoltura, Fertilità, Stagioni</td></tr>
-          <tr><td>Atena</td><td class="sym">Civetta su elmo</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Saggezza, Artigianato, Guerra Giusta</td></tr>
-          <tr><td>Apollo</td><td class="sym">Arco d'argento e sole</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Sole, Musica, Profezia, Guarigione</td></tr>
-          <tr><td>Artemide</td><td class="sym">Luna crescente e freccia</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Caccia, Luna, Foreste, Verginità</td></tr>
-          <tr><td>Ares</td><td class="sym">Lancia e scudo insanguinato</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Guerra, Sangue, Violenza</td></tr>
-          <tr><td>Afrodite</td><td class="sym">Conchiglia e colomba</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Amore, Bellezza, Desiderio</td></tr>
-          <tr><td>Efesto</td><td class="sym">Martello e incudine</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Fuoco, Fabbricazione, Artigianato</td></tr>
-          <tr><td>Ermes</td><td class="sym">Caduceo con ali</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Messaggeri, Viaggi, Commercio, Ladri</td></tr>
-          <tr><td>Dioniso</td><td class="sym">Tralcio di vite</td><td><span class="al al-cn">CN</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Vino, Estasi, Teatro, Follia</td></tr>
-          <tr><td>Ade</td><td class="sym">Corona di cipresso nero</td><td><span class="al al-ln">LN</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Morte, Oltretomba, Ricchezze Sotterranee</td></tr>
-          <tr><td>Ecate</td><td class="sym">Luna triforme</td><td><span class="al al-cn">CN</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Magia, Incroci, Spiriti, Notte</td></tr>
-          <tr><td>Eracle</td><td class="sym">Clava e pelle di leone</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Forza, Eroi, Imprese Sovrumane</td></tr>
-          <tr><td>Nike</td><td class="sym">Ali e corona d'alloro</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Vittoria, Successo, Gloria</td></tr>
-          <tr><td>Pan</td><td class="sym">Flauto e zoccolo di capra</td><td><span class="al al-cn">CN</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Natura Selvaggia, Greggi, Panico</td></tr>
-          <tr><td>Tiche</td><td class="sym">Ruota della fortuna</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Fortuna, Caso, Destino</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- EGIZIO -->
-    <div class="pantheon-section reveal" style="margin-top:4rem;padding-bottom:1rem">
-      <h2 class="pantheon-title">Culto del Deserto</h2>
-      <p class="pantheon-subtitle">✦ &nbsp; Divinità Umane &nbsp; ✦</p>
-      <div class="pantheon-divider"></div>
-      <table class="deity-table">
-        <thead><tr><th>Nome</th><th>Simbolo</th><th>Allineamento</th><th>Tipo</th><th>Dominio</th></tr></thead>
-        <tbody>
-          <tr><td>Ra-Horakhty</td><td class="sym">Falco con disco solare</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Sole, Creazione, Re degli Dèi</td></tr>
-          <tr><td>Osiride</td><td class="sym">Crook e flail, corona Atef</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Morte, Resurrezione, Agricoltura</td></tr>
-          <tr><td>Iside</td><td class="sym">Trono sulla testa</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Magia, Maternità, Guarigione</td></tr>
-          <tr><td>Horus</td><td class="sym">Falco con doppia corona</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Cielo, Regalità, Protezione</td></tr>
-          <tr><td>Set</td><td class="sym">Bestia di Set</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Caos, Tempeste Desertiche, Tradimento</td></tr>
-          <tr><td>Anubi</td><td class="sym">Testa di sciacallo</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Morte, Imbalsamazione, Giudizio</td></tr>
-          <tr><td>Thot</td><td class="sym">Ibis e caduceo</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Conoscenza, Scrittura, Luna, Magia</td></tr>
-          <tr><td>Bast</td><td class="sym">Gatto o donna gatto</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Gatti, Casa, Protezione, Gioia</td></tr>
-          <tr><td>Hathor</td><td class="sym">Mucca con disco solare</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Amore, Bellezza, Fertilità, Musica</td></tr>
-          <tr><td>Ptah</td><td class="sym">Scettro djed</td><td><span class="al al-ln">LN</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Creazione, Artigianato, Architetti</td></tr>
-          <tr><td>Nefti</td><td class="sym">Casa e canestro</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Funerali, Lutto, Protezione dei Morti</td></tr>
-          <tr><td>Nut</td><td class="sym">Donna arcuata con stelle</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Cielo Notturno, Stelle, Cosmologia</td></tr>
-          <tr><td>Geb</td><td class="sym">Uomo steso con piante</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Terra, Terremoti, Vegetazione</td></tr>
-          <tr><td>Sekhmet</td><td class="sym">Testa di leonessa</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Guerra, Guarigione, Pestilenza</td></tr>
-          <tr><td>Sobek</td><td class="sym">Coccodrillo</td><td><span class="al al-lm">LM</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Forza, Fiumi, Coccodrilli</td></tr>
-          <tr><td>Apep (Apophis)</td><td class="sym">Serpente avvolto</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Caos Primordiale, Oscurità</td></tr>
-          <tr><td>Imhotep</td><td class="sym">Pergamena</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Medicina, Sapienza</td></tr>
-          <tr><td>Bes</td><td class="sym">Immagine di Bes</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Famiglie, Nascite, Protezione</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- NORRENO -->
-    <div class="pantheon-section reveal" style="margin-top:4rem;padding-bottom:3rem">
-      <h2 class="pantheon-title">Culto del Nord</h2>
-      <p class="pantheon-subtitle">✦ &nbsp; Divinità Umane &nbsp; ✦</p>
-      <div class="pantheon-divider"></div>
-      <table class="deity-table">
-        <thead><tr><th>Nome</th><th>Simbolo</th><th>Allineamento</th><th>Tipo</th><th>Dominio</th></tr></thead>
-        <tbody>
-          <tr class="deity-subgroup"><td colspan="5">Aesir</td></tr>
-          <tr><td>Odino (Odin)</td><td class="sym">Occhio blu vigile</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Saggezza, Guerra, Morte, Magia</td></tr>
-          <tr><td>Thor</td><td class="sym">Martello (Mjolnir)</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Tuono, Forza, Protezione</td></tr>
-          <tr><td>Tyr</td><td class="sym">Spada e bilancia</td><td><span class="al al-ln">LN</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Giustizia, Guerra Onorevole</td></tr>
-          <tr><td>Balder (Baldur)</td><td class="sym">Gemma d'argento</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Bellezza, Luce, Purezza</td></tr>
-          <tr><td>Loki</td><td class="sym">Fiamma</td><td><span class="al al-cm">CM</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Inganni, Astuzia, Fuoco</td></tr>
-          <tr><td>Heimdall</td><td class="sym">Corno d'oro ricurvo</td><td><span class="al al-lb">LB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Vigilanza, Custodi, Alba</td></tr>
-          <tr><td>Hel</td><td class="sym">Donna metà viva metà morta</td><td><span class="al al-nm">NM</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Morti, Regno dei Defunti</td></tr>
-          <tr><td>Frigga</td><td class="sym">Gatto</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Amore, Matrimonio, Profezia</td></tr>
-          <tr><td>Forseti</td><td class="sym">Testa barbuta</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Intermedia</td><td class="deity-type">Giustizia, Legge</td></tr>
-          <tr><td>Sif</td><td class="sym">Spada ascendente</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Terra, Raccolto, Guerra</td></tr>
-          <tr><td>Hermod</td><td class="sym">Scarpe alate</td><td><span class="al al-cn">CN</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Messaggeri, Velocità</td></tr>
-          <tr><td>Bragi</td><td class="sym">Arpa runica</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Poesia, Musica, Eloquenza</td></tr>
-          <tr class="deity-subgroup"><td colspan="5">Vanir</td></tr>
-          <tr><td>Freya</td><td class="sym">Falcone</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Maggiore</td><td class="deity-type">Amore, Guerra, Fertilità, Magia</td></tr>
-          <tr><td>Freyr (Frey)</td><td class="sym">Spadone celeste di ghiaccio</td><td><span class="al al-nb">NB</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Fertilità, Sole, Prosperità</td></tr>
-          <tr><td>Njord</td><td class="sym">Testa di alce</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Mare, Vento, Pesca</td></tr>
-          <tr><td>Skadi</td><td class="sym">Cima montuosa</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Inverno, Caccia, Montagne</td></tr>
-          <tr><td>Odur</td><td class="sym">Disco solare</td><td><span class="al al-cb">CB</span></td><td class="deity-type">Semidivinità</td><td class="deity-type">Sole, Luce Estiva</td></tr>
-          <tr class="deity-subgroup"><td colspan="5">Jotunn e Altre Entità</td></tr>
-          <tr><td>Aegir</td><td class="sym">Onda tempestosa</td><td><span class="al al-n">N</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Mare, Tempeste, Banchetti</td></tr>
-          <tr><td>Uller</td><td class="sym">Arco lungo</td><td><span class="al al-cn">CN</span></td><td class="deity-type">Divinità Minore</td><td class="deity-type">Caccia, Inverno, Duelli</td></tr>
         </tbody>
       </table>
     </div>
@@ -2443,7 +2463,7 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     </div>
     <hr class="org-divider">
     <div class="org-landscape reveal" style="transition-delay:.1s"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1773844756/sancta-fides_r4o6s7.webp"></div>
-    <p class="org-desc">Il <em>Sancta Fides</em> è il nome che viene associato al culto di Pelor. Rappresenta la religione ufficiale di Eldoria che nel corso dei secoli ha quasi completamente soppiantato i tre principali Pantheon del regno: quello <em>Norreno</em>, quello <em>Egizio</em> e quello <em>Greco</em>. Un predominio reso possibile dal sostegno diretto della Monarchia, che costituisce la principale fonte di finanziamento del culto. A queste risorse si aggiungono le donazioni dei fedeli, che spesso lasciano eredità o offrono generose somme durante le cerimonie religiose, e i contributi di nobili e mercanti, desiderosi di ottenere la benedizione di <em>Pelor</em> per le loro imprese.</p>
+    <p class="org-desc">Il <em>Sancta Fides</em> è il nome che viene associato al culto di <em>Aureleth</em>. Rappresenta la religione ufficiale di Eldoria che nel corso dei secoli ha quasi completamente soppiantato le principali Divinità del regno. Un predominio reso possibile dal sostegno diretto della Monarchia, che costituisce la principale fonte di finanziamento del culto. A queste risorse si aggiungono le donazioni dei fedeli, che spesso lasciano eredità o offrono generose somme durante le cerimonie religiose, e i contributi di nobili e mercanti, desiderosi di ottenere la benedizione di Aureleth per le loro imprese.</p>
   </div>
   <footer><span class="footer-logo">✦ Le Cronache di Gwernia ✦</span><p class="footer-text">«Ogni mito cela una verità. Ogni leggenda, un frammento di storia perduta.»</p></footer>
 </div>
@@ -2498,7 +2518,8 @@ footer::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
     </div>
     <hr class="org-divider">
     <div class="org-landscape reveal visible" style="transition-delay:.1s"><img src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1773844766/tenuta-rose_oqyyps.webp"></div>
-	  <p class="org-desc">Nessuno sa con certezza se l'<em>Ordine della Rosa</em> Nessuno sa con certezza se l'Ordine della Rosa esista davvero come organizzazione, o se sia soltanto il nome che la gente ha dato a una serie di coincidenze troppo precise per essere casuali. Il poco che si crede di sapere è sempre di seconda mano, ma basta a seminare timore ovunque: una <em>Rosa Rossa</em> recisa di fresco, lasciata dove non dovrebbe poter comparire.</p>
+	  <p class="org-desc">Nessuno sa con certezza se l'<em>Ordine della Rosa</em> esista davvero come organizzazione, o se sia semplicemente il nome che la gente ha dato a una serie di coincidenze troppo precise per essere casuali. Quello che si sa, o che si crede di sapere, è poco e sempre di seconda mano. Qualcuno scompare. Una figura influente, un mercante ricco, un nobile con troppi segreti, un religioso con troppo potere. Non c'è violenza apparente, solo sparizione. La camera è in ordine, i documenti sono al loro posto, la cena è ancora sul tavolo. L'unica cosa fuori posto è una <em>Rosa Rossa</em>, recisa di fresco, posata con cura in un punto che non può essere casuale. Chi trova la rosa capisce che non si tratta di una comune scomparsa. Le voci che circolano nei bassifondi e nelle corti, spesso le stesse, descrivono figure eleganti, per lo più femminili, che entrano dove non dovrebbero poter entrare e che non lasciano mai nulla di sé se non quel fiore. Nessuno sa chi le mandi, nessuno sa i loro obiettivi.
+</p>
  
   </div>
   <footer><span class="footer-logo">✦ Le Cronache di Gwernia ✦</span><p class="footer-text">«Ogni mito cela una verità. Ogni leggenda, un frammento di storia perduta.»</p></footer>
@@ -3326,7 +3347,7 @@ window.addEventListener('admin-state-changed', e => {
 <div class="page" id="page-mappa">
   <div class="worldmap" id="worldmap">
     <div class="worldmap-loading" id="worldmap-loading">✦ &nbsp; La mappa si dispiega… &nbsp; ✦</div>
-    <img id="worldmap-img" data-src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1784216989/05---Gwernia-con-Nuvole_ino2nm.jpg" alt="Mappa di Gwernia" draggable="false">
+    <img id="worldmap-img" data-src="https://res.cloudinary.com/dkvotcvo6/image/upload/v1783366723/05---Gwernia-con-Nuvole_ino2nm.jpg" alt="Mappa di Gwernia" draggable="false">
     <div class="map-hint">Scorri per zoomare · Trascina per spostarti</div>
   </div>
 </div>
