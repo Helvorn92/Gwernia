@@ -43,7 +43,7 @@ button{font-family:inherit}
 /* ═══ INSEGNA ═══ */
 .marquee{text-align:center;margin-bottom:1.1rem;flex-shrink:0}
 .marquee-eyebrow{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:600;font-size:.66rem;letter-spacing:.55em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.5rem}
-.marquee-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:transparent;background:linear-gradient(165deg,#f0e6d3 0%,#e8c97a 30%,#c9a84c 55%,#fff3d6 65%,#a07828 90%);-webkit-background-clip:text;background-clip:text}
+.marquee-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:transparent;background:linear-gradient(165deg,#f0e6d3 0%,#e8c97a 30%,#c9a84c 55%,#fff3d6 65%,#a07828 90%);-webkit-background-clip:text;background-clip:text;padding:.1em 0 .22em;margin:-.1em 0 -.22em}
 .marquee-sub{font-style:italic;color:var(--cream-dim);font-size:.92rem;margin-top:.4rem}
 .marquee-lights{display:flex;justify-content:center;gap:.85rem;margin-top:.8rem}
 .marquee-lights span{width:7px;height:7px;border-radius:50%;background:radial-gradient(circle,#ffe9ad,#c9a84c 70%);box-shadow:0 0 10px rgba(232,201,122,.8);animation:bulb 2.2s ease-in-out infinite}
@@ -52,9 +52,17 @@ button{font-family:inherit}
 @keyframes bulb{0%,100%{opacity:1}50%{opacity:.25}}
 
 /* ═══ BACHECA ═══ */
-.board{flex:1;min-height:0;display:grid;grid-template-columns:repeat(5,auto);grid-template-rows:auto auto;gap:19px;justify-content:center;align-content:center}
+.board{flex:1;min-height:0;display:flex;flex-direction:column;gap:19px;justify-content:center;align-items:center}
+/* ogni fila: locandine affiancate, mai compresse, centrate */
+.shelf-row{display:flex;flex-wrap:nowrap;gap:19px;justify-content:center;align-items:flex-start}
+.board-empty{margin:auto;color:var(--cream-dim);font-style:italic;font-size:1.05rem;text-align:center}
+/* ═══ FILTRI DURATA ═══ */
+.filters{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-bottom:1rem;flex-shrink:0}
+.filter-btn{background:rgba(6,4,16,.7);border:1px solid rgba(201,168,76,.3);color:var(--gold-dim);font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:600;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;padding:.42rem 1rem;cursor:pointer;transition:all .2s}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold)}
+.filter-btn.active{background:rgba(201,168,76,.18);border-color:var(--gold);color:var(--gold-light)}
 .poster{
-  position:relative;cursor:pointer;height:var(--ph,340px);width:auto;
+  position:relative;cursor:pointer;height:var(--ph,340px);width:auto;flex:0 0 auto;
   background:var(--panel);
   border:1px solid rgba(201,168,76,.3);
   box-shadow:0 0 0 4px rgba(4,3,12,.9),0 0 0 5px rgba(201,168,76,.18),0 14px 34px rgba(0,0,0,.7);
@@ -94,7 +102,9 @@ body.is-admin .poster:hover .poster-edit{display:flex}
 .detail-poster.noimg{aspect-ratio:3/4}
 .detail-poster .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:5rem;color:rgba(201,168,76,.2)}
 .detail-info{min-width:0}
-.detail-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:700;font-size:clamp(2.2rem,4.2vw,3.4rem);line-height:1.08;letter-spacing:.04em;color:transparent;background:linear-gradient(165deg,#f0e6d3,#e8c97a 35%,#c9a84c 60%,#fff3d6 70%,#a07828);-webkit-background-clip:text;background-clip:text}
+/* padding + margin negativo di pari valore: allarga l'area in cui viene dipinto il gradiente
+   (altrimenti i tratti discendenti di g, p, q, y finiscono fuori e spariscono) senza spostare nulla */
+.detail-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:700;font-size:clamp(2.2rem,4.2vw,3.4rem);line-height:1.08;letter-spacing:.04em;color:transparent;background:linear-gradient(165deg,#f0e6d3,#e8c97a 35%,#c9a84c 60%,#fff3d6 70%,#a07828);-webkit-background-clip:text;background-clip:text;padding:.12em 0 .28em;margin:-.12em 0 -.28em}
 .detail-chips{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.2rem}
 .dchip{display:flex;flex-direction:column;gap:.2rem;border:1px solid rgba(201,168,76,.4);background:rgba(4,3,12,.78);padding:.55rem 1.05rem;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
 .dchip-l{font-family:'Lora',Georgia,serif;font-weight:700;font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
@@ -143,6 +153,8 @@ body.is-admin .add-adv-btn{display:flex}
 @media(max-width:900px){
   #board-view{position:static;display:block;padding:4.6rem 1.2rem 2.5rem}
   .board{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto;gap:1rem}
+  /* su mobile le file spariscono dal layout: le locandine tornano celle della griglia */
+  .shelf-row{display:contents}
   .poster{height:auto;width:100%}
   .poster img{width:100%;height:auto}
   .detail{grid-template-columns:1fr}
@@ -171,9 +183,10 @@ body.is-admin .add-adv-btn{display:flex}
     <div class="marquee">
       <p class="marquee-eyebrow">✦ &nbsp; Le Cronache di Gwernia &nbsp; ✦</p>
       <h1 class="marquee-title">Le Avventure</h1>
-      <p class="marquee-sub">Scegli l'avventura che fa per te.</p>
+      <p class="marquee-sub">Scegli l'Avventura che fa per te.</p>
       <div class="marquee-lights"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
     </div>
+    <div class="filters" id="filters"></div>
     <div class="board" id="board"></div>
   </div>
 
@@ -229,6 +242,7 @@ body.is-admin .add-adv-btn{display:flex}
     <div class="field"><label>Durata</label>
       <select id="f-dur">
         <option value="">— non indicata —</option>
+        <option value="oneshot">One Shot</option>
         <option value="breve">Breve</option>
         <option value="media">Media</option>
         <option value="lunga">Lunga</option>
@@ -297,8 +311,18 @@ window.addEventListener('resize',resizeStars);resizeStars();drawStars();
 
 /* ═══ DATI ═══ */
 const SLOTS=['adv1','adv2','adv3','adv4','adv5','adv6','adv7','adv8','adv9','adv10'];
-const DUR_LABEL={breve:'Breve',media:'Media',lunga:'Lunga'};
-let ADVS={}, currentId=null, isAdmin=false;
+const DUR_LABEL={oneshot:'One Shot',breve:'Breve',media:'Media',lunga:'Lunga'};
+let ADVS={}, currentId=null, isAdmin=false, currentFilter='all';
+
+/* ═══ FILTRI DURATA ═══ */
+const FILTERS=[['all','Tutte'],['oneshot','One Shot'],['breve','Breve'],['media','Media'],['lunga','Lunga']];
+function renderFilters(){
+  const el=document.getElementById('filters'); if(!el) return;
+  el.innerHTML=FILTERS.map(function(f){
+    return '<button class="filter-btn'+(currentFilter===f[0]?' active':'')+'" onclick="setFilter(\''+f[0]+'\')">'+f[1]+'</button>';
+  }).join('');
+}
+function setFilter(v){ currentFilter=v; renderFilters(); renderBoard(); }
 
 /* i 10 slot base + quelli extra (adv11, adv12…) che hanno contenuto */
 function allSlots(){
@@ -319,33 +343,39 @@ function skulls(n){
 }
 
 /* ═══ ADATTAMENTO ALLO SCHERMO ═══ */
-/* calcola l'altezza delle locandine perché 5×2 riempiano esattamente lo spazio, senza scroll */
+/* proporzione reale di ogni locandina (larghezza/altezza dell'immagine); default 2:3 */
+function ratioOf(p){
+  const img=p.querySelector('img');
+  if(img && img.naturalWidth>0 && img.naturalHeight>0) return img.naturalWidth/img.naturalHeight;
+  return 2/3;
+}
+/* Dimensiona le locandine (--ph) perché le file entrino esattamente nella videata:
+   ogni fila riempie la larghezza disponibile e le file insieme riempiono l'altezza.
+   L'altezza è sempre limitata da quella disponibile, quindi la bacheca non può mai
+   debordare sopra l'insegna. Le locandine non vengono mai compresse (flex:0 0 auto),
+   quindi la cornice segue il formato dell'immagine, senza bande e senza tagli. */
 function fitBoard(){
   const board=document.getElementById('board');
-  if(window.innerWidth<=900){board.style.removeProperty('--ph');board.style.removeProperty('grid-template-columns');return;}
+  if(!board) return;
+  if(window.innerWidth<=900){ board.style.removeProperty('--ph'); return; }
   const gap=19;
   const availW=board.clientWidth, availH=board.clientHeight;
-  if(availW<10||availH<10){requestAnimationFrame(fitBoard);return;}
-  const n=Math.max(1,board.children.length);
-  /* sceglie la combinazione file/colonne con le locandine più grandi:
-     a parità, vince quella con meno file → si riempie prima l'orizzontale */
-  let best={ph:0,cols:5};
-  for(let rows=1;rows<=Math.min(n,5);rows++){
-    const cols=Math.ceil(n/rows);
-    const cand=Math.min((availH-(rows-1)*gap)/rows,((availW-(cols-1)*gap)/cols)*1.5);
-    if(cand>best.ph)best={ph:cand,cols:cols};
-  }
-  board.style.gridTemplateColumns='repeat('+best.cols+',auto)';
-  let ph=best.ph;
-  board.style.setProperty('--ph',Math.floor(ph)+'px');
-  /* le locandine seguono il formato delle immagini: se la fila sfora in larghezza, riduci in proporzione */
-  requestAnimationFrame(function(){
-    const over=board.scrollWidth-board.clientWidth;
-    if(over>2){
-      ph=ph*board.clientWidth/board.scrollWidth;
-      board.style.setProperty('--ph',Math.floor(ph)+'px');
-    }
+  if(availW<10||availH<10){ requestAnimationFrame(fitBoard); return; }
+  const rows=[...board.querySelectorAll('.shelf-row')].filter(function(r){ return r.querySelector('.poster'); });
+  if(!rows.length){ board.style.removeProperty('--ph'); return; }
+  /* altezza massima per cui la fila più "larga" sta nella larghezza disponibile */
+  let h=Infinity;
+  rows.forEach(function(row){
+    const posters=[...row.querySelectorAll('.poster')];
+    const sum=posters.reduce(function(s,p){ return s+ratioOf(p); },0);
+    const hw=(availW-(posters.length-1)*gap)/sum;
+    if(hw<h) h=hw;
   });
+  /* altezza massima per cui tutte le file stanno nell'altezza disponibile */
+  const hh=(availH-(rows.length-1)*gap)/rows.length;
+  h=Math.min(h,hh);
+  if(!isFinite(h)||h<10){ board.style.removeProperty('--ph'); return; }
+  board.style.setProperty('--ph', Math.floor(h)+'px');
 }
 window.addEventListener('resize',fitBoard);
 window.addEventListener('load',fitBoard);
@@ -353,7 +383,15 @@ window.addEventListener('load',fitBoard);
 /* ═══ BACHECA ═══ */
 function renderBoard(){
   const el=document.getElementById('board');
-  el.innerHTML=allSlots().map((id,i)=>{
+  let ids=allSlots();
+  if(currentFilter!=='all'){
+    ids=ids.filter(function(id){ var a=ADVS[id]; return a && a.title && a.dur===currentFilter; });
+  }
+  if(!ids.length){
+    el.innerHTML='<div class="board-empty">Nessuna avventura in questa categoria… per ora.</div>';
+    return;
+  }
+  const cells=ids.map((id,i)=>{
     const a=ADVS[id];
     const delay='style="animation-delay:'+(i*70)+'ms"';
     if(!a||!a.title){
@@ -363,7 +401,13 @@ function renderBoard(){
     const img=a.img?'<img src="'+esc(a.img)+'" alt="'+esc(a.title)+'" loading="lazy">':'';
     return '<div class="poster" '+delay+' onclick="showAdv(\''+id+'\')">'+img+
       '<button class="poster-edit" title="Modifica" onclick="event.stopPropagation();openEdit(\''+id+'\')">✎</button></div>';
-  }).join('');
+  });
+  /* due file sempre bilanciate: se il numero è pari sono uguali (6 → 3+3),
+     se è dispari la fila di sopra ne ha una in più (5 → 3+2). Una sola locandina: una fila. */
+  let shelves;
+  if(cells.length<=1){ shelves=[cells]; }
+  else { const top=Math.ceil(cells.length/2); shelves=[cells.slice(0,top), cells.slice(top)]; }
+  el.innerHTML=shelves.map(function(row){ return '<div class="shelf-row">'+row.join('')+'</div>'; }).join('');
   el.querySelectorAll('.poster img').forEach(function(im){
     if(!im.complete) im.addEventListener('load',fitBoard,{once:true});
   });
@@ -471,6 +515,7 @@ function clearAdv(){
 }
 
 /* ═══ AVVIO ═══ */
+renderFilters();
 renderBoard();
 (function waitFb(){
   if(!window.fbSubscribeAdvs){setTimeout(waitFb,30);return;}
