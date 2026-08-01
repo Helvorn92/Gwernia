@@ -356,12 +356,12 @@ body.is-admin .add-book-btn{display:flex}
   <div class="adm-field">
     <label>Testo (un paragrafo per riga vuota)</label>
     <div class="fmt-bar">
-      <button type="button" class="fmt-btn" title="Grassetto (Ctrl+B)" onclick="wrapSel('strong')"><b>G</b></button>
+      <button type="button" class="fmt-btn" title="Grassetto (Ctrl+B)" onclick="wrapSel('b')"><b>G</b></button>
       <button type="button" class="fmt-btn" title="Corsivo (Ctrl+I)" onclick="wrapSel('em')"><i>C</i></button>
       <span class="fmt-hint">Seleziona il testo e premi il pulsante</span>
     </div>
     <textarea id="be-paragraphs" placeholder="Primo paragrafo...&#10;&#10;Secondo paragrafo..."></textarea>
-    <div class="adm-field-hint">Puoi usare &lt;strong&gt; ed &lt;em&gt; per il grassetto/corsivo. Lascia una riga vuota tra un paragrafo e l'altro.</div>
+    <div class="adm-field-hint">Puoi usare &lt;b&gt; ed &lt;em&gt; per il grassetto/corsivo. Lascia una riga vuota tra un paragrafo e l'altro.</div>
   </div>
   <div class="adm-toggle-row">
     <label class="adm-switch"><input type="checkbox" id="be-locked"><span class="adm-switch-track"></span></label>
@@ -699,7 +699,7 @@ document.addEventListener('keydown', function(ev){
   if(!(ev.ctrlKey||ev.metaKey)) return;
   if(document.activeElement !== document.getElementById('be-paragraphs')) return;
   var k=ev.key.toLowerCase();
-  if(k==='b'){ ev.preventDefault(); wrapSel('strong'); }
+  if(k==='b'){ ev.preventDefault(); wrapSel('b'); }
   else if(k==='i'){ ev.preventDefault(); wrapSel('em'); }
 });
 function closeBookEdit(){
