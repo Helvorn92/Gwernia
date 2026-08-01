@@ -276,6 +276,15 @@ body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New
 .adm-field input[type=text],.adm-field input[type=email],.adm-field input[type=password],.adm-field textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);padding:.55rem .7rem;color:var(--cream);font-family:'Lora',Georgia,'Times New Roman',serif;font-size:.95rem;outline:none;resize:vertical;box-sizing:border-box;transition:border-color .2s}
 .adm-field input:focus,.adm-field textarea:focus{border-color:rgba(201,168,76,.7)}
 .adm-field textarea{min-height:160px;line-height:1.6}
+/* La modale di modifica libro è più larga delle altre: si scrive molto testo. */
+#book-edit-modal{max-width:1000px;width:min(94vw,1000px)}
+#book-edit-modal #be-paragraphs{min-height:46vh;line-height:1.7;font-size:1rem}
+/* barra di formattazione sopra il campo di testo */
+.fmt-bar{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem}
+.fmt-btn{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);color:var(--cream);width:32px;height:30px;cursor:pointer;font-size:.95rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:'Lora',Georgia,serif}
+.fmt-btn:hover{border-color:var(--gold);color:var(--gold-light);background:rgba(201,168,76,.14)}
+.fmt-btn b{font-weight:800}
+.fmt-hint{font-size:.68rem;color:var(--cream-dim);font-style:italic;margin-left:.2rem}
 .adm-field-hint{font-size:.72rem;color:var(--cream-dim);margin-top:.3rem;font-style:italic}
 .adm-toggle-row{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
 .adm-toggle-row label{font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);cursor:pointer}
@@ -346,6 +355,11 @@ body.is-admin .add-book-btn{display:flex}
   <div class="adm-field"><label>Copertina (URL immagine)</label><input type="text" id="be-cover" placeholder="https://..."></div>
   <div class="adm-field">
     <label>Testo (un paragrafo per riga vuota)</label>
+    <div class="fmt-bar">
+      <button type="button" class="fmt-btn" title="Grassetto (Ctrl+B)" onclick="wrapSel('strong')"><b>G</b></button>
+      <button type="button" class="fmt-btn" title="Corsivo (Ctrl+I)" onclick="wrapSel('em')"><i>C</i></button>
+      <span class="fmt-hint">Seleziona il testo e premi il pulsante</span>
+    </div>
     <textarea id="be-paragraphs" placeholder="Primo paragrafo...&#10;&#10;Secondo paragrafo..."></textarea>
     <div class="adm-field-hint">Puoi usare &lt;strong&gt; ed &lt;em&gt; per il grassetto/corsivo. Lascia una riga vuota tra un paragrafo e l'altro.</div>
   </div>
@@ -640,6 +654,54 @@ function openBookEdit(id){
   document.getElementById('book-edit-overlay').classList.add('open');
   document.getElementById('book-edit-modal').classList.add('open');
 }
+/* Avvolge il testo selezionato nel tag indicato (o lo toglie, se già presente).
+   Usato dai pulsanti G / C e dalle scorciatoie Ctrl+B / Ctrl+I. */
+function wrapSel(tag){
+  var ta=document.getElementById('be-paragraphs');
+  if(!ta) return;
+  var open='<'+tag+'>', close='</'+tag+'>';
+  var s=ta.selectionStart, e=ta.selectionEnd, v=ta.value;
+  var sel=v.slice(s,e);
+  // niente selezione: inserisce la coppia di tag e mette il cursore in mezzo
+  if(s===e){
+    ta.value=v.slice(0,s)+open+close+v.slice(e);
+    ta.focus();
+    ta.selectionStart=ta.selectionEnd=s+open.length;
+    return;
+  }
+  // la selezione include già i tag -> li rimuove
+  if(sel.slice(0,open.length)===open && sel.slice(-close.length)===close){
+    var inner=sel.slice(open.length, sel.length-close.length);
+    ta.value=v.slice(0,s)+inner+v.slice(e);
+    ta.focus();
+    ta.selectionStart=s; ta.selectionEnd=s+inner.length;
+    return;
+  }
+  // i tag stanno appena fuori dalla selezione -> li rimuove
+  if(v.slice(Math.max(0,s-open.length),s)===open && v.slice(e,e+close.length)===close){
+    ta.value=v.slice(0,s-open.length)+sel+v.slice(e+close.length);
+    ta.focus();
+    ta.selectionStart=s-open.length; ta.selectionEnd=s-open.length+sel.length;
+    return;
+  }
+  // caso normale: avvolge, mantenendo fuori gli spazi ai bordi della selezione
+  var pre=sel.match(/^\s*/)[0], post=sel.match(/\s*$/)[0];
+  var core=sel.slice(pre.length, sel.length-post.length);
+  if(!core){ return; }
+  var wrapped=pre+open+core+close+post;
+  ta.value=v.slice(0,s)+wrapped+v.slice(e);
+  ta.focus();
+  ta.selectionStart=s+pre.length+open.length;
+  ta.selectionEnd=ta.selectionStart+core.length;
+}
+/* scorciatoie da tastiera dentro il campo di testo */
+document.addEventListener('keydown', function(ev){
+  if(!(ev.ctrlKey||ev.metaKey)) return;
+  if(document.activeElement !== document.getElementById('be-paragraphs')) return;
+  var k=ev.key.toLowerCase();
+  if(k==='b'){ ev.preventDefault(); wrapSel('strong'); }
+  else if(k==='i'){ ev.preventDefault(); wrapSel('em'); }
+});
 function closeBookEdit(){
   document.getElementById('book-edit-overlay').classList.remove('open');
   document.getElementById('book-edit-modal').classList.remove('open');
