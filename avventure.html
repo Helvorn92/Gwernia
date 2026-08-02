@@ -1,11 +1,12 @@
 
 
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Iconoteca — Le Cronache di Gwernia</title>
+<title>Avventure — Le Cronache di Gwernia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&amp;display=swap" rel="stylesheet">
@@ -13,396 +14,263 @@
 :root{
   --gold:#c9a84c;--gold-light:#e8c97a;--gold-dim:#9a7535;
   --bg:#06060f;--cream:#f0e6d3;--cream-dim:#bba98c;
-  --border:rgba(201,168,76,.42);
+  --border:rgba(201,168,76,.42);--glow:rgba(201,168,76,.65);
+  --panel:rgba(10,9,24,.88);
 }
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New Roman',serif;font-size:18px;overflow:hidden;height:100vh;font-variant-numeric:lining-nums;text-rendering:optimizeLegibility;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,auto}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--cream);font-family:'Lora',Georgia,'Times New Roman',serif;font-size:17px;overflow-x:hidden;min-height:100vh;font-variant-numeric:lining-nums;text-rendering:optimizeLegibility;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,auto}
+a{color:inherit}
+button{font-family:inherit}
 
-/* ═══ SALA ESPOSITIVA ═══ */
-/* parete di fondo: intonaco caldo, luce che cala dall'alto, angoli in ombra */
-.hall{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
-  background:
-    radial-gradient(120% 70% at 50% -8%,rgba(255,214,150,.10) 0%,transparent 55%),
-    radial-gradient(80% 55% at 50% 108%,rgba(0,0,0,.55) 0%,transparent 60%),
-    linear-gradient(180deg,#1a120a 0%,#221709 26%,#1c1308 62%,#120c06 100%);
-}
-/* velatura d'intonaco: micro-granulosita' che rompe il gradiente piatto */
-.hall::before{content:'';position:absolute;inset:0;opacity:.5;
-  background-image:
-    repeating-linear-gradient(94deg,rgba(255,235,200,.014) 0 2px,transparent 2px 5px),
-    repeating-linear-gradient(2deg,rgba(0,0,0,.03) 0 3px,transparent 3px 7px);
-}
-/* vignettatura: concentra lo sguardo al centro della sala */
-.hall::after{content:'';position:absolute;inset:0;
-  background:radial-gradient(105% 85% at 50% 42%,transparent 42%,rgba(0,0,0,.5) 82%,rgba(0,0,0,.78) 100%);
-}
+#stars-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
-/* BACK BTN */
-.back-btn{position:absolute;top:1.2rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(6,4,16,.92);border:1px solid rgba(201,168,76,.35);color:var(--gold-dim);font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:.5rem 1.4rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:all .2s;text-decoration:none;white-space:nowrap}
+/* ═══ TOP BAR ═══ */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:300;height:56px;display:flex;align-items:center;justify-content:center;padding:0 1.4rem;background:linear-gradient(180deg,rgba(4,3,12,.92),rgba(4,3,12,.6) 70%,transparent);pointer-events:none}
+.topbar>*{pointer-events:auto}
+.top-login-btn{position:absolute;right:1.4rem;top:50%;transform:translateY(-50%)}
+.back-btn{background:rgba(6,4,16,.9);border:1px solid rgba(201,168,76,.35);color:var(--gold-dim);font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:600;font-size:.64rem;letter-spacing:.22em;text-transform:uppercase;padding:.48rem 1.2rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:all .2s;text-decoration:none;white-space:nowrap}
 .back-btn:hover{border-color:var(--gold);color:var(--gold)}
+.top-login-btn{background:rgba(6,4,16,.9);border:1px solid rgba(201,168,76,.35);color:var(--gold-dim);font-size:1rem;width:34px;height:34px;display:flex;align-items:center;justify-content:center;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:all .2s}
+.top-login-btn:hover{border-color:var(--gold);color:var(--gold)}
+.top-login-btn.logged{color:#7fd87f;border-color:rgba(127,216,127,.5)}
 
-/* LAYOUT */
-.archive-wrap{position:relative;z-index:10;height:100vh;display:flex;flex-direction:column;padding:2.4rem 0 1.6rem}
-.archive-header{text-align:center;margin-bottom:1.5rem;flex-shrink:0;padding:0 2rem}
-.archive-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:clamp(2rem,4vw,3.5rem);color:var(--gold-light);text-shadow:0 0 40px rgba(201,168,76,.4);margin-bottom:.8rem}
-.archive-intro{font-family:'Lora',Georgia,'Times New Roman',serif;font-style:italic;font-size:1.02rem;color:var(--cream-dim);line-height:1.6}
-.archive-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:.7rem auto}
-.archive-divider::before,.archive-divider::after{content:'';flex:1;max-width:200px;height:1px}
-.archive-divider::before{background:linear-gradient(90deg,transparent,rgba(201,168,76,.4))}
-.archive-divider::after{background:linear-gradient(90deg,rgba(201,168,76,.4),transparent)}
+/* ═══ LAYOUT ═══ */
+.wrap{position:relative;z-index:10;max-width:1340px;margin:0 auto;padding:5.2rem 2rem 4rem}
 
-/* ═══ PARETE DEI QUADRI ═══ */
-.bookshelf{
-  flex:1;min-height:0;width:100%;
-  overflow-x:auto;overflow-y:hidden;
-  scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.45) transparent;
-  overscroll-behavior-x:contain;
+/* ═══ BACHECA A SCHERMO INTERO (senza scroll) ═══ */
+#board-view{position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;padding:4.1rem 2rem 1.2rem}
+
+/* ═══ INSEGNA ═══ */
+.marquee{text-align:center;margin-bottom:1.1rem;flex-shrink:0}
+.marquee-eyebrow{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:600;font-size:.66rem;letter-spacing:.55em;text-transform:uppercase;color:var(--gold-dim);margin-bottom:.5rem}
+.marquee-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:clamp(1.9rem,4vw,3rem);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:transparent;background:linear-gradient(165deg,#f0e6d3 0%,#e8c97a 30%,#c9a84c 55%,#fff3d6 65%,#a07828 90%);-webkit-background-clip:text;background-clip:text;padding:.1em 0 .22em;margin:-.1em 0 -.22em}
+.marquee-sub{font-style:italic;color:var(--cream-dim);font-size:.92rem;margin-top:.4rem}
+.marquee-lights{display:flex;justify-content:center;gap:.85rem;margin-top:.8rem}
+.marquee-lights span{width:7px;height:7px;border-radius:50%;background:radial-gradient(circle,#ffe9ad,#c9a84c 70%);box-shadow:0 0 10px rgba(232,201,122,.8);animation:bulb 2.2s ease-in-out infinite}
+.marquee-lights span:nth-child(2n){animation-delay:.55s}
+.marquee-lights span:nth-child(3n){animation-delay:1.1s}
+@keyframes bulb{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ═══ BACHECA ═══ */
+.board{flex:1;min-height:0;display:flex;flex-direction:column;gap:19px;justify-content:center;align-items:center}
+/* ogni fila: locandine affiancate, mai compresse, centrate */
+.shelf-row{display:flex;flex-wrap:nowrap;gap:19px;justify-content:center;align-items:flex-start}
+.board-empty{margin:auto;color:var(--cream-dim);font-style:italic;font-size:1.05rem;text-align:center}
+/* ═══ FILTRI DURATA ═══ */
+.filters{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;margin-bottom:1rem;flex-shrink:0}
+.filter-btn{background:rgba(6,4,16,.7);border:1px solid rgba(201,168,76,.3);color:var(--gold-dim);font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:600;font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;padding:.42rem 1rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:all .2s}
+.filter-btn:hover{border-color:var(--gold);color:var(--gold)}
+.filter-btn.active{background:rgba(201,168,76,.18);border-color:var(--gold);color:var(--gold-light)}
+.poster{
+  position:relative;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;height:var(--ph,340px);width:auto;flex:0 0 auto;
+  background:var(--panel);
+  border:1px solid rgba(201,168,76,.3);
+  box-shadow:0 0 0 4px rgba(4,3,12,.9),0 0 0 5px rgba(201,168,76,.18),0 14px 34px rgba(0,0,0,.7);
+  transition:transform .32s cubic-bezier(.2,.7,.2,1),box-shadow .32s,border-color .32s;
+  overflow:hidden;
+  opacity:0;transform:translateY(20px);animation:postIn .55s forwards;
 }
-.bookshelf::-webkit-scrollbar{height:8px}
-.bookshelf::-webkit-scrollbar-track{background:rgba(0,0,0,.35)}
-.bookshelf::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#c9a961,#7a5a1c);border-radius:4px}
-.bookshelf::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#e8c97a,#8a6a24)}
+@keyframes postIn{to{opacity:1;transform:translateY(0)}}
+.poster:hover{transform:translateY(-8px) scale(1.025);border-color:var(--gold);box-shadow:0 0 0 4px rgba(4,3,12,.9),0 0 0 5px rgba(201,168,76,.5),0 24px 54px rgba(0,0,0,.85),0 0 40px rgba(201,168,76,.16)}
+/* la cornice segue il formato dell'immagine: niente tagli, niente bande */
+.poster img{display:block;height:100%;width:auto;transition:transform .5s ease}
+.poster:hover img{transform:scale(1.1)}
+.poster::after{content:'';position:absolute;top:0;bottom:0;left:-80%;width:50%;background:linear-gradient(105deg,transparent,rgba(255,240,190,.13),transparent);transform:skewX(-18deg);transition:left .55s ease;z-index:3}
+.poster:hover::after{left:135%}
+/* slot vuoto */
+.poster.empty{cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,default;aspect-ratio:2/3;border-style:dashed;border-color:rgba(201,168,76,.3);box-shadow:none;background:linear-gradient(165deg,rgba(12,10,28,.9),rgba(6,5,16,.95))}
+.poster.empty:hover{transform:none;box-shadow:none;border-color:rgba(201,168,76,.45)}
+.poster.empty .empty-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7rem}
+.poster.empty .empty-star{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:rgba(201,168,76,.28)}
+.poster.empty .empty-label{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:.6rem;letter-spacing:.34em;text-transform:uppercase;color:rgba(187,169,140,.4)}
+body.is-admin .poster.empty{cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer}
+body.is-admin .poster.empty:hover .empty-star{color:var(--gold)}
+/* matita admin */
+.poster-edit{position:absolute;top:8px;left:8px;z-index:4;width:28px;height:28px;background:rgba(4,3,12,.88);border:1px solid rgba(201,168,76,.5);color:var(--gold);font-size:.8rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;display:none;align-items:center;justify-content:center}
+body.is-admin .poster:hover .poster-edit{display:flex}
+.poster-edit:hover{background:rgba(201,168,76,.2)}
 
-/* una sola fila: i quadri riempiono l'altezza della sala */
-.shelf-row{position:relative;display:flex;flex-wrap:nowrap;align-items:stretch;
-  height:100%;gap:clamp(26px,3vw,54px);
-  padding:54px clamp(3vw,5vw,7vw) 10px;   /* spazio sopra per i faretti */
-  width:max-content;min-width:100%;justify-content:safe center}
+/* ═══ DETTAGLIO ═══ */
+#detail-view{display:none}
+.detail-topline{display:flex;align-items:center;gap:.8rem;margin-bottom:1.6rem}
+.detail-back{display:inline-flex;align-items:center;gap:.5rem;background:rgba(6,4,16,.7);border:1px solid rgba(201,168,76,.3);color:var(--gold-dim);font-family:'Cormorant Garamond',serif;font-weight:600;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;padding:.55rem 1.2rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:all .2s}
+.detail-back:hover{border-color:var(--gold);color:var(--gold)}
+.detail{display:grid;grid-template-columns:minmax(300px,500px) 1fr;gap:2.8rem;align-items:start;animation:detIn .45s ease}
+@keyframes detIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.detail-poster{position:relative;border:1px solid rgba(201,168,76,.35);box-shadow:0 0 0 5px rgba(4,3,12,.9),0 0 0 6px rgba(201,168,76,.22),0 26px 60px rgba(0,0,0,.85);overflow:hidden;background:var(--panel)}
+.detail-poster img{width:100%;height:auto;display:block}
+.detail-poster.noimg{aspect-ratio:3/4}
+.detail-poster .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:5rem;color:rgba(201,168,76,.2)}
+.detail-info{min-width:0}
+/* padding + margin negativo di pari valore: allarga l'area in cui viene dipinto il gradiente
+   (altrimenti i tratti discendenti di g, p, q, y finiscono fuori e spariscono) senza spostare nulla */
+.detail-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:700;font-size:clamp(2.2rem,4.2vw,3.4rem);line-height:1.08;letter-spacing:.04em;color:transparent;background:linear-gradient(165deg,#f0e6d3,#e8c97a 35%,#c9a84c 60%,#fff3d6 70%,#a07828);-webkit-background-clip:text;background-clip:text;padding:.12em 0 .28em;margin:-.12em 0 -.28em}
+.detail-chips{display:flex;flex-wrap:wrap;gap:.65rem;margin-top:1.2rem}
+.dchip{display:flex;flex-direction:column;gap:.2rem;border:1px solid rgba(201,168,76,.4);background:rgba(4,3,12,.78);padding:.55rem 1.05rem;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.dchip-l{font-family:'Lora',Georgia,serif;font-weight:700;font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold)}
+.dchip-v{font-family:'Lora',Georgia,serif;font-weight:700;font-size:1.02rem;letter-spacing:.03em;color:var(--cream)}
+.dchip-v .skull-on{color:#e8c97a;text-shadow:0 0 8px rgba(232,181,58,.5)}
+.dchip-v .skull-off{color:rgba(187,169,140,.28)}
+.detail-edit{background:rgba(201,168,76,.13);border:1px solid rgba(201,168,76,.5);color:var(--gold);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:.66rem;letter-spacing:.22em;text-transform:uppercase;padding:.55rem 1.2rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:background .2s;display:none}
+body.is-admin .detail-edit{display:inline-block}
+.detail-edit:hover{background:rgba(201,168,76,.26)}
+.detail-desc{margin-top:1.5rem;background:var(--panel);border:1px solid rgba(201,168,76,.22);border-left:3px solid var(--gold-dim);padding:1.5rem 1.7rem;line-height:1.8;font-size:.95rem;font-weight:500;color:var(--cream)}
+.detail-desc p{margin:.7rem 0}
+.detail-desc p:first-child{margin-top:0}
+.detail-desc p:last-child{margin-bottom:0}
+.detail-desc .empty{font-style:italic;color:rgba(187,169,140,.45)}
 
-/* sfumature ai lati: suggeriscono che la sala continua */
-.hall-fade{position:fixed;top:0;bottom:0;width:9vw;z-index:6;pointer-events:none}
-.hall-fade.l{left:0;background:linear-gradient(90deg,rgba(12,8,4,.92),transparent)}
-.hall-fade.r{right:0;background:linear-gradient(270deg,rgba(12,8,4,.92),transparent)}
+/* ═══ MODALI ═══ */
+.ov{position:fixed;inset:0;z-index:9980;background:rgba(2,1,8,.86);backdrop-filter:blur(10px);display:none}
+.ov.open{display:block}
+.modal{position:fixed;z-index:9981;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(8,5,20,.97);border:2px solid var(--border);border-top:3px solid var(--gold-dim);max-width:560px;width:94%;max-height:88vh;overflow-y:auto;padding:1.9rem 2rem;display:none;box-shadow:0 24px 64px rgba(0,0,0,.9)}
+.modal.open{display:block}
+.modal-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:700;font-size:1.15rem;letter-spacing:.08em;color:var(--gold-light);margin-bottom:1rem}
+.modal-close{position:absolute;top:.7rem;right:.95rem;background:none;border:none;color:var(--gold-dim);font-size:1.3rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;line-height:1}
+.modal-close:hover{color:var(--gold)}
+.field{margin-bottom:.85rem}
+.field label{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:.32rem}
+.field input,.field textarea,.field select{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);padding:.5rem .65rem;color:var(--cream);font-family:'Lora',Georgia,serif;font-size:.92rem;outline:none;resize:vertical;transition:border-color .2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:rgba(201,168,76,.7)}
+.field select{cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer}
+.field select option{background:#0b0a1c}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.hint{font-size:.72rem;color:var(--cream-dim);font-style:italic;margin-top:.25rem}
+.modal-actions{display:flex;gap:.8rem;margin-top:1rem}
+.btn{flex:1;padding:.65rem;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.5);color:var(--gold);font-family:'Cormorant Garamond',serif;font-weight:700;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:background .2s,border-color .2s}
+.btn:hover{background:rgba(201,168,76,.28);border-color:var(--gold)}
+.btn-danger{border-color:rgba(255,80,80,.5);color:#ff8080}
+.btn-danger:hover{background:rgba(255,80,80,.15);border-color:#ff8080}
+#login-error{color:#ff8080;font-size:.8rem;display:none;margin:.4rem 0 0}
+.save-msg{font-size:.8rem;color:#7fd87f;display:none;margin-top:.5rem;text-align:center}
 
-/* IL FARETTO e il suo cono di luce */
-.spot{position:absolute;left:50%;top:-46px;transform:translateX(-50%);width:100%;height:46px;pointer-events:none;z-index:0}
-/* corpo del faretto agganciato al binario */
-.spot::before{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);
-  width:15px;height:19px;border-radius:3px 3px 5px 5px;
-  background:linear-gradient(180deg,#3a2a12 0%,#20160a 60%,#c9a961 100%);
-  box-shadow:0 2px 5px rgba(0,0,0,.8),0 0 12px rgba(255,206,130,.4)}
-/* cono di luce che scende sul quadro */
-.spot::after{content:'';position:absolute;left:50%;top:17px;transform:translateX(-50%);
-  width:190%;height:calc(100% + 78vh);
-  background:linear-gradient(180deg,rgba(255,224,170,.30) 0%,rgba(255,214,150,.14) 16%,rgba(255,206,140,.05) 42%,transparent 76%);
-  clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);
-  mix-blend-mode:screen;filter:blur(7px)}
+/* pulsante admin: aggiungi locandina */
+.add-adv-btn{position:fixed;bottom:1.6rem;right:1.6rem;z-index:150;width:52px;height:52px;border-radius:50%;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.55);color:var(--gold-light);font-size:1.5rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;display:none;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.7);transition:background .2s}
+body.is-admin .add-adv-btn{display:flex}
+.add-adv-btn:hover{background:rgba(201,168,76,.32)}
 
-/* LA CORNICE */
-.niche{
-  position:relative;height:100%;width:auto;flex:0 0 auto;
-  display:flex;flex-direction:column;align-items:center;
-  padding:clamp(8px,.85vw,12px) clamp(8px,.85vw,12px) clamp(7px,.7vw,10px);
-  border-radius:2px;
-  background:linear-gradient(145deg,#c9a961 0%,#8a6a24 18%,#e8c97a 32%,#7a5a1c 52%,#c9a961 72%,#6d4f16 88%,#a98a3e 100%);
-  box-shadow:
-    inset 0 2px 3px rgba(255,240,200,.55),
-    inset 0 -2px 4px rgba(0,0,0,.6),
-    inset 3px 0 5px rgba(0,0,0,.25),
-    inset -3px 0 5px rgba(0,0,0,.25),
-    0 16px 34px rgba(0,0,0,.72),
-    0 3px 9px rgba(0,0,0,.6);
-  transition:box-shadow .4s ease,filter .4s ease;
-  z-index:1;
-}
-/* battuta interna */
-.niche::before{content:'';position:absolute;inset:clamp(5px,.6vw,8px);
-  border:1px solid rgba(60,38,8,.55);box-shadow:inset 0 0 0 1px rgba(255,232,180,.22);
-  border-radius:1px;pointer-events:none;z-index:3}
-/* alone caldo che il faretto disegna attorno alla cornice */
-.niche::after{content:'';position:absolute;inset:-16px;border-radius:6px;pointer-events:none;z-index:-1;
-  background:radial-gradient(60% 46% at 50% 6%,rgba(255,210,140,.24),transparent 72%);
-  opacity:.85;transition:opacity .4s ease}
-/* HOVER: nessuno spostamento e nessuna schiaritura sul contenitore, altrimenti si
-   moltiplicherebbe con quella della tela; la luce arriva dall'alone e dal riflesso. */
-.niche:hover{
-  box-shadow:
-    inset 0 2px 3px rgba(255,240,200,.6),
-    inset 0 -2px 4px rgba(0,0,0,.6),
-    0 16px 34px rgba(0,0,0,.72),
-    0 0 46px rgba(255,205,125,.34)}
-.niche:hover::after{opacity:1}
-
-/* IL DIPINTO */
-.cover-book{
-  position:relative;flex:1;min-height:0;aspect-ratio:3/4;width:auto;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;
-  transition:filter .4s ease;
-  box-shadow:inset 0 0 26px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.5);
-  overflow:hidden;background:#0d0a06;
-}
-/* I dipinti sono esposti in seppia, come tele antiche: al passaggio del mouse
-   riprendono il colore originale. Il filtro sta sull'immagine, così la luce del
-   faretto (i pseudo-elementi) resta fuori dal viraggio. */
-.cover-book img{width:100%;height:100%;object-fit:cover;display:block;
-  filter:sepia(.92) saturate(.7) contrast(1.04) brightness(.72);
-  transition:filter .55s cubic-bezier(.3,.7,.3,1)}
-/* in hover la tela torna esattamente com'è l'originale: nessuna schiaritura in più */
-.niche:hover .cover-book img{filter:sepia(0) saturate(1) contrast(1) brightness(1)}
-/* luce del faretto sulla tela + velo di vernice */
-.cover-book::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:3;
-  background:
-    linear-gradient(180deg,rgba(255,228,178,.18) 0%,rgba(255,220,165,.05) 26%,transparent 58%),
-    linear-gradient(118deg,rgba(255,250,235,.10) 0%,transparent 34%,transparent 66%,rgba(0,0,0,.20) 100%)}
-
-/* LA TARGA: piu' grande, le date si leggono */
-.niche-label{
-  font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;
-  font-size:clamp(.86rem,1.02vw,1.02rem);letter-spacing:.09em;text-transform:uppercase;font-weight:700;
-  color:#2a1c07;text-align:center;line-height:1.24;
-  margin-top:clamp(8px,.95vw,13px);padding:.42rem .9rem .38rem;
-  background:linear-gradient(180deg,#f0d691 0%,#d8b45f 45%,#b8933f 100%);
-  border:1px solid rgba(60,38,8,.55);border-radius:2px;
-  box-shadow:0 3px 7px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,248,222,.75),inset 0 -1px 0 rgba(90,60,12,.3);
-  width:100%;flex-shrink:0;position:relative;z-index:4;
-}
-/* la targa dei ritratti svelati è cliccabile come il dipinto */
-.niche-label[onclick]{cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer}
-.niche-sub{display:block;font-size:clamp(.72rem,.86vw,.84rem);letter-spacing:.05em;
-  color:rgba(48,32,8,.85);text-transform:none;font-style:italic;font-weight:600;margin-top:.22rem;
-  font-variant-numeric:lining-nums}
-
-/* ═══ RITRATTO NON ANCORA SVELATO ═══ */
-.cover-book.locked{cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,default;background:linear-gradient(160deg,#221a10,#14100a);display:flex;align-items:center;justify-content:center}
-.niche:hover .cover-book.locked{filter:none}
-.cover-book.locked::before{
-  content:'?';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:5rem;font-weight:700;
-  color:rgba(201,168,76,.26);text-shadow:0 2px 14px rgba(0,0,0,.8);z-index:2}
-.cover-book.locked .locked-deco{position:absolute;inset:12px;border:1px solid rgba(201,168,76,.12)}
-.cover-book.locked .locked-deco::before{content:'';position:absolute;inset:6px;border:1px solid rgba(201,168,76,.07)}
-.niche-label.locked-label{color:rgba(46,32,10,.6);font-style:italic;background:linear-gradient(180deg,#c9b384,#8d7538)}
-/* i quadri non svelati restano in penombra: il faretto non li illumina */
-.niche:has(.cover-book.locked)::after{opacity:.3}
-.niche:has(.cover-book.locked){box-shadow:inset 0 2px 3px rgba(255,240,200,.3),inset 0 -2px 4px rgba(0,0,0,.6),0 14px 30px rgba(0,0,0,.7);filter:brightness(.82) saturate(.85)}
-
-/* Vista admin: dipinto visibile ma offuscato */
-.cover-book.locked.admin-peek img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.38) saturate(.5) blur(1.5px)}
-.cover-book.locked.admin-peek::before{font-size:3.4rem;color:rgba(201,168,76,.55)}
-.cover-book.locked.admin-peek .locked-deco{inset:6px}
-
-/* ═══ SCHEDA DEL PERSONAGGIO ═══ */
-.book-reader-overlay{position:fixed;inset:0;z-index:9990;background:rgba(2,1,8,.92);backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;opacity:0;transition:opacity .28s ease;padding:2.5rem 1.5rem}
-.book-reader-overlay.open{display:flex}
-.book-reader-overlay.visible{opacity:1}
-
-.icon-card{
-  width:min(1240px,96vw);height:min(92vh,940px);max-height:92vh;display:grid;grid-template-columns:minmax(0,44%) minmax(0,56%);
-  background:linear-gradient(160deg,#14100a 0%,#0c0906 100%);
-  border:1px solid rgba(201,168,76,.4);
-  box-shadow:0 30px 90px rgba(0,0,0,.95),0 0 0 1px rgba(0,0,0,.6);
-  overflow:hidden;transform:translateY(14px) scale(.985);transition:transform .32s cubic-bezier(.2,.7,.2,1);
-}
-.book-reader-overlay.visible .icon-card{transform:none}
-
-/* lato sinistro: il dipinto nudo, a tutta altezza della finestra */
-.icon-card-img{position:relative;background:#080603;overflow:hidden;min-height:0}
-.icon-card-img img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
-/* sfumatura sul bordo interno: il dipinto entra nella scheda senza stacco netto */
-.icon-card-img::after{content:'';position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(90deg,transparent 76%,rgba(8,6,3,.55) 100%),
-             linear-gradient(180deg,rgba(255,225,175,.10),transparent 30%)}
-.icon-card-img .noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:5rem;color:rgba(201,168,76,.2);background:#0d0a06}
-
-/* lato destro: le informazioni */
-.icon-card-info{padding:clamp(1.6rem,2.4vw,2.6rem);overflow-y:auto;display:flex;flex-direction:column;min-height:0}
-.icon-card-info::-webkit-scrollbar{width:9px}
-.icon-card-info::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:5px}
-.icon-name{
-  font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:700;
-  font-size:clamp(1.7rem,3vw,2.6rem);line-height:1.14;letter-spacing:.02em;
-  color:var(--gold-light);text-shadow:0 0 26px rgba(201,168,76,.25);
-  padding:.06em 0 .16em;margin:-.06em 0 -.16em;
-}
-.icon-dates{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1rem}
-.icon-date{border:1px solid rgba(201,168,76,.35);background:rgba(201,168,76,.07);padding:.42rem .9rem;display:flex;flex-direction:column;gap:.12rem}
-.icon-date-l{font-family:'Cormorant Garamond',serif;font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-dim)}
-.icon-date-v{font-family:'Lora',Georgia,serif;font-size:.95rem;font-weight:600;color:var(--cream)}
-.icon-rule{height:1px;background:linear-gradient(90deg,rgba(201,168,76,.5),rgba(201,168,76,.06) 70%,transparent);margin:1.5rem 0 0}
-.icon-text{margin-top:1.3rem;font-size:1.02rem;line-height:1.85;color:var(--cream);text-align:justify}
-.icon-text p{margin:.9rem 0}
-.icon-text p:first-child{margin-top:0}
-.icon-text b{font-weight:700;color:var(--gold-light)}
-.icon-text em{font-style:italic;color:#d8c9a8}
-.icon-text .empty{font-style:italic;color:rgba(187,169,140,.5)}
-
-.icon-card-actions{margin-top:auto;padding-top:1.6rem;display:flex;gap:.7rem;flex-wrap:wrap}
-.book-close-btn{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.35);color:var(--gold-dim);padding:.6rem 1.6rem;font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:.64rem;letter-spacing:.2em;text-transform:uppercase;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:all .2s}
-.book-close-btn:hover{background:rgba(201,168,76,.2);color:var(--gold)}
-
-@media(max-width:1100px){
-  .shelf-row{padding-left:3vw;padding-right:3vw}
-}
-/* la scheda passa a colonna: dipinto sopra, informazioni sotto */
-@media(max-width:860px){
-  .icon-card{grid-template-columns:1fr;max-height:92vh;overflow-y:auto}
-  .icon-card-img img{max-height:46vh}
-  .book-reader-overlay{padding:1rem}
-}
-/* 2 libri per ripiano */
+/* ═══ RESPONSIVE ═══ */
 @media(max-width:900px){
-  .archive-intro{font-size:.94rem}
+  #board-view{position:static;display:block;padding:4.6rem 1.2rem 2.5rem}
+  .board{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:auto;gap:1rem}
+  /* su mobile le file spariscono dal layout: le locandine tornano celle della griglia */
+  .shelf-row{display:contents}
+  .poster{height:auto;width:100%}
+  .poster img{width:100%;height:auto}
+  .detail{grid-template-columns:1fr}
+  .detail-poster{max-width:380px;margin:0 auto}
 }
-@media(max-width:760px){
-  .shelf-row{gap:20px;padding:16px 6vw 8px}
-  .cover-book.locked::before{font-size:3.2rem}
-  .spot{display:none}          /* niente faretti su schermo stretto */
-  .hall-fade{width:14vw}
-  .archive-wrap{padding:1.4rem 0 1rem}
-  .archive-header{margin-bottom:.9rem}
+@media(max-width:600px){
+  .wrap{padding:4.6rem 1rem 3rem}
+  .board{grid-template-columns:repeat(2,1fr);gap:.9rem}
+  .field-row{grid-template-columns:1fr}
 }
-/* 1 libro per ripiano, centrato */
-@media(max-width:520px){
-  .shelf-row{gap:16px}
-}
-/* schermi molto piccoli: il libro si rimpicciolisce */
-@media(max-width:380px){
-  .shelf-row{gap:12px}
-}
-
-/* ═══ ADMIN LOGIN ═══ */
-.admin-login-btn{position:fixed;top:1.2rem;right:2rem;z-index:200;background:rgba(6,4,16,.92);border:1px solid rgba(201,168,76,.35);color:var(--gold-dim);font-size:1.05rem;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:all .2s;opacity:.7}
-.admin-login-btn:hover{border-color:var(--gold);color:var(--gold);opacity:1}
-.admin-login-btn.is-admin{color:#7fd87f;opacity:1}
-.adm-overlay{position:fixed;inset:0;z-index:9980;background:rgba(2,1,8,.85);backdrop-filter:blur(10px);display:none}
-.adm-overlay.open{display:block}
-.adm-modal{position:fixed;z-index:9981;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(8,5,20,.97);border:2px solid var(--border);border-top:3px solid var(--gold-dim);max-width:520px;width:92%;max-height:86vh;overflow-y:auto;padding:2rem 2.2rem;display:none;box-shadow:0 24px 64px rgba(0,0,0,.9)}
-.adm-modal.open{display:block}
-.adm-modal-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:1.1rem;color:var(--gold-light);margin:0 0 .9rem}
-.adm-modal-close{position:absolute;top:.8rem;right:1rem;background:none;border:none;color:var(--gold-dim);font-size:1.3rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;line-height:1}
-.adm-modal-close:hover{color:var(--gold)}
-.adm-field{margin-bottom:.9rem}
-.adm-field label{font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-dim);display:block;margin-bottom:.35rem}
-.adm-field input[type=text],.adm-field input[type=email],.adm-field input[type=password],.adm-field textarea{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);padding:.55rem .7rem;color:var(--cream);font-family:'Lora',Georgia,'Times New Roman',serif;font-size:.95rem;outline:none;resize:vertical;box-sizing:border-box;transition:border-color .2s}
-.adm-field input:focus,.adm-field textarea:focus{border-color:rgba(201,168,76,.7)}
-.adm-field textarea{min-height:160px;line-height:1.6}
-/* La modale di modifica libro è più larga delle altre: si scrive molto testo. */
-#book-edit-modal{max-width:1000px;width:min(94vw,1000px)}
-#book-edit-modal #be-paragraphs{min-height:46vh;line-height:1.7;font-size:1rem}
-/* barra di formattazione sopra il campo di testo */
-.fmt-bar{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem}
-.fmt-btn{background:rgba(255,255,255,.05);border:1px solid rgba(201,168,76,.3);color:var(--cream);width:32px;height:30px;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;font-size:.95rem;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .18s;font-family:'Lora',Georgia,serif}
-.fmt-btn:hover{border-color:var(--gold);color:var(--gold-light);background:rgba(201,168,76,.14)}
-.fmt-btn b{font-weight:800}
-.fmt-hint{font-size:.68rem;color:var(--cream-dim);font-style:italic;margin-left:.2rem}
-.adm-field-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
-.adm-field-hint{font-size:.72rem;color:var(--cream-dim);margin-top:.3rem;font-style:italic}
-.adm-toggle-row{display:flex;align-items:center;gap:.7rem;margin-bottom:1rem}
-.adm-toggle-row label{font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.62rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold-dim);cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer}
-.adm-switch{position:relative;width:42px;height:22px;flex-shrink:0;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer}
-.adm-switch input{opacity:0;width:0;height:0;position:absolute}
-.adm-switch-track{position:absolute;inset:0;background:rgba(255,255,255,.12);border:1px solid rgba(201,168,76,.35);border-radius:11px;transition:background .2s}
-.adm-switch-track::before{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--gold-dim);transition:transform .2s,background .2s}
-.adm-switch input:checked+.adm-switch-track{background:rgba(127,216,127,.25);border-color:#7fd87f}
-.adm-switch input:checked+.adm-switch-track::before{transform:translateX(20px);background:#7fd87f}
-.adm-modal-actions{display:flex;gap:.8rem;margin-top:.5rem}
-.adm-btn{flex:1;padding:.6rem;background:rgba(201,168,76,.15);border:1px solid rgba(201,168,76,.5);color:var(--gold);font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;transition:background .2s,border-color .2s}
-.adm-btn:hover{background:rgba(201,168,76,.28);border-color:var(--gold)}
-.adm-btn-danger{border-color:rgba(255,80,80,.5);color:#ff8080}
-.adm-btn-danger:hover{background:rgba(255,80,80,.15);border-color:#ff8080}
-#adm-login-error{color:#ff8080;font-size:.8rem;display:none;margin:.4rem 0 0}
-
-/* ═══ ADMIN CONTROLS SUI LIBRI ═══ */
-.admin-only{display:none}
-body.is-admin .admin-only{display:flex}
-.niche{position:relative}
-.book-admin-bar{position:absolute;top:-14px;left:50%;transform:translateX(-50%);z-index:6;display:none;gap:4px;background:rgba(4,3,12,.94);border:1px solid rgba(201,168,76,.4);padding:3px;border-radius:3px}
-body.is-admin .niche:hover .book-admin-bar{display:flex}
-.book-admin-btn{width:26px;height:26px;background:none;border:none;color:var(--gold);font-size:.85rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;display:flex;align-items:center;justify-content:center;border-radius:2px}
-.book-admin-btn:hover{background:rgba(201,168,76,.2)}
-body.is-admin .cover-book.locked{opacity:.7}
-.add-book-btn{position:fixed;bottom:2rem;right:2rem;z-index:150;width:56px;height:56px;border-radius:50%;background:rgba(201,168,76,.18);border:1px solid rgba(201,168,76,.55);color:var(--gold-light);font-size:1.6rem;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,pointer;display:none;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.7);transition:background .2s}
-body.is-admin .add-book-btn{display:flex}
-.add-book-btn:hover{background:rgba(201,168,76,.32)}
 </style>
 </head>
 <body>
 
-<div class="hall"></div>
-<div class="hall-fade l"></div>
-<div class="hall-fade r"></div>
+<canvas id="stars-canvas"></canvas>
 
-<a class="back-btn" href="https://helvorn92.github.io/World/gwernia">Torna al Sito</a>
-
-<!-- ═══ ADMIN LOGIN ═══ -->
-<button class="admin-login-btn" id="admin-login-btn" onclick="openAdminLogin()" title="Accedi">⚿</button>
-<div class="adm-overlay" id="admin-login-overlay" onclick="if(event.target===this)closeAdminLogin()"></div>
-<div class="adm-modal" id="admin-login-modal">
-  <button class="adm-modal-close" onclick="closeAdminLogin()">✕</button>
-  <div class="adm-modal-title" id="admin-login-title">Accesso Amministratore</div>
-  <div id="admin-login-form">
-    <div class="adm-field"><label>Email</label><input type="email" id="admin-login-email" placeholder="email@esempio.com" autocomplete="username"></div>
-    <div class="adm-field"><label>Password</label><input type="password" id="admin-login-password" placeholder="••••••••" autocomplete="current-password"></div>
-    <p id="adm-login-error"></p>
-    <div class="adm-modal-actions"><button class="adm-btn" onclick="adminLogin()">✦ &nbsp; Accedi</button></div>
-  </div>
-  <div id="admin-logged-in" style="display:none">
-    <p class="adm-field-hint" id="admin-logged-email" style="margin-bottom:1rem"></p>
-    <div class="adm-modal-actions"><button class="adm-btn" onclick="adminLogout()">⎋ &nbsp; Esci</button></div>
-  </div>
+<div class="topbar">
+  <a class="back-btn" href="https://helvorn92.github.io/World/gwernia">Torna al Sito</a>
+  <button class="top-login-btn" id="login-btn" onclick="openLogin()" title="Accedi">⚿</button>
 </div>
 
-<!-- ═══ EDIT BOOK MODAL ═══ -->
-<div class="adm-overlay" id="book-edit-overlay" onclick="if(event.target===this)closeBookEdit()"></div>
-<div class="adm-modal" id="book-edit-modal">
-  <button class="adm-modal-close" onclick="closeBookEdit()">✕</button>
-  <div class="adm-modal-title" id="book-edit-title">Nuovo Ritratto</div>
-  <div class="adm-field"><label>Nome del personaggio</label><input type="text" id="be-title" placeholder="Nome e casato..."></div>
-  <div class="adm-field"><label>Dipinto (URL immagine)</label><input type="text" id="be-cover" placeholder="https://..."></div>
-  <div class="adm-field-row">
-    <div class="adm-field"><label>Nascita</label><input type="text" id="be-birth" placeholder="es. 430° Arco Ciclico"></div>
-    <div class="adm-field"><label>Morte</label><input type="text" id="be-death" placeholder="es. 512° Arco Ciclico — o vuoto"></div>
-  </div>
-  <div class="adm-field">
-    <label>Informazioni (un paragrafo per riga vuota)</label>
-    <div class="fmt-bar">
-      <button type="button" class="fmt-btn" title="Grassetto (Ctrl+B)" onclick="wrapSel('b')"><b>G</b></button>
-      <button type="button" class="fmt-btn" title="Corsivo (Ctrl+I)" onclick="wrapSel('em')"><i>C</i></button>
-      <span class="fmt-hint">Seleziona il testo e premi il pulsante</span>
+<div class="wrap">
+
+  <!-- ═══ BACHECA ═══ -->
+  <div id="board-view">
+    <div class="marquee">
+      <p class="marquee-eyebrow">✦ &nbsp; Le Cronache di Gwernia &nbsp; ✦</p>
+      <h1 class="marquee-title">Le Avventure</h1>
+      <p class="marquee-sub">Scegli l'Avventura che fa per te.</p>
+      <div class="marquee-lights"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
     </div>
-    <textarea id="be-paragraphs" placeholder="Vita, imprese, eredità...&#10;&#10;Secondo paragrafo..."></textarea>
-    <div class="adm-field-hint">Puoi usare &lt;b&gt; ed &lt;em&gt; per il grassetto/corsivo. Lascia una riga vuota tra un paragrafo e l'altro.</div>
+    <div class="filters" id="filters"></div>
+    <div class="board" id="board"></div>
   </div>
-  <div class="adm-toggle-row">
-    <label class="adm-switch"><input type="checkbox" id="be-locked"><span class="adm-switch-track"></span></label>
-    <label for="be-locked">Nascosto (non ancora svelato)</label>
-  </div>
-  <div class="adm-modal-actions">
-    <button class="adm-btn adm-btn-danger" id="be-delete-btn" onclick="deleteBookFromModal()" style="display:none">🗑 &nbsp; Elimina</button>
-    <button class="adm-btn" onclick="saveBookFromModal()">✦ &nbsp; Salva</button>
-  </div>
-</div>
 
-<button class="add-book-btn" onclick="openBookEdit(null)" title="Aggiungi ritratto">+</button>
-
-<div class="archive-wrap">
-  <div class="archive-header">
-    <h1 class="archive-title">Iconoteca</h1>
-    <div class="archive-divider"><span style="color:var(--gold);font-size:.8rem">✦</span></div>
-    <p class="archive-intro">I volti che hanno fatto la storia di Gwernia. Ogni ritratto custodisce una vita, un'eredità, un segreto.</p>
-  </div>
-  <div class="bookshelf" id="bookshelf"></div>
-</div>
-
-<!-- SCHEDA PERSONAGGIO -->
-<div class="book-reader-overlay" id="book-reader-overlay" onclick="if(event.target===this)closeBook()">
-  <div class="icon-card">
-    <div class="icon-card-img" id="ic-img"></div>
-    <div class="icon-card-info">
-      <h2 class="icon-name" id="ic-name"></h2>
-      <div class="icon-dates" id="ic-dates"></div>
-      <div class="icon-rule"></div>
-      <div class="icon-text" id="ic-text"></div>
-      <div class="icon-card-actions">
-        <button class="book-close-btn" onclick="closeBook()">✕ &nbsp; Chiudi</button>
+  <!-- ═══ DETTAGLIO ═══ -->
+  <div id="detail-view">
+    <div class="detail-topline">
+      <button class="detail-back" onclick="showBoard()">← La Bacheca</button>
+      <button class="detail-edit" onclick="openEdit(currentId)">✎ &nbsp; Modifica</button>
+    </div>
+    <div class="detail">
+      <div class="detail-poster" id="d-poster"></div>
+      <div class="detail-info">
+        <h1 class="detail-title" id="d-title"></h1>
+        <div class="detail-chips" id="d-chips"></div>
+        <div class="detail-desc" id="d-desc"></div>
       </div>
     </div>
   </div>
+
+</div>
+
+<button class="add-adv-btn" onclick="addAdv()" title="Aggiungi locandina">+</button>
+
+<!-- ═══ LOGIN ═══ -->
+<div class="ov" id="login-ov" onclick="if(event.target===this)closeLogin()"></div>
+<div class="modal" id="login-modal">
+  <button class="modal-close" onclick="closeLogin()">✕</button>
+  <div class="modal-title" id="login-title">Accesso</div>
+  <div id="login-form">
+    <div class="field"><label>Email</label><input type="email" id="login-email" autocomplete="username"></div>
+    <div class="field"><label>Password</label><input type="password" id="login-password" autocomplete="current-password"></div>
+    <p id="login-error"></p>
+    <div class="modal-actions"><button class="btn" onclick="doLogin()">✦ &nbsp; Entra</button></div>
+  </div>
+  <div id="logged-box" style="display:none">
+    <p class="hint" id="logged-email" style="margin-bottom:1rem"></p>
+    <div class="modal-actions"><button class="btn" onclick="doLogout()">⎋ &nbsp; Esci</button></div>
+  </div>
+</div>
+
+<!-- ═══ EDIT ═══ -->
+<div class="ov" id="edit-ov" onclick="if(event.target===this)closeEdit()"></div>
+<div class="modal" id="edit-modal">
+  <button class="modal-close" onclick="closeEdit()">✕</button>
+  <div class="modal-title" id="edit-title">Locandina</div>
+  <div class="field"><label>Titolo dell'avventura</label><input type="text" id="f-title"></div>
+  <div class="field"><label>Locandina (URL immagine)</label><input type="text" id="f-img" placeholder="https://..."><div class="hint">Consiglio: immagine verticale 2:3, come una locandina da cinema.</div></div>
+  <div class="field-row">
+    <div class="field"><label>Tipo di campagna</label><input type="text" id="f-type" placeholder="Esplorazione, Investigazione…"></div>
+    <div class="field"><label>Mood</label><input type="text" id="f-mood" placeholder="Horror, Comico, Epico…"></div>
+  </div>
+  <div class="field-row">
+    <div class="field"><label>Durata</label>
+      <select id="f-dur">
+        <option value="">— non indicata —</option>
+        <option value="oneshot">One Shot</option>
+        <option value="breve">Breve</option>
+        <option value="media">Media</option>
+        <option value="lunga">Lunga</option>
+      </select>
+    </div>
+    <div class="field"><label>Letalità (0 = non mostrata)</label>
+      <select id="f-lethal">
+        <option value="0">— nessuna —</option>
+        <option value="1">★ (1) Passeggiata</option>
+        <option value="2">★★ (2) Impegnativa</option>
+        <option value="3">★★★ (3) Pericolosa</option>
+        <option value="4">★★★★ (4) Spietata</option>
+        <option value="5">★★★★★ (5) Mortale</option>
+      </select>
+    </div>
+  </div>
+  <div class="field"><label>Descrizione</label><textarea id="f-desc" rows="7" placeholder="Le informazioni sull'avventura. Lascia una riga vuota tra un paragrafo e l'altro."></textarea></div>
+  <div class="modal-actions">
+    <button class="btn btn-danger" id="f-clear" onclick="clearAdv()">🗑 &nbsp; Svuota slot</button>
+    <button class="btn" onclick="saveAdv()">✦ &nbsp; Salva</button>
+  </div>
+  <p class="save-msg" id="save-msg">Salvato ✦</p>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-  import { getFirestore, collection, doc, setDoc, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { getFirestore, collection, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyCCfucSV5KmGd4M9Bg7mD4UPhbBK4ce0-k",
@@ -414,405 +282,249 @@ body.is-admin .add-book-btn{display:flex}
     measurementId: "G-4TEN29F7HG"
   };
 
-  const fbApp = initializeApp(firebaseConfig);
-  const fbAuth = getAuth(fbApp);
-  const fbDb = getFirestore(fbApp);
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-  window.fbIsAdmin = false;
-  setPersistence(fbAuth, browserLocalPersistence).catch(()=>{});
+  setPersistence(auth, browserLocalPersistence).catch(()=>{});
 
-  onAuthStateChanged(fbAuth, user => {
-    window.fbIsAdmin = !!user;
+  onAuthStateChanged(auth, user => {
     document.body.classList.toggle('is-admin', !!user);
-    window.dispatchEvent(new CustomEvent('admin-state-changed', { detail: { isAdmin: !!user, email: user ? user.email : null } }));
+    window.dispatchEvent(new CustomEvent('auth-changed', { detail: { uid: user?user.uid:null, email: user?user.email:null } }));
   });
 
-  window.fbAdminLogin = (email, password) => signInWithEmailAndPassword(fbAuth, email, password);
-  window.fbAdminLogout = () => signOut(fbAuth);
-  window.fbSaveBook = (id, data) => setDoc(doc(fbDb, 'icons', id), data, { merge: true });
-  window.fbSaveMeta = data => setDoc(doc(fbDb, 'meta', 'gallery'), data, { merge: true });
-  window.fbSubscribeMeta = cb => onSnapshot(doc(fbDb, 'meta', 'gallery'),
-    snap => cb(snap.exists() ? (snap.data() || {}) : {}),
-    err => console.error('Firestore meta error:', err));
-  // Ospite: legge SOLO i ritratti svelati (i nascosti non lasciano il server, per le regole di sicurezza).
-  // Admin autenticato: legge l'intera collezione. Ritorna la funzione di unsubscribe.
-  window.fbSubscribeBooks = (isAdmin, cb) => {
-    const ref = isAdmin
-      ? collection(fbDb, 'icons')
-      : query(collection(fbDb, 'icons'), where('locked', '==', false));
-    return onSnapshot(ref, snap => {
-      const out = {};
-      snap.forEach(d => { out[d.id] = d.data(); });
-      cb(out);
-    }, err => console.error('Firestore books error:', err));
+  window.fbLogin = (e,p) => signInWithEmailAndPassword(auth,e,p);
+  window.fbLogout = () => signOut(auth);
+  window.fbSaveAdv = (id,data) => setDoc(doc(db,'adventures',id), data, { merge:false });
+  window.fbSubscribeAdvs = cb => onSnapshot(collection(db,'adventures'), snap => {
+    const out={}; snap.forEach(d=>{ out[d.id]=d.data(); }); cb(out);
+  }, err => console.error('Firestore adventures error:', err));
+</script>
+
+<script>
+/* ═══ STELLE ═══ */
+const canvas=document.getElementById('stars-canvas'),ctx=canvas.getContext('2d');
+let W,H,stars=[];
+function resizeStars(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;stars=[];var count=Math.floor((W*H)/4200);for(var i=0;i<count;i++){var bright=Math.random()<0.12;stars.push({x:Math.random()*W,y:Math.random()*H,r:bright?Math.random()*.8+1:Math.random()*.9+.2,pulse:Math.random()*Math.PI*2,speed:Math.random()*.8+.4,bright:bright});}}
+function drawStars(){ctx.clearRect(0,0,W,H);var t=Date.now()*.001;stars.forEach(function(s){var a=s.bright?.55+.45*Math.sin(t*s.speed+s.pulse):.25+.35*Math.sin(t*s.speed*.6+s.pulse);ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,245,210,'+a+')';ctx.fill();});requestAnimationFrame(drawStars);}
+window.addEventListener('resize',resizeStars);resizeStars();drawStars();
+
+/* ═══ DATI ═══ */
+const SLOTS=['adv1','adv2','adv3','adv4','adv5','adv6','adv7','adv8','adv9','adv10'];
+const DUR_LABEL={oneshot:'One Shot',breve:'Breve',media:'Media',lunga:'Lunga'};
+let ADVS={}, currentId=null, isAdmin=false, currentFilter='all';
+
+/* ═══ FILTRI DURATA ═══ */
+const FILTERS=[['all','Tutte'],['oneshot','One Shot'],['breve','Breve'],['media','Media'],['lunga','Lunga']];
+function renderFilters(){
+  const el=document.getElementById('filters'); if(!el) return;
+  el.innerHTML=FILTERS.map(function(f){
+    return '<button class="filter-btn'+(currentFilter===f[0]?' active':'')+'" onclick="setFilter(\''+f[0]+'\')">'+f[1]+'</button>';
+  }).join('');
+}
+function setFilter(v){ currentFilter=v; renderFilters(); renderBoard(); }
+
+/* i 10 slot base + quelli extra (adv11, adv12…) che hanno contenuto */
+function allSlots(){
+  const ids=new Set(SLOTS);
+  Object.keys(ADVS).forEach(id=>{
+    const m=id.match(/^adv(\d+)$/);
+    if(m&&ADVS[id]&&ADVS[id].title)ids.add(id);
+  });
+  return [...ids].sort((a,b)=>parseInt(a.slice(3),10)-parseInt(b.slice(3),10));
+}
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function skulls(n){
+  n=Math.max(0,Math.min(5,parseInt(n,10)||0));
+  if(!n)return '';
+  let out='';for(let i=1;i<=5;i++)out+='<span class="'+(i<=n?'skull-on':'skull-off')+'">★</span>';
+  return out;
+}
+
+/* ═══ ADATTAMENTO ALLO SCHERMO ═══ */
+/* proporzione reale di ogni locandina (larghezza/altezza dell'immagine); default 2:3 */
+function ratioOf(p){
+  const img=p.querySelector('img');
+  if(img && img.naturalWidth>0 && img.naturalHeight>0) return img.naturalWidth/img.naturalHeight;
+  return 2/3;
+}
+/* Dimensiona le locandine (--ph) perché le file entrino esattamente nella videata:
+   ogni fila riempie la larghezza disponibile e le file insieme riempiono l'altezza.
+   L'altezza è sempre limitata da quella disponibile, quindi la bacheca non può mai
+   debordare sopra l'insegna. Le locandine non vengono mai compresse (flex:0 0 auto),
+   quindi la cornice segue il formato dell'immagine, senza bande e senza tagli. */
+function fitBoard(){
+  const board=document.getElementById('board');
+  if(!board) return;
+  if(window.innerWidth<=900){ board.style.removeProperty('--ph'); return; }
+  const gap=19;
+  const availW=board.clientWidth, availH=board.clientHeight;
+  if(availW<10||availH<10){ requestAnimationFrame(fitBoard); return; }
+  const rows=[...board.querySelectorAll('.shelf-row')].filter(function(r){ return r.querySelector('.poster'); });
+  if(!rows.length){ board.style.removeProperty('--ph'); return; }
+  /* altezza massima per cui la fila più "larga" sta nella larghezza disponibile */
+  let h=Infinity;
+  rows.forEach(function(row){
+    const posters=[...row.querySelectorAll('.poster')];
+    const sum=posters.reduce(function(s,p){ return s+ratioOf(p); },0);
+    const hw=(availW-(posters.length-1)*gap)/sum;
+    if(hw<h) h=hw;
+  });
+  /* altezza massima per cui tutte le file stanno nell'altezza disponibile */
+  const hh=(availH-(rows.length-1)*gap)/rows.length;
+  h=Math.min(h,hh);
+  if(!isFinite(h)||h<10){ board.style.removeProperty('--ph'); return; }
+  board.style.setProperty('--ph', Math.floor(h)+'px');
+}
+window.addEventListener('resize',fitBoard);
+window.addEventListener('load',fitBoard);
+
+/* ═══ BACHECA ═══ */
+function renderBoard(){
+  const el=document.getElementById('board');
+  let ids=allSlots();
+  if(currentFilter!=='all'){
+    ids=ids.filter(function(id){ var a=ADVS[id]; return a && a.title && a.dur===currentFilter; });
+  }
+  if(!ids.length){
+    el.innerHTML='<div class="board-empty">Nessuna avventura in questa categoria… per ora.</div>';
+    return;
+  }
+  const cells=ids.map((id,i)=>{
+    const a=ADVS[id];
+    const delay='style="animation-delay:'+(i*70)+'ms"';
+    if(!a||!a.title){
+      return '<div class="poster empty" '+delay+' onclick="if(isAdmin)openEdit(\''+id+'\')">'+
+        '<div class="empty-inner"><div class="empty-star">✧</div><div class="empty-label">Prossimamente</div></div></div>';
+    }
+    const img=a.img?'<img src="'+esc(a.img)+'" alt="'+esc(a.title)+'" loading="lazy">':'';
+    return '<div class="poster" '+delay+' onclick="showAdv(\''+id+'\')">'+img+
+      '<button class="poster-edit" title="Modifica" onclick="event.stopPropagation();openEdit(\''+id+'\')">✎</button></div>';
+  });
+  /* due file sempre bilanciate: se il numero è pari sono uguali (6 → 3+3),
+     se è dispari la fila di sopra ne ha una in più (5 → 3+2). Una sola locandina: una fila. */
+  let shelves;
+  if(cells.length<=1){ shelves=[cells]; }
+  else { const top=Math.ceil(cells.length/2); shelves=[cells.slice(0,top), cells.slice(top)]; }
+  el.innerHTML=shelves.map(function(row){ return '<div class="shelf-row">'+row.join('')+'</div>'; }).join('');
+  el.querySelectorAll('.poster img').forEach(function(im){
+    if(!im.complete) im.addEventListener('load',fitBoard,{once:true});
+  });
+  fitBoard();
+}
+
+/* ═══ DETTAGLIO ═══ */
+function showAdv(id){
+  const a=ADVS[id]; if(!a||!a.title) return;
+  currentId=id;
+  document.getElementById('board-view').style.display='none';
+  document.getElementById('detail-view').style.display='block';
+  window.scrollTo(0,0);
+  const dp=document.getElementById('d-poster');
+  dp.innerHTML=a.img?'<img src="'+esc(a.img)+'" alt="">':'<div class="ph">✧</div>';
+  dp.classList.toggle('noimg',!a.img);
+  document.getElementById('d-title').textContent=a.title;
+  let chips='';
+  if(a.type) chips+='<span class="dchip"><span class="dchip-l">Campagna</span><span class="dchip-v">'+esc(a.type)+'</span></span>';
+  if(a.mood) chips+='<span class="dchip"><span class="dchip-l">Mood</span><span class="dchip-v">'+esc(a.mood)+'</span></span>';
+  if(a.dur&&DUR_LABEL[a.dur]) chips+='<span class="dchip"><span class="dchip-l">Durata</span><span class="dchip-v">'+DUR_LABEL[a.dur]+'</span></span>';
+  if(a.lethal>0) chips+='<span class="dchip"><span class="dchip-l">Letalità</span><span class="dchip-v">'+skulls(a.lethal)+'</span></span>';
+  document.getElementById('d-chips').innerHTML=chips;
+  const d=document.getElementById('d-desc');
+  d.innerHTML=a.desc?String(a.desc).split(/\n\s*\n/).map(p=>'<p>'+esc(p.trim())+'</p>').join(''):'<p class="empty">Nessuna descrizione… per ora.</p>';
+}
+function showBoard(){
+  currentId=null;
+  document.getElementById('detail-view').style.display='none';
+  document.getElementById('board-view').style.display='';
+  fitBoard();
+}
+
+/* ═══ LOGIN ═══ */
+function openLogin(){document.getElementById('login-ov').classList.add('open');document.getElementById('login-modal').classList.add('open');document.getElementById('login-error').style.display='none';}
+function closeLogin(){document.getElementById('login-ov').classList.remove('open');document.getElementById('login-modal').classList.remove('open');}
+function doLogin(){
+  const e=document.getElementById('login-email').value.trim(),p=document.getElementById('login-password').value;
+  if(!e||!p)return;
+  window.fbLogin(e,p).then(()=>{document.getElementById('login-password').value='';closeLogin();})
+  .catch(()=>{const er=document.getElementById('login-error');er.textContent='Credenziali non valide.';er.style.display='block';});
+}
+function doLogout(){window.fbLogout();closeLogin();}
+
+window.addEventListener('auth-changed',ev=>{
+  isAdmin=!!ev.detail.uid;
+  const btn=document.getElementById('login-btn');
+  btn.classList.toggle('logged',isAdmin);
+  document.getElementById('login-form').style.display=isAdmin?'none':'block';
+  document.getElementById('logged-box').style.display=isAdmin?'block':'none';
+  document.getElementById('login-title').textContent=isAdmin?'Narratore':'Accesso';
+  if(isAdmin)document.getElementById('logged-email').textContent=ev.detail.email;
+  renderBoard();
+});
+
+/* ═══ EDIT ═══ */
+let editingId=null;
+/* nuova locandina: primo numero libero dopo l'ultimo slot occupato */
+function addAdv(){
+  if(!isAdmin)return;
+  let max=10;
+  allSlots().forEach(id=>{max=Math.max(max,parseInt(id.slice(3),10));});
+  openEdit('adv'+(max+1));
+}
+function openEdit(id){
+  if(!isAdmin)return;
+  editingId=id;
+  const a=ADVS[id]||{};
+  document.getElementById('edit-title').textContent='Locandina '+id.replace('adv','');
+  document.getElementById('f-title').value=a.title||'';
+  document.getElementById('f-img').value=a.img||'';
+  document.getElementById('f-type').value=a.type||'';
+  document.getElementById('f-mood').value=a.mood||'';
+  document.getElementById('f-dur').value=a.dur||'';
+  document.getElementById('f-lethal').value=a.lethal||'0';
+  document.getElementById('f-desc').value=a.desc||'';
+  document.getElementById('save-msg').style.display='none';
+  document.getElementById('edit-ov').classList.add('open');
+  document.getElementById('edit-modal').classList.add('open');
+}
+function closeEdit(){document.getElementById('edit-ov').classList.remove('open');document.getElementById('edit-modal').classList.remove('open');editingId=null;}
+function saveAdv(){
+  if(!isAdmin||!editingId)return;
+  const data={
+    title:document.getElementById('f-title').value.trim(),
+    img:document.getElementById('f-img').value.trim(),
+    type:document.getElementById('f-type').value.trim(),
+    mood:document.getElementById('f-mood').value.trim(),
+    dur:document.getElementById('f-dur').value,
+    lethal:parseInt(document.getElementById('f-lethal').value,10)||0,
+    desc:document.getElementById('f-desc').value.trim()
   };
-</script>
-
-<script>
-/* ═══ ADMIN LOGIN UI ═══ */
-function openAdminLogin(){
-  document.getElementById('admin-login-overlay').classList.add('open');
-  document.getElementById('admin-login-modal').classList.add('open');
-  document.getElementById('adm-login-error').style.display='none';
+  if(!data.title){alert('Il titolo è obbligatorio.');return;}
+  const id=editingId;
+  window.fbSaveAdv(id,data).then(()=>{
+    const m=document.getElementById('save-msg');m.style.display='block';
+    setTimeout(()=>{closeEdit();if(currentId===id)showAdv(id);},550);
+  }).catch(err=>{alert('Errore nel salvataggio: '+err.message);});
 }
-function closeAdminLogin(){
-  document.getElementById('admin-login-overlay').classList.remove('open');
-  document.getElementById('admin-login-modal').classList.remove('open');
-}
-function adminLogin(){
-  const email = document.getElementById('admin-login-email').value.trim();
-  const password = document.getElementById('admin-login-password').value;
-  const errEl = document.getElementById('adm-login-error');
-  errEl.style.display='none';
-  if(!email || !password) return;
-  window.fbAdminLogin(email, password).then(()=>{
-    document.getElementById('admin-login-password').value='';
-    closeAdminLogin();
-  }).catch(()=>{
-    errEl.textContent = 'Credenziali non valide.';
-    errEl.style.display='block';
-  });
-}
-function adminLogout(){
-  window.fbAdminLogout();
-  closeAdminLogin();
-}
-window.addEventListener('admin-state-changed', e => {
-  const btn = document.getElementById('admin-login-btn');
-  const form = document.getElementById('admin-login-form');
-  const loggedIn = document.getElementById('admin-logged-in');
-  const title = document.getElementById('admin-login-title');
-  if(e.detail.isAdmin){
-    btn.classList.add('is-admin');
-    form.style.display='none';
-    loggedIn.style.display='block';
-    title.textContent='Amministratore';
-    document.getElementById('admin-logged-email').textContent = e.detail.email;
-  } else {
-    btn.classList.remove('is-admin');
-    form.style.display='block';
-    loggedIn.style.display='none';
-    title.textContent='Accesso Amministratore';
-  }
-  // Ri-apre le sottoscrizioni con i permessi del nuovo stato (ospite <-> admin).
-  if(typeof subscribeBooks==='function'){ subscribeBooks(); subscribeMeta(); }
-  else if(window.renderShelf){ window.renderShelf(); }
-});
-</script>
-
-<script>
-/* ═══ COSTRUZIONE SCAFFALE (con merge Firestore) ═══ */
-let BOOKS = {};
-var __lockedCount = 0;   /* numero di libri bloccati (dal doc pubblico meta/shelf), per i segnaposto degli ospiti */
-function escAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
-function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-/* "1023 — 1090", oppure "n. 1023" se ancora in vita */
-function lifeSpan(b){
-  var n=(b.birth||'').trim(), m=(b.death||'').trim();
-  if(n&&m) return n+' — '+m;
-  if(n) return 'n. '+n;
-  if(m) return '† '+m;
-  return '';
-}
-function nicheHTML(id, b){
-  var isLocked = b.locked===true;
-  var h='<div class="niche"><div class="spot"></div>';
-  h+='<div class="book-admin-bar">'+
-    '<button class="book-admin-btn" title="Modifica" onclick="event.stopPropagation();openBookEdit(\''+id+'\')">\u270E</button>'+
-    '<button class="book-admin-btn" title="'+(isLocked?'Sblocca':'Blocca')+'" onclick="event.stopPropagation();toggleBookLocked(\''+id+'\')">'+(isLocked?'\uD83D\uDD13':'\uD83D\uDD12')+'</button>'+
-    '<button class="book-admin-btn" title="Elimina" onclick="event.stopPropagation();deleteBook(\''+id+'\')">\uD83D\uDDD1</button>'+
-  '</div>';
-  if(isLocked || !window.__booksReady){
-    if(isLocked && window.__booksReady && window.fbIsAdmin){
-      h+='<div class="cover-book locked admin-peek"><img src="'+escAttr(b.cover)+'" alt="" loading="lazy"><div class="locked-deco"></div></div>';
-      h+='<div class="niche-label locked-label">'+esc(b.title||'—')+'</div>';
-    } else {
-      h+='<div class="cover-book locked"><div class="locked-deco"></div></div>';
-      h+='<div class="niche-label locked-label">Ignoto</div>';
-    }
-  } else {
-    h+='<div class="cover-book" onclick="openBook(\''+id+'\')"><img src="'+escAttr(b.cover)+'" alt="'+escAttr(b.title)+'" loading="lazy"></div>';
-    /* la targhetta compare solo sui ritratti svelati: anche il nome sarebbe uno spoiler */
-    h+='<div class="niche-label" onclick="openBook(\''+id+'\')" >'+esc(b.title||'')+
-       (b.birth||b.death ? '<span class="niche-sub">'+esc(lifeSpan(b))+'</span>' : '')+'</div>';
-  }
-  h+='</div>';
-  return h;
-}
-/* Segnaposto anonimo per un libro bloccato: nessun dato (titolo/copertina/testo). Solo per gli ospiti. */
-function lockedPlaceholderHTML(){
-  return '<div class="niche"><div class="spot"></div><div class="cover-book locked"><div class="locked-deco"></div></div>'+
-         '<div class="niche-label locked-label">Ignoto</div></div>';
-}
-/* La tela ricava la larghezza dalla propria altezza (aspect-ratio): il flex non la
-   propaga alla cornice, che resterebbe troppo stretta. Qui si allinea la cornice
-   alla tela, così il dipinto non sborda mai dal legno. */
-function fitFrames(){
-  var shelf=document.getElementById('bookshelf');
-  var frames=[].slice.call(document.querySelectorAll('.niche'));
-  if(!shelf||!frames.length) return;
-  frames.forEach(function(f){
-    f.style.width='';
-    var a=f.querySelector('.cover-book');
-    if(a){ a.style.flex=''; a.style.width=''; a.style.height=''; }
-  });
-  void shelf.offsetWidth;            /* forza il ricalcolo del layout appena azzerato */
-  frames.forEach(function(f){
-    var art=f.querySelector('.cover-book');
-    if(!art) return;
-    var cs=getComputedStyle(f);
-    var pad=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);
-    var r=art.getBoundingClientRect();
-    var w=r.width, h=r.height;
-    if(w<1||h<1) return;
-    /* su schermi stretti un quadro alto quanto la sala sarebbe piu' largo dello
-       schermo: lo si rimpicciolisce mantenendo le proporzioni della tela */
-    var maxW=shelf.clientWidth-pad-24;
-    if(w>maxW){
-      var ratio=w/h;
-      art.style.flex='0 0 auto';
-      art.style.width=Math.floor(maxW)+'px';
-      art.style.height=Math.floor(maxW/ratio)+'px';
-      w=maxW;
-    }
-    f.style.width=Math.ceil(w+pad)+'px';
-  });
-}
-function buildShelf(){
-  var shelf=document.getElementById('bookshelf');
-  if(!shelf) return;
-  var entries = Object.entries(BOOKS).filter(function(e){ return !e[1].deleted; });
-  // Sbloccati in cima, bloccati in fondo (stabile: conserva l'ordine dentro ogni gruppo)
-  entries.sort(function(a,b){
-    var la=a[1].locked===true?1:0, lb=b[1].locked===true?1:0;
-    if(la!==lb) return la-lb;
-    return (a[1].order||999)-(b[1].order||999);
-  });
-  var cells = entries.map(function(e){ return nicheHTML(e[0], e[1]); });
-  // Ospite: aggiunge N segnaposto anonimi in coda, cosi vede QUANTI libri bloccati esistono, non QUALI.
-  if(!window.fbIsAdmin){
-    for(var k=0;k<(window.__lockedCount||0);k++) cells.push(lockedPlaceholderHTML());
-  }
-  /* una sola fila: la sala si percorre in orizzontale */
-  shelf.innerHTML='<div class="shelf-row">'+cells.join('')+'</div>';
-  fitFrames();
-}
-window.renderShelf = buildShelf;
-window.__booksReady = false;
-window.__lockedCount = 0;
-BOOKS = {};
-buildShelf();   // scaffale vuoto finche non arrivano i dati da Firestore
-
-window.addEventListener('resize', function(){ buildShelf(); });
-
-/* Sottoscrizioni Firestore adattate al ruolo. La subscription dei libri va ri-aperta
-   quando cambia lo stato di login: ospite = solo sbloccati; admin = intera collezione. */
-var _unsubBooks = null, _unsubMeta = null, _lastMetaWritten = null;
-function subscribeBooks(){
-  if(!window.fbSubscribeBooks){ setTimeout(subscribeBooks, 30); return; }
-  if(_unsubBooks){ _unsubBooks(); _unsubBooks = null; }
-  var admin = !!window.fbIsAdmin;
-  _unsubBooks = window.fbSubscribeBooks(admin, function(fsBooks){
-    BOOKS = fsBooks;
-    window.__booksReady = true;
-    if(admin){
-      // L'admin mantiene aggiornato il conteggio pubblico dei bloccati (per i segnaposto degli ospiti).
-      var n = Object.values(BOOKS).filter(function(b){ return b.locked===true && !b.deleted; }).length;
-      window.__lockedCount = n;
-      if(n !== _lastMetaWritten && window.fbSaveMeta){
-        _lastMetaWritten = n;
-        window.fbSaveMeta({ lockedCount: n }).catch(function(){});
-      }
-    }
-    buildShelf();
-  });
-}
-function subscribeMeta(){
-  if(!window.fbSubscribeMeta){ setTimeout(subscribeMeta, 30); return; }
-  if(_unsubMeta){ _unsubMeta(); _unsubMeta = null; }
-  if(window.fbIsAdmin) return;   // l'admin calcola il conteggio da se
-  _unsubMeta = window.fbSubscribeMeta(function(meta){
-    window.__lockedCount = (meta && typeof meta.lockedCount === 'number') ? meta.lockedCount : 0;
-    buildShelf();
-  });
-}
-subscribeBooks();
-subscribeMeta();
-
-/* Firestore irraggiungibile (offline): nessun contenuto disponibile, mostra un avviso discreto. */
-setTimeout(function(){
-  if(!window.__booksReady){
-    window.__booksReady = true;
-    var shelf=document.getElementById('bookshelf');
-    if(shelf && !shelf.children.length){
-      shelf.innerHTML='<p style="opacity:.6;text-align:center;padding:2rem">Connessione richiesta per caricare l\'Iconoteca.</p>';
-    }
-  }
-}, 6000);
-
-/* ═══ ADMIN: CRUD LIBRI ═══ */
-let _editingBookId = null;
-function openBookEdit(id){
-  _editingBookId = id;
-  var isNew = !id;
-  document.getElementById('book-edit-title').textContent = isNew ? 'Nuovo Ritratto' : 'Modifica Ritratto';
-  document.getElementById('be-delete-btn').style.display = isNew ? 'none' : 'block';
-  var b = id ? (BOOKS[id]||{}) : {};
-  document.getElementById('be-title').value = b.title || '';
-  document.getElementById('be-cover').value = b.cover || '';
-  document.getElementById('be-birth').value = b.birth || '';
-  document.getElementById('be-death').value = b.death || '';
-  document.getElementById('be-paragraphs').value = (b.paragraphs||[]).join('\n\n');
-  document.getElementById('be-locked').checked = b.locked === true;
-  document.getElementById('book-edit-overlay').classList.add('open');
-  document.getElementById('book-edit-modal').classList.add('open');
-}
-/* Avvolge il testo selezionato nel tag indicato (o lo toglie, se già presente).
-   Usato dai pulsanti G / C e dalle scorciatoie Ctrl+B / Ctrl+I. */
-function wrapSel(tag){
-  var ta=document.getElementById('be-paragraphs');
-  if(!ta) return;
-  var open='<'+tag+'>', close='</'+tag+'>';
-  var s=ta.selectionStart, e=ta.selectionEnd, v=ta.value;
-  var sel=v.slice(s,e);
-  // niente selezione: inserisce la coppia di tag e mette il cursore in mezzo
-  if(s===e){
-    ta.value=v.slice(0,s)+open+close+v.slice(e);
-    ta.focus();
-    ta.selectionStart=ta.selectionEnd=s+open.length;
-    return;
-  }
-  // la selezione include già i tag -> li rimuove
-  if(sel.slice(0,open.length)===open && sel.slice(-close.length)===close){
-    var inner=sel.slice(open.length, sel.length-close.length);
-    ta.value=v.slice(0,s)+inner+v.slice(e);
-    ta.focus();
-    ta.selectionStart=s; ta.selectionEnd=s+inner.length;
-    return;
-  }
-  // i tag stanno appena fuori dalla selezione -> li rimuove
-  if(v.slice(Math.max(0,s-open.length),s)===open && v.slice(e,e+close.length)===close){
-    ta.value=v.slice(0,s-open.length)+sel+v.slice(e+close.length);
-    ta.focus();
-    ta.selectionStart=s-open.length; ta.selectionEnd=s-open.length+sel.length;
-    return;
-  }
-  // caso normale: avvolge, mantenendo fuori gli spazi ai bordi della selezione
-  var pre=sel.match(/^\s*/)[0], post=sel.match(/\s*$/)[0];
-  var core=sel.slice(pre.length, sel.length-post.length);
-  if(!core){ return; }
-  var wrapped=pre+open+core+close+post;
-  ta.value=v.slice(0,s)+wrapped+v.slice(e);
-  ta.focus();
-  ta.selectionStart=s+pre.length+open.length;
-  ta.selectionEnd=ta.selectionStart+core.length;
-}
-/* scorciatoie da tastiera dentro il campo di testo */
-document.addEventListener('keydown', function(ev){
-  if(!(ev.ctrlKey||ev.metaKey)) return;
-  if(document.activeElement !== document.getElementById('be-paragraphs')) return;
-  var k=ev.key.toLowerCase();
-  if(k==='b'){ ev.preventDefault(); wrapSel('b'); }
-  else if(k==='i'){ ev.preventDefault(); wrapSel('em'); }
-});
-function closeBookEdit(){
-  document.getElementById('book-edit-overlay').classList.remove('open');
-  document.getElementById('book-edit-modal').classList.remove('open');
-  _editingBookId = null;
-}
-function saveBookFromModal(){
-  if(!window.fbIsAdmin) return;
-  var title = document.getElementById('be-title').value.trim();
-  var cover = document.getElementById('be-cover').value.trim();
-  var birth = document.getElementById('be-birth').value.trim();
-  var death = document.getElementById('be-death').value.trim();
-  var paragraphs = document.getElementById('be-paragraphs').value
-    .split(/\n\s*\n/).map(function(p){return p.trim();}).filter(Boolean);
-  var locked = document.getElementById('be-locked').checked;
-  if(!title || !cover || !paragraphs.length){ alert('Nome, dipinto e informazioni sono obbligatori.'); return; }
-  var id = _editingBookId;
-  var extra = {};
-  if(!id){
-    id = 'b_' + Date.now();
-    extra = { order: Date.now() };
-  }
-  window.fbSaveBook(id, Object.assign({title, cover, birth, death, paragraphs, locked}, extra))
-    .catch(function(e){ alert('Errore nel salvataggio: '+e.message); });
-  closeBookEdit();
-}
-function toggleBookLocked(id){
-  if(!window.fbIsAdmin) return;
-  var b = BOOKS[id]; if(!b) return;
-  window.fbSaveBook(id, {locked: b.locked !== true})
-    .catch(function(e){ alert('Errore nel salvataggio: '+e.message); });
-}
-function deleteBook(id){
-  if(!window.fbIsAdmin || !confirm('Eliminare definitivamente questo ritratto?')) return;
-  window.fbSaveBook(id, {deleted:true})
-    .catch(function(e){ alert('Errore nel salvataggio: '+e.message); });
-}
-function deleteBookFromModal(){
-  if(_editingBookId) deleteBook(_editingBookId);
-  closeBookEdit();
+function clearAdv(){
+  if(!isAdmin||!editingId)return;
+  if(!confirm('Svuotare questa locandina?'))return;
+  const id=editingId;
+  window.fbSaveAdv(id,{}).then(()=>{closeEdit();if(currentId===id)showBoard();});
 }
 
-/* ═══ SCORRIMENTO ORIZZONTALE ═══ */
-/* la rotella del mouse percorre la sala da sinistra a destra */
-(function(){
-  var el=document.getElementById('bookshelf');
-  if(!el) return;
-  window.addEventListener('wheel', function(e){
-    if(document.getElementById('book-reader-overlay').classList.contains('open')) return;
-    if(document.body.classList.contains('modal-open')) return;
-    var d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-    if(!d) return;
-    if(e.deltaMode===1) d*=18;        /* alcune rotelle contano righe, non pixel */
-    e.preventDefault();
-    el.scrollLeft += d;
-  }, {passive:false});
-  /* frecce, Home e Fine per chi usa la tastiera */
-  window.addEventListener('keydown', function(e){
-    if(document.getElementById('book-reader-overlay').classList.contains('open')) return;
-    var tag=(document.activeElement||{}).tagName;
-    if(tag==='INPUT'||tag==='TEXTAREA') return;
-    var step=el.clientWidth*0.8;
-    if(e.key==='ArrowRight'){ e.preventDefault(); el.scrollBy({left:step,behavior:'smooth'}); }
-    else if(e.key==='ArrowLeft'){ e.preventDefault(); el.scrollBy({left:-step,behavior:'smooth'}); }
-    else if(e.key==='Home'){ e.preventDefault(); el.scrollTo({left:0,behavior:'smooth'}); }
-    else if(e.key==='End'){ e.preventDefault(); el.scrollTo({left:el.scrollWidth,behavior:'smooth'}); }
+/* ═══ AVVIO ═══ */
+renderFilters();
+renderBoard();
+(function waitFb(){
+  if(!window.fbSubscribeAdvs){setTimeout(waitFb,30);return;}
+  window.fbSubscribeAdvs(advs=>{
+    ADVS=advs;
+    renderBoard();
+    if(currentId){ if(ADVS[currentId]&&ADVS[currentId].title) showAdv(currentId); else showBoard(); }
   });
 })();
-
-/* ═══ SCHEDA DEL PERSONAGGIO ═══ */
-var _curBook=null;
-function fmt(t){return t?'<p>'+t.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</p>':'';}
-function openBook(id){
-  var b=BOOKS[id]; if(!b) return;
-  if(b.locked===true && !window.fbIsAdmin) return;   /* i nascosti non si aprono */
-  _curBook=b;
-  var ov=document.getElementById('book-reader-overlay');
-  document.getElementById('ic-img').innerHTML = b.cover
-    ? '<img src="'+escAttr(b.cover)+'" alt="'+escAttr(b.title)+'">'
-    : '<div class="noimg">✧</div>';
-  document.getElementById('ic-name').textContent = b.title || '';
-  var d='';
-  if((b.birth||'').trim()) d+='<div class="icon-date"><span class="icon-date-l">Nascita</span><span class="icon-date-v">'+esc(b.birth)+'</span></div>';
-  if((b.death||'').trim()) d+='<div class="icon-date"><span class="icon-date-l">Morte</span><span class="icon-date-v">'+esc(b.death)+'</span></div>';
-  document.getElementById('ic-dates').innerHTML=d;
-  var txt=(b.paragraphs||[]).join('\n\n');
-  document.getElementById('ic-text').innerHTML = txt ? fmt(txt) : '<p class="empty">Nessuna informazione… per ora.</p>';
-  document.getElementById('ic-text').scrollTop=0;
-  ov.classList.add('open');
-  requestAnimationFrame(function(){ ov.classList.add('visible'); });
-}
-function closeBook(){
-  var ov=document.getElementById('book-reader-overlay');
-  ov.classList.remove('visible');
-  setTimeout(function(){ ov.classList.remove('open'); _curBook=null; },280);
-}
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape' && document.getElementById('book-reader-overlay').classList.contains('open')) closeBook();
-});
 </script>
 </body>
 </html>
