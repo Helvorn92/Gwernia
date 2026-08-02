@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -15,136 +16,159 @@
   --border:rgba(201,168,76,.42);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New Roman',serif;font-size:18px;overflow-x:hidden;min-height:100vh;font-variant-numeric:lining-nums;text-rendering:optimizeLegibility}
+body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New Roman',serif;font-size:18px;overflow:hidden;height:100vh;font-variant-numeric:lining-nums;text-rendering:optimizeLegibility}
 
-/* STELLE */
-#stars-canvas{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
-
-/* PARETE */
-#wall-left{position:absolute;top:0;left:0;width:3vw;z-index:2;pointer-events:none;background:#0e0804}
-#wall-center{position:absolute;top:0;left:17vw;right:17vw;z-index:2;pointer-events:none;background:linear-gradient(180deg,#0e0804,#180d06 50%,#0e0804)}
-#wall-right{position:absolute;top:0;right:0;width:3vw;z-index:2;pointer-events:none;background:#0e0804}
-
-/* FINESTRE */
-#win-left{position:absolute;top:0;left:3vw;width:14vw;z-index:3;pointer-events:none;overflow:hidden}
-#win-right{position:absolute;top:0;right:3vw;width:14vw;z-index:3;pointer-events:none;overflow:hidden}
-.win-inner{position:absolute;top:0;left:-10px;right:-10px;border:10px solid #63380f;border-bottom:none;border-radius:50% 50% 0 0 / 7vw 7vw 0 0;overflow:hidden;
-  box-shadow:
-    inset 0 0 0 3px #2e1706,
-    inset 0 0 0 6px #7d4b1e,
-    inset 0 0 0 7px rgba(240,200,120,.22),
-    inset 0 0 0 13px #452709,
-    inset 0 0 70px rgba(0,0,0,.7),
-    0 0 46px rgba(0,0,0,.85)}
-.win-sky{position:absolute;inset:0;background:rgba(3,2,10,.06)}
-.win-bar-h1,.win-bar-h2{position:absolute;left:0;right:0;height:12px;background:linear-gradient(180deg,#8a5522 0%,#5a3414 45%,#331c07 100%);box-shadow:inset 0 1px 0 rgba(240,200,120,.3),0 4px 10px rgba(0,0,0,.8)}
-.win-bar-h1{top:35%}
-.win-bar-h2{top:65%}
-.win-bar-v{position:absolute;top:0;bottom:0;left:50%;width:12px;transform:translateX(-50%);background:linear-gradient(90deg,#8a5522 0%,#5a3414 45%,#331c07 100%);box-shadow:inset 1px 0 0 rgba(240,200,120,.26),4px 0 10px rgba(0,0,0,.8)}
-.win-frame{position:absolute;inset:0;border:6px solid #331c07;border-bottom:none;border-radius:50% 50% 0 0 / 7vw 7vw 0 0;pointer-events:none;box-shadow:inset 0 0 0 2px rgba(240,200,120,.1)}
+/* ═══ SALA ESPOSITIVA ═══ */
+/* parete di fondo: intonaco caldo, luce che cala dall'alto, angoli in ombra */
+.hall{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  background:
+    radial-gradient(120% 70% at 50% -8%,rgba(255,214,150,.10) 0%,transparent 55%),
+    radial-gradient(80% 55% at 50% 108%,rgba(0,0,0,.55) 0%,transparent 60%),
+    linear-gradient(180deg,#1a120a 0%,#221709 26%,#1c1308 62%,#120c06 100%);
+}
+/* velatura d'intonaco: micro-granulosita' che rompe il gradiente piatto */
+.hall::before{content:'';position:absolute;inset:0;opacity:.5;
+  background-image:
+    repeating-linear-gradient(94deg,rgba(255,235,200,.014) 0 2px,transparent 2px 5px),
+    repeating-linear-gradient(2deg,rgba(0,0,0,.03) 0 3px,transparent 3px 7px);
+}
+/* vignettatura: concentra lo sguardo al centro della sala */
+.hall::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(105% 85% at 50% 42%,transparent 42%,rgba(0,0,0,.5) 82%,rgba(0,0,0,.78) 100%);
+}
 
 /* BACK BTN */
 .back-btn{position:absolute;top:1.2rem;left:50%;transform:translateX(-50%);z-index:200;background:rgba(6,4,16,.92);border:1px solid rgba(201,168,76,.35);color:var(--gold-dim);font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:.5rem 1.4rem;cursor:pointer;transition:all .2s;text-decoration:none;white-space:nowrap}
 .back-btn:hover{border-color:var(--gold);color:var(--gold)}
 
 /* LAYOUT */
-.archive-wrap{position:relative;z-index:10;min-height:100vh;padding:5rem 2rem 6rem}
-.archive-header{text-align:center;margin-bottom:3.5rem}
+.archive-wrap{position:relative;z-index:10;height:100vh;display:flex;flex-direction:column;padding:2.4rem 0 1.6rem}
+.archive-header{text-align:center;margin-bottom:1.5rem;flex-shrink:0;padding:0 2rem}
 .archive-title{font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:clamp(2rem,4vw,3.5rem);color:var(--gold-light);text-shadow:0 0 40px rgba(201,168,76,.4);margin-bottom:.8rem}
-.archive-intro{font-family:'Lora',Georgia,'Times New Roman',serif;font-style:italic;font-size:1.1rem;color:var(--cream-dim);line-height:1.8}
-.archive-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:1.2rem auto}
+.archive-intro{font-family:'Lora',Georgia,'Times New Roman',serif;font-style:italic;font-size:1.02rem;color:var(--cream-dim);line-height:1.6}
+.archive-divider{display:flex;align-items:center;justify-content:center;gap:1rem;margin:.7rem auto}
 .archive-divider::before,.archive-divider::after{content:'';flex:1;max-width:200px;height:1px}
 .archive-divider::before{background:linear-gradient(90deg,transparent,rgba(201,168,76,.4))}
 .archive-divider::after{background:linear-gradient(90deg,rgba(201,168,76,.4),transparent)}
 
-/* ═══ PARETE DELLA GALLERIA ═══ */
-.bookshelf{max-width:none;width:100%;margin:0;padding:0 12vw;display:flex;flex-direction:column;gap:clamp(28px,4vw,52px)}
-
-/* una fila di quadri appesi alla parete */
-.shelf-row{
-  position:relative;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:clamp(22px,3vw,44px);
-  padding:0;
+/* ═══ PARETE DEI QUADRI ═══ */
+.bookshelf{
+  flex:1;min-height:0;width:100%;
+  overflow-x:auto;overflow-y:hidden;
+  scrollbar-width:thin;scrollbar-color:rgba(201,168,76,.45) transparent;
+  overscroll-behavior-x:contain;
 }
+.bookshelf::-webkit-scrollbar{height:8px}
+.bookshelf::-webkit-scrollbar-track{background:rgba(0,0,0,.35)}
+.bookshelf::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#c9a961,#7a5a1c);border-radius:4px}
+.bookshelf::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#e8c97a,#8a6a24)}
 
-/* LA CORNICE: legno dorato con passe-partout interno */
+/* una sola fila: i quadri riempiono l'altezza della sala */
+.shelf-row{position:relative;display:flex;flex-wrap:nowrap;align-items:stretch;
+  height:100%;gap:clamp(26px,3vw,54px);
+  padding:54px clamp(3vw,5vw,7vw) 10px;   /* spazio sopra per i faretti */
+  width:max-content;min-width:100%;justify-content:safe center}
+
+/* sfumature ai lati: suggeriscono che la sala continua */
+.hall-fade{position:fixed;top:0;bottom:0;width:9vw;z-index:6;pointer-events:none}
+.hall-fade.l{left:0;background:linear-gradient(90deg,rgba(12,8,4,.92),transparent)}
+.hall-fade.r{right:0;background:linear-gradient(270deg,rgba(12,8,4,.92),transparent)}
+
+/* IL FARETTO e il suo cono di luce */
+.spot{position:absolute;left:50%;top:-46px;transform:translateX(-50%);width:100%;height:46px;pointer-events:none;z-index:0}
+/* corpo del faretto agganciato al binario */
+.spot::before{content:'';position:absolute;left:50%;top:0;transform:translateX(-50%);
+  width:15px;height:19px;border-radius:3px 3px 5px 5px;
+  background:linear-gradient(180deg,#3a2a12 0%,#20160a 60%,#c9a961 100%);
+  box-shadow:0 2px 5px rgba(0,0,0,.8),0 0 12px rgba(255,206,130,.4)}
+/* cono di luce che scende sul quadro */
+.spot::after{content:'';position:absolute;left:50%;top:17px;transform:translateX(-50%);
+  width:190%;height:calc(100% + 78vh);
+  background:linear-gradient(180deg,rgba(255,224,170,.30) 0%,rgba(255,214,150,.14) 16%,rgba(255,206,140,.05) 42%,transparent 76%);
+  clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);
+  mix-blend-mode:screen;filter:blur(7px)}
+
+/* LA CORNICE */
 .niche{
-  position:relative;
+  position:relative;height:100%;width:auto;flex:0 0 auto;
   display:flex;flex-direction:column;align-items:center;
-  padding:clamp(9px,1.1vw,15px) clamp(9px,1.1vw,15px) clamp(7px,.9vw,12px);
-  border-radius:3px;
-  background:
-    linear-gradient(145deg,#c9a961 0%,#8a6a24 18%,#e8c97a 32%,#7a5a1c 52%,#c9a961 72%,#6d4f16 88%,#a98a3e 100%);
+  padding:clamp(8px,.85vw,12px) clamp(8px,.85vw,12px) clamp(7px,.7vw,10px);
+  border-radius:2px;
+  background:linear-gradient(145deg,#c9a961 0%,#8a6a24 18%,#e8c97a 32%,#7a5a1c 52%,#c9a961 72%,#6d4f16 88%,#a98a3e 100%);
   box-shadow:
     inset 0 2px 3px rgba(255,240,200,.55),
     inset 0 -2px 4px rgba(0,0,0,.6),
     inset 3px 0 5px rgba(0,0,0,.25),
     inset -3px 0 5px rgba(0,0,0,.25),
-    0 18px 38px rgba(0,0,0,.75),
-    0 4px 10px rgba(0,0,0,.6);
-  transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s;
+    0 16px 34px rgba(0,0,0,.72),
+    0 3px 9px rgba(0,0,0,.6);
+  transition:box-shadow .4s ease,filter .4s ease;
+  z-index:1;
 }
-/* battuta interna della cornice */
-.niche::before{
-  content:'';position:absolute;inset:clamp(6px,.75vw,10px);
-  border:1px solid rgba(60,38,8,.55);
-  box-shadow:inset 0 0 0 1px rgba(255,232,180,.22);
-  border-radius:1px;pointer-events:none;z-index:2
-}
-/* chiodo/gancio sopra la cornice */
-.niche::after{
-  content:'';position:absolute;top:-9px;left:50%;transform:translateX(-50%);
-  width:7px;height:7px;border-radius:50%;
-  background:radial-gradient(circle at 35% 30%,#e8c97a,#6d4f16 70%);
-  box-shadow:0 1px 3px rgba(0,0,0,.8);pointer-events:none
-}
-.niche:hover{transform:translateY(-4px);box-shadow:inset 0 2px 3px rgba(255,240,200,.55),inset 0 -2px 4px rgba(0,0,0,.6),0 26px 52px rgba(0,0,0,.85),0 0 34px rgba(201,168,76,.2)}
+/* battuta interna */
+.niche::before{content:'';position:absolute;inset:clamp(5px,.6vw,8px);
+  border:1px solid rgba(60,38,8,.55);box-shadow:inset 0 0 0 1px rgba(255,232,180,.22);
+  border-radius:1px;pointer-events:none;z-index:3}
+/* alone caldo che il faretto disegna attorno alla cornice */
+.niche::after{content:'';position:absolute;inset:-16px;border-radius:6px;pointer-events:none;z-index:-1;
+  background:radial-gradient(60% 46% at 50% 6%,rgba(255,210,140,.24),transparent 72%);
+  opacity:.85;transition:opacity .4s ease}
+/* HOVER: solo luce, nessuno spostamento */
+.niche:hover{filter:brightness(1.06);
+  box-shadow:
+    inset 0 2px 3px rgba(255,240,200,.6),
+    inset 0 -2px 4px rgba(0,0,0,.6),
+    0 16px 34px rgba(0,0,0,.72),
+    0 0 46px rgba(255,205,125,.34)}
+.niche:hover::after{opacity:1}
 
 /* IL DIPINTO */
 .cover-book{
-  position:relative;width:100%;aspect-ratio:3/4;cursor:pointer;
-  transition:filter .35s;
-  box-shadow:inset 0 0 22px rgba(0,0,0,.5),0 2px 8px rgba(0,0,0,.5);
+  position:relative;flex:1;min-height:0;aspect-ratio:3/4;width:auto;cursor:pointer;
+  transition:filter .4s ease;
+  box-shadow:inset 0 0 26px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.5);
   overflow:hidden;background:#0d0a06;
 }
 .cover-book img{width:100%;height:100%;object-fit:cover;display:block}
-.cover-book:hover{filter:brightness(1.08) saturate(1.05)}
-/* velo di vernice */
-.cover-book::after{
-  content:'';position:absolute;inset:0;pointer-events:none;z-index:3;
-  background:linear-gradient(118deg,rgba(255,250,235,.13) 0%,transparent 34%,transparent 66%,rgba(0,0,0,.16) 100%);
-}
+.niche:hover .cover-book{filter:brightness(1.13) saturate(1.06)}
+/* luce del faretto sulla tela + velo di vernice */
+.cover-book::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:3;
+  background:
+    linear-gradient(180deg,rgba(255,228,178,.18) 0%,rgba(255,220,165,.05) 26%,transparent 58%),
+    linear-gradient(118deg,rgba(255,250,235,.10) 0%,transparent 34%,transparent 66%,rgba(0,0,0,.20) 100%)}
 
-/* TARGHETTA col nome, sotto il dipinto (solo per i ritratti svelati) */
+/* LA TARGA: piu' grande, le date si leggono */
 .niche-label{
   font-family:'Cormorant Garamond','Palatino Linotype','Book Antiqua',Palatino,serif;
-  font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
-  color:#2a1c07;text-align:center;line-height:1.3;
-  margin-top:clamp(7px,.9vw,11px);padding:.28rem .6rem;
-  background:linear-gradient(180deg,#e8c97a,#b8933f);
-  border:1px solid rgba(60,38,8,.5);border-radius:2px;
-  box-shadow:0 2px 5px rgba(0,0,0,.5),inset 0 1px 0 rgba(255,245,215,.6);
-  max-width:100%;position:relative;z-index:3;
+  font-size:clamp(.86rem,1.02vw,1.02rem);letter-spacing:.09em;text-transform:uppercase;font-weight:700;
+  color:#2a1c07;text-align:center;line-height:1.24;
+  margin-top:clamp(8px,.95vw,13px);padding:.42rem .9rem .38rem;
+  background:linear-gradient(180deg,#f0d691 0%,#d8b45f 45%,#b8933f 100%);
+  border:1px solid rgba(60,38,8,.55);border-radius:2px;
+  box-shadow:0 3px 7px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,248,222,.75),inset 0 -1px 0 rgba(90,60,12,.3);
+  width:100%;flex-shrink:0;position:relative;z-index:4;
 }
-.niche-sub{display:block;font-size:.6rem;letter-spacing:.03em;color:rgba(42,28,7,.72);text-transform:none;font-style:italic;font-weight:500;margin-top:.1rem}
+.niche-sub{display:block;font-size:clamp(.72rem,.86vw,.84rem);letter-spacing:.05em;
+  color:rgba(48,32,8,.85);text-transform:none;font-style:italic;font-weight:600;margin-top:.22rem;
+  font-variant-numeric:lining-nums}
 
 /* ═══ RITRATTO NON ANCORA SVELATO ═══ */
 .cover-book.locked{cursor:default;background:linear-gradient(160deg,#221a10,#14100a);display:flex;align-items:center;justify-content:center}
-.cover-book.locked:hover{filter:none}
+.niche:hover .cover-book.locked{filter:none}
 .cover-book.locked::before{
   content:'?';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-  font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:6rem;font-weight:700;
-  color:rgba(201,168,76,.28);text-shadow:0 2px 14px rgba(0,0,0,.8);z-index:2
-}
+  font-family:'Cormorant Garamond','Palatino Linotype',serif;font-size:5rem;font-weight:700;
+  color:rgba(201,168,76,.26);text-shadow:0 2px 14px rgba(0,0,0,.8);z-index:2}
 .cover-book.locked .locked-deco{position:absolute;inset:12px;border:1px solid rgba(201,168,76,.12)}
 .cover-book.locked .locked-deco::before{content:'';position:absolute;inset:6px;border:1px solid rgba(201,168,76,.07)}
-.niche-label.locked-label{color:rgba(42,28,7,.55);font-style:italic;background:linear-gradient(180deg,#b9a273,#8d7538)}
+.niche-label.locked-label{color:rgba(46,32,10,.6);font-style:italic;background:linear-gradient(180deg,#c9b384,#8d7538)}
+/* i quadri non svelati restano in penombra: il faretto non li illumina */
+.niche:has(.cover-book.locked)::after{opacity:.3}
+.niche:has(.cover-book.locked){box-shadow:inset 0 2px 3px rgba(255,240,200,.3),inset 0 -2px 4px rgba(0,0,0,.6),0 14px 30px rgba(0,0,0,.7);filter:brightness(.82) saturate(.85)}
 
-/* Vista admin: dipinto visibile ma offuscato, per riconoscerlo */
+/* Vista admin: dipinto visibile ma offuscato */
 .cover-book.locked.admin-peek img{width:100%;height:100%;object-fit:cover;display:block;filter:brightness(.38) saturate(.5) blur(1.5px)}
-.cover-book.locked.admin-peek::before{font-size:4rem;color:rgba(201,168,76,.55)}
+.cover-book.locked.admin-peek::before{font-size:3.4rem;color:rgba(201,168,76,.55)}
 .cover-book.locked.admin-peek .locked-deco{inset:6px}
 
 /* ═══ SCHEDA DEL PERSONAGGIO ═══ */
@@ -153,7 +177,7 @@ body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New
 .book-reader-overlay.visible{opacity:1}
 
 .icon-card{
-  width:min(1180px,96vw);max-height:88vh;display:grid;grid-template-columns:minmax(0,44%) minmax(0,56%);
+  width:min(1240px,96vw);height:min(92vh,940px);max-height:92vh;display:grid;grid-template-columns:minmax(0,44%) minmax(0,56%);
   background:linear-gradient(160deg,#14100a 0%,#0c0906 100%);
   border:1px solid rgba(201,168,76,.4);
   box-shadow:0 30px 90px rgba(0,0,0,.95),0 0 0 1px rgba(0,0,0,.6);
@@ -161,15 +185,14 @@ body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New
 }
 .book-reader-overlay.visible .icon-card{transform:none}
 
-/* lato sinistro: il dipinto incorniciato */
-.icon-card-img{position:relative;background:linear-gradient(150deg,#1a1409,#0a0805);display:flex;align-items:center;justify-content:center;padding:clamp(14px,1.8vw,26px);min-height:0}
-.icon-card-img .frame{
-  position:relative;max-height:100%;padding:clamp(8px,1vw,14px);border-radius:2px;
-  background:linear-gradient(145deg,#c9a961,#8a6a24 22%,#e8c97a 38%,#7a5a1c 60%,#a98a3e 100%);
-  box-shadow:inset 0 2px 3px rgba(255,240,200,.5),inset 0 -2px 4px rgba(0,0,0,.6),0 14px 34px rgba(0,0,0,.8);
-}
-.icon-card-img img{display:block;max-width:100%;max-height:calc(88vh - 6rem);object-fit:contain;box-shadow:inset 0 0 20px rgba(0,0,0,.5)}
-.icon-card-img .noimg{width:min(300px,50vw);aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:4.5rem;color:rgba(201,168,76,.22);background:#0d0a06}
+/* lato sinistro: il dipinto nudo, a tutta altezza della finestra */
+.icon-card-img{position:relative;background:#080603;overflow:hidden;min-height:0}
+.icon-card-img img{display:block;width:100%;height:100%;object-fit:cover;object-position:center top}
+/* sfumatura sul bordo interno: il dipinto entra nella scheda senza stacco netto */
+.icon-card-img::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,transparent 76%,rgba(8,6,3,.55) 100%),
+             linear-gradient(180deg,rgba(255,225,175,.10),transparent 30%)}
+.icon-card-img .noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:5rem;color:rgba(201,168,76,.2);background:#0d0a06}
 
 /* lato destro: le informazioni */
 .icon-card-info{padding:clamp(1.6rem,2.4vw,2.6rem);overflow-y:auto;display:flex;flex-direction:column;min-height:0}
@@ -198,9 +221,7 @@ body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New
 .book-close-btn:hover{background:rgba(201,168,76,.2);color:var(--gold)}
 
 @media(max-width:1100px){
-  #win-left,#win-right{display:none}
-  #wall-center{left:0;right:0}
-  .bookshelf{padding:0 5vw}
+  .shelf-row{padding-left:3vw;padding-right:3vw}
 }
 /* la scheda passa a colonna: dipinto sopra, informazioni sotto */
 @media(max-width:860px){
@@ -210,26 +231,23 @@ body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New
 }
 /* 2 libri per ripiano */
 @media(max-width:900px){
-  .shelf-row{grid-template-columns:repeat(2,1fr)}
-  .bookshelf{padding:0 10vw}
+  .archive-intro{font-size:.94rem}
 }
 @media(max-width:760px){
-  .bookshelf{padding:0 7vw}
-  .shelf-row{gap:10px;padding:12px;border-left-width:8px;border-right-width:8px}
-  .shelf-row::before{left:-8px;right:-8px;top:-6px;height:12px}
-  .shelf-row:last-child::after{left:-11px;right:-11px;bottom:-8px;height:14px}
-  .niche{padding:10px}
+  .shelf-row{gap:20px;padding:16px 6vw 8px}
   .cover-book.locked::before{font-size:3.2rem}
+  .spot{display:none}          /* niente faretti su schermo stretto */
+  .hall-fade{width:14vw}
+  .archive-wrap{padding:1.4rem 0 1rem}
+  .archive-header{margin-bottom:.9rem}
 }
 /* 1 libro per ripiano, centrato */
 @media(max-width:520px){
-  .shelf-row{grid-template-columns:1fr}
-  .bookshelf{padding:0 12vw}
-  .niche{width:min(100%,240px);margin:0 auto}
+  .shelf-row{gap:16px}
 }
 /* schermi molto piccoli: il libro si rimpicciolisce */
 @media(max-width:380px){
-  .niche{width:min(100%,195px)}
+  .shelf-row{gap:12px}
 }
 
 /* ═══ ADMIN LOGIN ═══ */
@@ -290,14 +308,9 @@ body.is-admin .add-book-btn{display:flex}
 </head>
 <body>
 
-<canvas id="stars-canvas"></canvas>
-
-<div id="wall-left"></div>
-<div id="wall-center"></div>
-<div id="wall-right"></div>
-
-<div id="win-left"><div class="win-inner"><div class="win-sky"></div><div class="win-bar-h1"></div><div class="win-bar-h2"></div><div class="win-bar-v"></div><div class="win-frame"></div></div></div>
-<div id="win-right"><div class="win-inner"><div class="win-sky"></div><div class="win-bar-h1"></div><div class="win-bar-h2"></div><div class="win-bar-v"></div><div class="win-frame"></div></div></div>
+<div class="hall"></div>
+<div class="hall-fade l"></div>
+<div class="hall-fade r"></div>
 
 <a class="back-btn" href="https://helvorn92.github.io/World/gwernia">Torna al Sito</a>
 
@@ -479,27 +492,8 @@ window.addEventListener('admin-state-changed', e => {
 </script>
 
 <script>
-/* ═══ STELLE ═══ */
-const canvas=document.getElementById('stars-canvas'),ctx=canvas.getContext('2d');
-let W,H,stars=[],meteors=[],starsOffsetY=0,targetOffsetY=0;
-window.addEventListener('scroll',function(){targetOffsetY=window.scrollY*0.25;},{passive:true});
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;initStars()}
-function initStars(){stars=[];var count=Math.floor((W*H)/3800);for(var i=0;i<count;i++){var bright=Math.random()<0.12;stars.push({x:Math.random()*W,y:Math.random()*H,r:bright?Math.random()*.8+1:Math.random()*.9+.2,pulse:Math.random()*Math.PI*2,speed:Math.random()*.8+.4,bright:bright,gp:Math.random()*Math.PI*2});}}
-function spawnMeteor(){meteors.push({x:Math.random()*W*.6+W*.2,y:Math.random()*H*.3,vx:Math.random()*3+2,vy:Math.random()*2+1,len:Math.random()*80+60,a:1})}
-function drawStars(){ctx.clearRect(0,0,W,H);starsOffsetY+=(targetOffsetY-starsOffsetY)*.06;var t=Date.now()*.001;stars.forEach(function(s){var dy=((s.y-starsOffsetY)%H+H)%H;var alpha=s.bright?.55+.45*Math.sin(t*s.speed+s.pulse):.25+.35*Math.sin(t*s.speed*.6+s.pulse);ctx.beginPath();ctx.arc(s.x,dy,s.r,0,Math.PI*2);ctx.fillStyle='rgba(255,245,210,'+alpha+')';ctx.fill();if(s.bright){var ga=.18+.18*Math.sin(t*s.speed+s.gp),g=ctx.createRadialGradient(s.x,dy,0,s.x,dy,s.r*5);g.addColorStop(0,'rgba(201,168,76,'+ga+')');g.addColorStop(1,'rgba(201,168,76,0)');ctx.beginPath();ctx.arc(s.x,dy,s.r*5,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();}});meteors=meteors.filter(function(m){m.x+=m.vx;m.y+=m.vy;m.a-=.015;if(m.a<=0)return false;var g=ctx.createLinearGradient(m.x-m.vx*m.len/m.vx,m.y-m.vy*m.len/m.vx,m.x,m.y);g.addColorStop(0,'rgba(201,168,76,0)');g.addColorStop(1,'rgba(201,168,76,'+m.a*.7+')');ctx.beginPath();ctx.moveTo(m.x-m.vx*m.len/5,m.y-m.vy*m.len/5);ctx.lineTo(m.x,m.y);ctx.strokeStyle=g;ctx.lineWidth=1.5;ctx.stroke();return true;});requestAnimationFrame(drawStars);}
-window.addEventListener('resize',resize);resize();drawStars();
-setInterval(function(){if(Math.random()<.45)spawnMeteor();},2200);
-
-/* ═══ ALTEZZE PARETE E FINESTRE ═══ */
-function setWallHeights(){var h=document.body.scrollHeight;['wall-left','wall-center','wall-right','win-left','win-right'].forEach(function(id){var el=document.getElementById(id);if(el)el.style.height=h+'px';});document.querySelectorAll('.win-inner').forEach(function(w){w.style.height=h+'px';});}
-window.addEventListener('load',setWallHeights);window.addEventListener('resize',setWallHeights);setTimeout(setWallHeights,200);setTimeout(setWallHeights,800);
-
-/* Contenuto dei libri: vive SOLO su Firestore (niente testo/copertine nel sorgente). */
-
 /* ═══ COSTRUZIONE SCAFFALE (con merge Firestore) ═══ */
 let BOOKS = {};
-/* libri per ripiano in base alla larghezza: 3 → 2 → 1 (come i breakpoint CSS) */
-function shelfPerRow(){var w=window.innerWidth;return w<=520?1:(w<=900?2:3);}
 var __lockedCount = 0;   /* numero di libri bloccati (dal doc pubblico meta/shelf), per i segnaposto degli ospiti */
 function escAttr(s){ return String(s||'').replace(/"/g,'&quot;'); }
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -513,7 +507,7 @@ function lifeSpan(b){
 }
 function nicheHTML(id, b){
   var isLocked = b.locked===true;
-  var h='<div class="niche">';
+  var h='<div class="niche"><div class="spot"></div>';
   h+='<div class="book-admin-bar">'+
     '<button class="book-admin-btn" title="Modifica" onclick="event.stopPropagation();openBookEdit(\''+id+'\')">\u270E</button>'+
     '<button class="book-admin-btn" title="'+(isLocked?'Sblocca':'Blocca')+'" onclick="event.stopPropagation();toggleBookLocked(\''+id+'\')">'+(isLocked?'\uD83D\uDD13':'\uD83D\uDD12')+'</button>'+
@@ -538,8 +532,42 @@ function nicheHTML(id, b){
 }
 /* Segnaposto anonimo per un libro bloccato: nessun dato (titolo/copertina/testo). Solo per gli ospiti. */
 function lockedPlaceholderHTML(){
-  return '<div class="niche"><div class="cover-book locked"><div class="locked-deco"></div></div>'+
+  return '<div class="niche"><div class="spot"></div><div class="cover-book locked"><div class="locked-deco"></div></div>'+
          '<div class="niche-label locked-label">Ignoto</div></div>';
+}
+/* La tela ricava la larghezza dalla propria altezza (aspect-ratio): il flex non la
+   propaga alla cornice, che resterebbe troppo stretta. Qui si allinea la cornice
+   alla tela, così il dipinto non sborda mai dal legno. */
+function fitFrames(){
+  var shelf=document.getElementById('bookshelf');
+  var frames=[].slice.call(document.querySelectorAll('.niche'));
+  if(!shelf||!frames.length) return;
+  frames.forEach(function(f){
+    f.style.width='';
+    var a=f.querySelector('.cover-book');
+    if(a){ a.style.flex=''; a.style.width=''; a.style.height=''; }
+  });
+  void shelf.offsetWidth;            /* forza il ricalcolo del layout appena azzerato */
+  frames.forEach(function(f){
+    var art=f.querySelector('.cover-book');
+    if(!art) return;
+    var cs=getComputedStyle(f);
+    var pad=parseFloat(cs.paddingLeft)+parseFloat(cs.paddingRight);
+    var r=art.getBoundingClientRect();
+    var w=r.width, h=r.height;
+    if(w<1||h<1) return;
+    /* su schermi stretti un quadro alto quanto la sala sarebbe piu' largo dello
+       schermo: lo si rimpicciolisce mantenendo le proporzioni della tela */
+    var maxW=shelf.clientWidth-pad-24;
+    if(w>maxW){
+      var ratio=w/h;
+      art.style.flex='0 0 auto';
+      art.style.width=Math.floor(maxW)+'px';
+      art.style.height=Math.floor(maxW/ratio)+'px';
+      w=maxW;
+    }
+    f.style.width=Math.ceil(w+pad)+'px';
+  });
 }
 function buildShelf(){
   var shelf=document.getElementById('bookshelf');
@@ -556,15 +584,9 @@ function buildShelf(){
   if(!window.fbIsAdmin){
     for(var k=0;k<(window.__lockedCount||0);k++) cells.push(lockedPlaceholderHTML());
   }
-  var perRow=shelfPerRow();
-  var html='';
-  for(var r=0;r<cells.length;r+=perRow){
-    html+='<div class="shelf-row">';
-    for(var i=r;i<r+perRow && i<cells.length;i++){ html+=cells[i]; }
-    html+='</div>';
-  }
-  shelf.innerHTML=html;
-  setTimeout(setWallHeights,50);
+  /* una sola fila: la sala si percorre in orizzontale */
+  shelf.innerHTML='<div class="shelf-row">'+cells.join('')+'</div>';
+  fitFrames();
 }
 window.renderShelf = buildShelf;
 window.__booksReady = false;
@@ -572,12 +594,7 @@ window.__lockedCount = 0;
 BOOKS = {};
 buildShelf();   // scaffale vuoto finche non arrivano i dati da Firestore
 
-/* ricostruisce le file quando cambia il numero di libri per ripiano */
-var _shelfCols = shelfPerRow();
-window.addEventListener('resize', function(){
-  var c = shelfPerRow();
-  if(c !== _shelfCols){ _shelfCols = c; buildShelf(); }
-});
+window.addEventListener('resize', function(){ buildShelf(); });
 
 /* Sottoscrizioni Firestore adattate al ruolo. La subscription dei libri va ri-aperta
    quando cambia lo stato di login: ospite = solo sbloccati; admin = intera collezione. */
@@ -730,6 +747,33 @@ function deleteBookFromModal(){
   closeBookEdit();
 }
 
+/* ═══ SCORRIMENTO ORIZZONTALE ═══ */
+/* la rotella del mouse percorre la sala da sinistra a destra */
+(function(){
+  var el=document.getElementById('bookshelf');
+  if(!el) return;
+  window.addEventListener('wheel', function(e){
+    if(document.getElementById('book-reader-overlay').classList.contains('open')) return;
+    if(document.body.classList.contains('modal-open')) return;
+    var d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+    if(!d) return;
+    if(e.deltaMode===1) d*=18;        /* alcune rotelle contano righe, non pixel */
+    e.preventDefault();
+    el.scrollLeft += d;
+  }, {passive:false});
+  /* frecce, Home e Fine per chi usa la tastiera */
+  window.addEventListener('keydown', function(e){
+    if(document.getElementById('book-reader-overlay').classList.contains('open')) return;
+    var tag=(document.activeElement||{}).tagName;
+    if(tag==='INPUT'||tag==='TEXTAREA') return;
+    var step=el.clientWidth*0.8;
+    if(e.key==='ArrowRight'){ e.preventDefault(); el.scrollBy({left:step,behavior:'smooth'}); }
+    else if(e.key==='ArrowLeft'){ e.preventDefault(); el.scrollBy({left:-step,behavior:'smooth'}); }
+    else if(e.key==='Home'){ e.preventDefault(); el.scrollTo({left:0,behavior:'smooth'}); }
+    else if(e.key==='End'){ e.preventDefault(); el.scrollTo({left:el.scrollWidth,behavior:'smooth'}); }
+  });
+})();
+
 /* ═══ SCHEDA DEL PERSONAGGIO ═══ */
 var _curBook=null;
 function fmt(t){return t?'<p>'+t.replace(/\n\n/g,'</p><p>').replace(/\n/g,'<br>')+'</p>':'';}
@@ -739,8 +783,8 @@ function openBook(id){
   _curBook=b;
   var ov=document.getElementById('book-reader-overlay');
   document.getElementById('ic-img').innerHTML = b.cover
-    ? '<div class="frame"><img src="'+escAttr(b.cover)+'" alt="'+escAttr(b.title)+'"></div>'
-    : '<div class="frame"><div class="noimg">✧</div></div>';
+    ? '<img src="'+escAttr(b.cover)+'" alt="'+escAttr(b.title)+'">'
+    : '<div class="noimg">✧</div>';
   document.getElementById('ic-name').textContent = b.title || '';
   var d='';
   if((b.birth||'').trim()) d+='<div class="icon-date"><span class="icon-date-l">Nascita</span><span class="icon-date-v">'+esc(b.birth)+'</span></div>';
