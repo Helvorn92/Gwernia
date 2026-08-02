@@ -16,6 +16,14 @@
   --border:rgba(201,168,76,.42);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+/* ═══ BARRE DI SCORRIMENTO IN TEMA (ottone su fondo scuro) ═══ */
+*{scrollbar-width:thin;scrollbar-color:#a8863a rgba(10,7,3,.6)}
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:rgba(10,7,3,.6);border:1px solid rgba(201,168,76,.12)}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#e8c97a 0%,#c9a961 35%,#8a6a24 100%);
+  border:2px solid rgba(10,7,3,.6);border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#f4dc9c 0%,#d9b96b 35%,#a1802f 100%)}
+::-webkit-scrollbar-corner{background:transparent}
 body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New Roman',serif;font-size:18px;overflow:hidden;height:100vh;font-variant-numeric:lining-nums;text-rendering:optimizeLegibility;cursor:url('https://res.cloudinary.com/dkvotcvo6/image/upload/v1785677724/Mouse_isfffe.png') 0 0,auto}
 
 /* ═══ SALA ESPOSITIVA ═══ */
@@ -205,8 +213,6 @@ body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New
 
 /* lato destro: le informazioni */
 .icon-card-info{padding:clamp(1.6rem,2.4vw,2.6rem);overflow-y:auto;display:flex;flex-direction:column;min-height:0}
-.icon-card-info::-webkit-scrollbar{width:9px}
-.icon-card-info::-webkit-scrollbar-thumb{background:rgba(201,168,76,.3);border-radius:5px}
 .icon-name{
   font-family:'Cormorant Garamond','Palatino Linotype',serif;font-weight:700;
   font-size:clamp(1.7rem,3vw,2.6rem);line-height:1.14;letter-spacing:.02em;
@@ -763,7 +769,10 @@ function deleteBookFromModal(){
   if(!el) return;
   window.addEventListener('wheel', function(e){
     if(document.getElementById('book-reader-overlay').classList.contains('open')) return;
-    if(document.body.classList.contains('modal-open')) return;
+    /* se una finestra è aperta, o il puntatore è sopra un pannello che scorre per
+       conto suo (modale, scheda, area di testo), la rotella resta al suo padrone */
+    if(document.querySelector('.adm-modal.open, .adm-overlay.open')) return;
+    if(e.target.closest && e.target.closest('.adm-modal, .icon-card, textarea, select')) return;
     var d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
     if(!d) return;
     if(e.deltaMode===1) d*=18;        /* alcune rotelle contano righe, non pixel */
