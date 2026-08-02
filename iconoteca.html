@@ -113,8 +113,9 @@ body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New
 .niche::after{content:'';position:absolute;inset:-16px;border-radius:6px;pointer-events:none;z-index:-1;
   background:radial-gradient(60% 46% at 50% 6%,rgba(255,210,140,.24),transparent 72%);
   opacity:.85;transition:opacity .4s ease}
-/* HOVER: solo luce, nessuno spostamento */
-.niche:hover{filter:brightness(1.06);
+/* HOVER: nessuno spostamento e nessuna schiaritura sul contenitore, altrimenti si
+   moltiplicherebbe con quella della tela; la luce arriva dall'alone e dal riflesso. */
+.niche:hover{
   box-shadow:
     inset 0 2px 3px rgba(255,240,200,.6),
     inset 0 -2px 4px rgba(0,0,0,.6),
@@ -129,8 +130,14 @@ body{background:#06060f;color:var(--cream);font-family:'Lora',Georgia,'Times New
   box-shadow:inset 0 0 26px rgba(0,0,0,.55),0 2px 8px rgba(0,0,0,.5);
   overflow:hidden;background:#0d0a06;
 }
-.cover-book img{width:100%;height:100%;object-fit:cover;display:block}
-.niche:hover .cover-book{filter:brightness(1.13) saturate(1.06)}
+/* I dipinti sono esposti in seppia, come tele antiche: al passaggio del mouse
+   riprendono il colore originale. Il filtro sta sull'immagine, così la luce del
+   faretto (i pseudo-elementi) resta fuori dal viraggio. */
+.cover-book img{width:100%;height:100%;object-fit:cover;display:block;
+  filter:sepia(.92) saturate(.7) contrast(1.04) brightness(.72);
+  transition:filter .55s cubic-bezier(.3,.7,.3,1)}
+/* in hover la tela torna esattamente com'è l'originale: nessuna schiaritura in più */
+.niche:hover .cover-book img{filter:sepia(0) saturate(1) contrast(1) brightness(1)}
 /* luce del faretto sulla tela + velo di vernice */
 .cover-book::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:3;
   background:
